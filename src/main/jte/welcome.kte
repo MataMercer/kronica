@@ -1,0 +1,9 @@
+@import org.matamercer.web.PageViewModel
+@param page:PageViewModel
+@template.layout(
+page = page ,
+content = @`
+    <p>A brand-new website hosting data.</p>
+`,
+
+)

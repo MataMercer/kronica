@@ -12,3 +12,8 @@ data class RegisterUserForm(
     val name: String?,
     val password: String?,
 )
+
+data class CreateArticleForm(
+    val title: String?,
+    val body: String?,
+)

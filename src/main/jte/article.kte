@@ -1,0 +1,11 @@
+@import org.matamercer.domain.models.Article
+@import org.matamercer.web.PageViewModel
+@param page:PageViewModel
+@param article:Article
+@template.layout(
+page = page ,
+content = @`
+    <h1 class="">${article.title}</h1>
+    <p> ${article.body}</p>
+`,
+)

@@ -1,0 +1,18 @@
+@import org.matamercer.web.PageViewModel
+@param page:PageViewModel
+@template.layout(
+page = page ,
+content = @`
+    <form class="form" action="/login" method="post">
+        <label>
+            Email
+            <input id="email" name="email" type="email"/>
+        </label>
+        <label>
+            Password
+            <input id="password" name="password" type="password">
+        </label>
+        <button class="button" type="submit">Login</button>
+    </form>
+`,
+)

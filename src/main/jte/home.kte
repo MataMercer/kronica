@@ -1,0 +1,20 @@
+@import org.matamercer.web.PageViewModel
+@param page:PageViewModel
+@template.layout(
+page = page ,
+content = @`
+    <p class="">Blah blah blah </p>
+    <form class="form" action="/createarticle" method="post">
+        <p>Let's write something!</p>
+        <label for="title">
+            Title
+        </label>
+        <input id="title" name="title" type="text"/>
+        <label for="body">
+            Body
+        </label>
+        <textarea id="body" name="body" rows="20"></textarea>
+        <button class="button">Submit</button>
+    </form>
+`,
+)

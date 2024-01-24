@@ -1,0 +1,8 @@
+@import org.matamercer.web.PageViewModel
+@param page:PageViewModel
+@template.layout(
+page = page ,
+content = @`
+    <p class="">This is a wiki website.</p>
+`,
+)

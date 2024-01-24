@@ -1,0 +1,15 @@
+@import org.matamercer.domain.models.Article
+@import org.matamercer.domain.models.User
+@import org.matamercer.web.PageViewModel
+@param page:PageViewModel
+@param user:User
+@param articles:List<Article>
+@template.layout(
+page = page ,
+content = @`
+    @for(article in articles)
+       <h2>${article.title}</h2>
+        <p>${article.body}</p>
+    @endfor
+`,
+)

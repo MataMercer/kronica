@@ -18,7 +18,7 @@ class UserDaoSql(private val jdbcTemplate: JdbcTemplate) : UserDao {
             name = rs.getString("name"),
             email = rs.getString("email"),
             hashedPassword = rs.getString("hashed_password"),
-            createdAt = rs.getTimestamp("createdAt"),
+            createdAt = rs.getTimestamp("created_at"),
             role = enumValueOf( rs.getString("role"))
         )
     }
@@ -29,7 +29,11 @@ class UserDaoSql(private val jdbcTemplate: JdbcTemplate) : UserDao {
 
     override fun findByEmail(email: String): User? {
         return try {
-            jdbcTemplate.queryForObject<User>("SELECT * FROM users WHERE email = ?", userMapper, email)
+            jdbcTemplate.queryForObject<User>("""
+                SELECT * 
+                FROM users 
+                WHERE users.email = ?
+                """.trimIndent(), userMapper, email)
         }catch (e: EmptyResultDataAccessException){
             null
         }
@@ -37,7 +41,7 @@ class UserDaoSql(private val jdbcTemplate: JdbcTemplate) : UserDao {
 
     override fun findById(id: Long): User? {
         return try {
-            jdbcTemplate.queryForObject<User>("SELECT * FROM users WHERE id = ?", userMapper, id)
+            jdbcTemplate.queryForObject<User>("SELECT * FROM users WHERE users.id = ?", userMapper, id)
         }catch (e: EmptyResultDataAccessException){
            null
         }
@@ -45,23 +49,29 @@ class UserDaoSql(private val jdbcTemplate: JdbcTemplate) : UserDao {
 
     override fun create(user: User): Long? {
         val keyHolder = GeneratedKeyHolder()
-
         jdbcTemplate.update({
-            val sql = "INSERT INTO users (name, email, hashed_password, role, createdAt) VALUES (?, ?, ?, ?, ?)"
-            it.prepareStatement(sql, arrayOf("id")).apply { setString(1, user.name)
+            val sql = """
+                INSERT INTO users 
+                    (name,
+                    email,
+                    hashed_password,
+                    role,
+                    created_at) 
+                VALUES (?, ?, ?, ?, ?)
+                """.trimIndent()
+            it.prepareStatement(sql, arrayOf("id")).apply {
+                setString(1, user.name)
                 setString(2, user.email)
                 setString(3, user.hashedPassword)
                 setString(4, user.role.name)
                 setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()))
             }
         }, keyHolder)
-
         return keyHolder.key?.toLong()
     }
 
     override fun update(id: Long): User? {
         TODO("Not yet implemented")
-
     }
 
     override fun delete(id: Long) {
