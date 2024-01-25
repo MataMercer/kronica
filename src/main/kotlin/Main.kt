@@ -195,6 +195,16 @@ fun setupApp(): Javalin {
         }
     }
 
+    app.get("/characters/{id}") {ctx ->
+        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
+        val page = PageViewModel(
+            ctx = ctx,
+            title = foundArticle.title,
+            description = "Nothing interesting",
+            flash = getFlashedMessages(ctx).toMutableList())
+        ctx.render("article.kte", mapOf("page" to page, "article" to foundArticle))
+    }
+
     return app
 }
 

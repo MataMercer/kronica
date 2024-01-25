@@ -7,7 +7,7 @@ import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.User
 import org.matamercer.web.CreateArticleForm
 
-class ArticleService(val articleDao: ArticleDao){
+class ArticleService(private val articleDao: ArticleDao){
 
     fun getById(id: Long?): Article {
         if (id == null) throw BadRequestResponse()
