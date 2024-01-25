@@ -5,47 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/docs/designdoc.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/META-INF/main.kotlin_module" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion$render$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion$render$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/.jteroot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/about.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/article.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/home.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/layout.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/login.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/user.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/welcome.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/web/ViewModels.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/stylesheets/main.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/06f8617a-dfa2-4b81-a439-2ca316486265.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/06f8617a-dfa2-4b81-a439-2ca316486265.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/UserDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/UserDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/security/UserRole.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/security/UserRole.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
