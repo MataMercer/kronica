@@ -8,6 +8,7 @@ data class Article(
     val body: String,
     val author: User,
     val createdAt: Date? = null,
+    val updatedAt: Date? = null,
 
     val timelineData: TimelineData? = null,
     val characterData: CharacterData? = null,

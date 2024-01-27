@@ -18,6 +18,7 @@ class ArticleDaoSql(private val jdbcTemplate: JdbcTemplate):ArticleDao {
             title = rs.getString("title"),
             body =  rs.getString("body"),
             createdAt = rs.getTimestamp("created_at"),
+            updatedAt = rs.getTimestamp("updated_at"),
             author = User(
                 id = rs.getLong("authors_id"),
                 name = rs.getString("authors_name"),
@@ -72,6 +73,7 @@ class ArticleDaoSql(private val jdbcTemplate: JdbcTemplate):ArticleDao {
                     (title,
                     body,
                     created_at,
+                    updated_at,
                     author_id) 
                 VALUES (?, ?, ?, ?)
                 """.trimIndent()
@@ -79,7 +81,8 @@ class ArticleDaoSql(private val jdbcTemplate: JdbcTemplate):ArticleDao {
                 setString(1, article.title)
                 setString(2, article.body)
                 setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()))
-                article.author.id?.let { it1 -> setLong(4, it1) }
+                setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()))
+                article.author.id?.let { it1 -> setLong(5, it1) }
             }
         }, keyHolder)
 

@@ -11,10 +11,12 @@ import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.Seeder
 import org.matamercer.domain.dao.sql.ArticleDaoSql
+import org.matamercer.domain.dao.sql.FileDaoSql
 import org.matamercer.domain.dao.sql.UserDaoSql
 import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UsersDto
 import org.matamercer.domain.services.ArticleService
+import org.matamercer.domain.services.FileService
 import org.matamercer.domain.services.UserService
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
@@ -30,6 +32,7 @@ fun main(args: Array<String>){
 }
 fun setupApp(): Javalin {
 
+    //wire up the app
     val dataSource = initDataSource()
     val app = createJavalinApp()
     val jdbcTemplate = JdbcTemplate(dataSource)
@@ -40,6 +43,8 @@ fun setupApp(): Javalin {
 
     val articleDao = ArticleDaoSql(jdbcTemplate)
     val articleService = ArticleService(articleDao)
+    val fileDao = FileDaoSql()
+    val fileService = FileService(fileDao)
 
     app.before { handler ->
 
@@ -196,6 +201,7 @@ fun setupApp(): Javalin {
     }
 
     app.get("/characters/{id}") {ctx ->
+
         val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
         val page = PageViewModel(
             ctx = ctx,
@@ -204,6 +210,38 @@ fun setupApp(): Javalin {
             flash = getFlashedMessages(ctx).toMutableList())
         ctx.render("article.kte", mapOf("page" to page, "article" to foundArticle))
     }
+
+    app.get("/files/upload", {ctx ->
+        val page = PageViewModel(
+            ctx = ctx,
+            title = "File Manager",
+            description = "Manage your uploaded files.",
+            flash = getFlashedMessages(ctx).toMutableList())
+        ctx.render("file-manager.kte", mapOf("page" to page))
+    }, UserRole.ADMIN)
+
+    app.post("/files/upload", {ctx ->
+        val files = ctx.uploadedFiles()
+        val fileGroupIdStr = ctx.formParam("fileGroupId")
+        var fileGroupId:Long? = null
+
+        if (files.isEmpty()){
+            throw BadRequestResponse("No files provided.")
+        }
+        if (!fileGroupIdStr.isNullOrBlank()){
+            try {
+                fileGroupId = fileGroupIdStr.toLong()
+            }catch (e: NumberFormatException){
+               throw BadRequestResponse("Invalid file group id provided.")
+            }
+        }
+        val currentUser = getCurrentUser(ctx) ?: throw UnauthorizedResponse("You must be logged in.")
+
+        files.map { file ->
+            fileService.createFile(file, fileGroupId, currentUser )
+        }
+
+    }, UserRole.ADMIN)
 
     return app
 }
