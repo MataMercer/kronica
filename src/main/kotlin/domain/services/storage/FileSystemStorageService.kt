@@ -1,7 +1,6 @@
 package org.matamercer.domain.services.storage
 
-import org.springframework.core.io.Resource
-import org.springframework.core.io.UrlResource
+import io.javalin.http.UploadedFile
 import org.springframework.util.FileSystemUtils
 import org.springframework.util.StringUtils
 import java.io.File
@@ -14,10 +13,10 @@ import java.nio.file.StandardCopyOption
 
 class FileSystemStorageService() : StorageService {
     private val rootLocation: Path = Paths.get("storage-service-uploads")
-    override fun store(fileDestPath: Path, file: File) {
-        val filename = StringUtils.cleanPath(file.name)
+    override fun store(fileDestPath: Path, uploadedFile: UploadedFile) {
+        val filename = StringUtils.cleanPath(uploadedFile.filename())
         try {
-            if (isFileEmpty(file)) {
+            if (uploadedFile.size() == 0L) {
                 throw StorageException("Failed to store empty file $filename")
             }
             if (filename.contains("..")) {
@@ -27,7 +26,7 @@ class FileSystemStorageService() : StorageService {
                             + filename
                 )
             }
-            file.inputStream().use { inputStream ->
+            uploadedFile.content().use { inputStream ->
                 var combinedFileDestPath = rootLocation.resolve(fileDestPath)
                 combinedFileDestPath = Files.createDirectory(combinedFileDestPath)
                 Files.copy(
@@ -40,11 +39,12 @@ class FileSystemStorageService() : StorageService {
         }
     }
 
-    override fun loadAsResource(filePath: Path): Resource {
+    override fun loadAsFile(filePath: Path): File {
         return try {
-            val resource: Resource = UrlResource(rootLocation.resolve(filePath).toUri())
-            if (resource.exists() || resource.isReadable) {
-                resource
+            val file = File(rootLocation.resolve(filePath).toUri())
+
+            if (file.exists()) {
+                file
             } else {
                 throw StorageFileNotFoundException(
                     "Could not read file: " + filePath.fileName

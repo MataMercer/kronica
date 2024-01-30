@@ -4,22 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="sql actually compiles now + added class structure for articles">
-      <change afterPath="$PROJECT_DIR$/src/main/jte/file-manager.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TagDao.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageException.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageFileNotFoundException.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" afterDir="false" />
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="wip file service">
+      <change afterPath="$PROJECT_DIR$/storage-service-uploads/1/maxresdefault.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/jte/home.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/home.kte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion$render$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion$render$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +109,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -256,7 +267,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706176760475</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="wip file service">
+      <option name="closed" value="true" />
+      <created>1706343262584</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1706343262584</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -266,7 +285,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="finalized article structure" />
     <MESSAGE value="sql actually compiles now + added class structure for articles" />
-    <option name="LAST_COMMIT_MESSAGE" value="sql actually compiles now + added class structure for articles" />
+    <MESSAGE value="wip file service" />
+    <option name="LAST_COMMIT_MESSAGE" value="wip file service" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

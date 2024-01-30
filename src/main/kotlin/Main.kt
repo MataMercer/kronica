@@ -3,8 +3,10 @@ package org.matamercer
 import io.javalin.Javalin
 import io.javalin.http.*
 import io.javalin.http.staticfiles.Location
+import io.javalin.rendering.template.JavalinJte
 import io.javalin.security.RouteRole
 import org.eclipse.jetty.http.HttpCookie
+import org.eclipse.jetty.http.HttpHeader
 import org.eclipse.jetty.server.session.DatabaseAdaptor
 import org.eclipse.jetty.server.session.DefaultSessionCache
 import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
@@ -18,12 +20,15 @@ import org.matamercer.domain.models.UsersDto
 import org.matamercer.domain.services.ArticleService
 import org.matamercer.domain.services.FileService
 import org.matamercer.domain.services.UserService
+import org.matamercer.domain.services.storage.FileSystemStorageService
+import org.matamercer.domain.services.storage.StorageService
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
 import org.matamercer.web.LoginRequestForm
 import org.matamercer.web.PageViewModel
 import org.matamercer.web.RegisterUserForm
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.util.StringUtils
 import java.util.*
 
 fun main(args: Array<String>){
@@ -43,10 +48,34 @@ fun setupApp(): Javalin {
 
     val articleDao = ArticleDaoSql(jdbcTemplate)
     val articleService = ArticleService(articleDao)
-    val fileDao = FileDaoSql()
-    val fileService = FileService(fileDao)
+    val fileDao = FileDaoSql(jdbcTemplate)
+    val storageService = FileSystemStorageService()
+    val fileService = FileService(fileDao, storageService)
 
-    app.before { handler ->
+    app.beforeMatched{ctx ->
+        val routeRoles = ctx.routeRoles()
+
+        if (routeRoles.isEmpty()) {
+//            handler.handle(ctx);
+            return@beforeMatched
+        }
+
+        val userRole = getCurrentUserRole(ctx)
+        if (routeRoles.first() == UserRole.UNAUTHENTICATED_USER && userRole != UserRole.UNAUTHENTICATED_USER){
+            flashMsg(ctx, "You are already logged in.")
+            ctx.status(401).redirect("/welcome")
+        }
+
+        if (authorizeCheck(userRole, routeRoles)) {
+//            handler.handle(ctx)
+            return@beforeMatched
+        }else if(userRole == UserRole.UNAUTHENTICATED_USER){
+            flashMsg(ctx, "You must log in to view this page")
+            ctx.status(401).redirect("/login")
+        }else{
+            flashMsg(ctx, "You are not authorized to view this page.")
+            ctx.status(401).redirect("/welcome")
+        }
 
     }
 
@@ -222,26 +251,32 @@ fun setupApp(): Javalin {
 
     app.post("/files/upload", {ctx ->
         val files = ctx.uploadedFiles()
-        val fileGroupIdStr = ctx.formParam("fileGroupId")
-        var fileGroupId:Long? = null
 
         if (files.isEmpty()){
             throw BadRequestResponse("No files provided.")
         }
-        if (!fileGroupIdStr.isNullOrBlank()){
-            try {
-                fileGroupId = fileGroupIdStr.toLong()
-            }catch (e: NumberFormatException){
-               throw BadRequestResponse("Invalid file group id provided.")
-            }
-        }
+
         val currentUser = getCurrentUser(ctx) ?: throw UnauthorizedResponse("You must be logged in.")
 
-        files.map { file ->
-            fileService.createFile(file, fileGroupId, currentUser )
-        }
-
+        val createdFileIds = files.map { fileService.createFile(it, currentUser) }
+        ctx.status(201).json(createdFileIds)
     }, UserRole.ADMIN)
+
+    app.get("/files/serve/{id}/{filename}") { ctx ->
+        val fileId = ctx.pathParam("id").toLong()
+        val fileName = ctx.pathParam("filename")
+        val extension = StringUtils.getFilenameExtension(fileName)
+        if (extension.isNullOrBlank()){
+            throw BadRequestResponse("Filename has no extension. (.png or .jpeg)")
+        }
+        val contentType = ContentType.getContentTypeByExtension(extension)
+            ?: throw BadRequestResponse("Unable to get content type from file extension")
+
+        val file = fileService.getFile(fileId, fileName)
+        ctx.result(file.inputStream()).contentType(contentType).header("Content-Disposition",
+            "inline; filename=\"$fileName\""
+        )
+    }
 
     return app
 }
@@ -298,45 +333,10 @@ fun authorizeCheck(currentUserRole: UserRole, routeRoles: Set<RouteRole>): Boole
 
 fun createJavalinApp(): Javalin {
     val app = Javalin.create { config ->
-        config.accessManager { handler, ctx, routeRoles ->
-            if (routeRoles.isEmpty()) {
-                handler.handle(ctx);
-                return@accessManager
-            }
-            
-            val userRole = getCurrentUserRole(ctx)
-            if (routeRoles.first() == UserRole.UNAUTHENTICATED_USER && userRole != UserRole.UNAUTHENTICATED_USER){
-                flashMsg(ctx, "You are already logged in.")
-                ctx.status(401).redirect("/welcome")
-            }
-//            if (routeRoles.isEmpty() || authorizeCheck(userRole, routeRoles)){
-//                handler.handle(ctx)
-//            }else{
-//                ctx.status(401).result("Unauthorized")
-//
-//            }
-
-            if (authorizeCheck(userRole, routeRoles)) {
-                handler.handle(ctx)
-            }else if(userRole == UserRole.UNAUTHENTICATED_USER){
-                flashMsg(ctx, "You must log in to view this page")
-                ctx.status(401).redirect("/login")
-            }else{
-                flashMsg(ctx, "You are not authorized to view this page.")
-                ctx.status(401).redirect("/welcome")
-            }
-
-//            if (userRole == UserRole.UNAUTHENTICATED_USER) {
-//                flashMsg(ctx, "You must be logged in to view this page")
-//                ctx.redirect("/welcome", HttpStatus.UNAUTHORIZED)
-
-//                ctx.status(401).result("Unauthorized")
-//            }
-
-        }
-
+        val jte = JavalinJte()
+        config.fileRenderer(jte)
         config.staticFiles.add("src/main/resources", Location.EXTERNAL)
-        config.jetty.sessionHandler { sqlSessionHandler("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1:5432/wikiapi?user=postgres&password=password") }
+        config.jetty.modifyServletContextHandler { it.sessionHandler = sqlSessionHandler("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1:5432/wikiapi?user=postgres&password=password") }
     }
     return app
 }
