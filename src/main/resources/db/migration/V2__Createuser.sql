@@ -63,8 +63,8 @@ CREATE TABLE articles
     created_at TIMESTAMP with time zone NOT NULL,
     updated_at TIMESTAMP with time zone NOT NULL,
     author_id BIGINT NOT NULL,
-    parent_article_id BIGINT NOT NULL,
-    child_article_id BIGINT NOT NULL,
+    parent_article_id BIGINT,
+    child_article_id BIGINT,
     timeline_id BIGINT,
 
     character_data_id BIGINT,

@@ -1,8 +1,8 @@
 package org.matamercer.domain.services.storage
 
 import io.javalin.http.UploadedFile
-import org.springframework.util.FileSystemUtils
-import org.springframework.util.StringUtils
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import java.io.File
 import java.io.IOException
 import java.net.MalformedURLException
@@ -14,7 +14,7 @@ import java.nio.file.StandardCopyOption
 class FileSystemStorageService() : StorageService {
     private val rootLocation: Path = Paths.get("storage-service-uploads")
     override fun store(fileDestPath: Path, uploadedFile: UploadedFile) {
-        val filename = StringUtils.cleanPath(uploadedFile.filename())
+        val filename = FilenameUtils.normalize(uploadedFile.filename())
         try {
             if (uploadedFile.size() == 0L) {
                 throw StorageException("Failed to store empty file $filename")
@@ -57,14 +57,14 @@ class FileSystemStorageService() : StorageService {
 
     override fun delete(filePath: Path) {
         try {
-            FileSystemUtils.deleteRecursively(rootLocation.resolve(filePath).toAbsolutePath().parent)
+            FileUtils.delete(rootLocation.resolve(filePath).toAbsolutePath().parent.toFile())
         } catch (e: IOException) {
             throw StorageFileNotFoundException("Could not read file: " + filePath.fileName, e)
         }
     }
 
     override fun deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile())
+        FileUtils.deleteDirectory(rootLocation.toFile())
     }
 
     override fun init() {

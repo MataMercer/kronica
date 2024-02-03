@@ -4,29 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="wip file service">
-      <change afterPath="$PROJECT_DIR$/storage-service-uploads/1/maxresdefault.jpg" afterDir="false" />
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="working file uploads and upgraded to javalin 6">
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/Jtefragment_file_managerGenerated$Companion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/Jtefragment_file_managerGenerated.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/Jtefragment_file_managerGenerated.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion$render$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/jte/fragment_file_manager.kte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/SqlUtils.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion$render$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion$render$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/jte/file-manager.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/filemanager.kte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/jte/home.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/home.kte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/jte/layout.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/layout.kte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/UserDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/UserDaoSql.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" afterDir="false" />
@@ -43,11 +48,11 @@
         <option value="Dockerfile" />
         <option value="Kotlin Data Class" />
         <option value="Kotlin Enum" />
-        <option value="Kotlin File" />
         <option value="HTML File" />
         <option value="CSS File" />
         <option value="Kotlin Interface" />
         <option value="Kotlin Class" />
+        <option value="Kotlin File" />
       </list>
     </option>
   </component>
@@ -275,7 +280,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706343262584</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="working file uploads and upgraded to javalin 6">
+      <option name="closed" value="true" />
+      <created>1706608263259</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1706608263259</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -286,7 +299,8 @@
     <MESSAGE value="finalized article structure" />
     <MESSAGE value="sql actually compiles now + added class structure for articles" />
     <MESSAGE value="wip file service" />
-    <option name="LAST_COMMIT_MESSAGE" value="wip file service" />
+    <MESSAGE value="working file uploads and upgraded to javalin 6" />
+    <option name="LAST_COMMIT_MESSAGE" value="working file uploads and upgraded to javalin 6" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

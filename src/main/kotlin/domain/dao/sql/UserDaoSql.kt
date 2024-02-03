@@ -2,17 +2,15 @@ package org.matamercer.domain.dao.sql
 
 import org.matamercer.domain.dao.UserDao
 import org.matamercer.domain.models.User
-import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.RowMapper
-import org.springframework.jdbc.support.GeneratedKeyHolder
+import java.sql.Connection
 import java.sql.Timestamp
 import java.time.LocalDateTime
+import javax.sql.DataSource
 
 
-class UserDaoSql(private val jdbcTemplate: JdbcTemplate) : UserDao {
+class UserDaoSql(private val conn: Connection) : UserDao {
 
-    private val userMapper = RowMapper<User> { rs, _ ->
+    private val mapper = RowMapper<User> { rs  ->
         User(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -24,33 +22,32 @@ class UserDaoSql(private val jdbcTemplate: JdbcTemplate) : UserDao {
     }
 
     override fun findAll(): List<User> {
-        return jdbcTemplate.query("SELECT * FROM users", userMapper)
+        return mapper.queryForObjectList("SELECT * FROM users", conn){}
     }
 
     override fun findByEmail(email: String): User? {
-        return try {
-            jdbcTemplate.queryForObject<User>("""
+        return mapper.queryForObject("""
                 SELECT * 
                 FROM users 
                 WHERE users.email = ?
-                """.trimIndent(), userMapper, email)
-        }catch (e: EmptyResultDataAccessException){
-            null
+                """.trimIndent(), conn){
+            it.setString(1, email)
         }
+
     }
 
     override fun findById(id: Long): User? {
-        return try {
-            jdbcTemplate.queryForObject<User>("SELECT * FROM users WHERE users.id = ?", userMapper, id)
-        }catch (e: EmptyResultDataAccessException){
-           null
+        return mapper.queryForObject("""
+            SELECT * 
+            FROM users 
+            WHERE users.id = ?
+            """.trimIndent(), conn){
+            it.setLong(1, id)
         }
     }
 
     override fun create(user: User): Long? {
-        val keyHolder = GeneratedKeyHolder()
-        jdbcTemplate.update({
-            val sql = """
+        return mapper.update("""
                 INSERT INTO users 
                     (name,
                     email,
@@ -58,16 +55,13 @@ class UserDaoSql(private val jdbcTemplate: JdbcTemplate) : UserDao {
                     role,
                     created_at) 
                 VALUES (?, ?, ?, ?, ?)
-                """.trimIndent()
-            it.prepareStatement(sql, arrayOf("id")).apply {
-                setString(1, user.name)
-                setString(2, user.email)
-                setString(3, user.hashedPassword)
-                setString(4, user.role.name)
-                setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()))
-            }
-        }, keyHolder)
-        return keyHolder.key?.toLong()
+                """.trimIndent(), conn){
+            it.setString(1, user.name)
+            it.setString(2, user.email)
+            it.setString(3, user.hashedPassword)
+            it.setString(4, user.role.name)
+            it.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()))
+        }
     }
 
     override fun update(id: Long): User? {

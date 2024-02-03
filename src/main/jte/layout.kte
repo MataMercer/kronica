@@ -8,7 +8,6 @@
     <meta name="description" content="${page.description}">
     <title>${page.title}</title>
     <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
-
 </head>
 <body>
 !{val currentUser = page.getCurrentUser()}

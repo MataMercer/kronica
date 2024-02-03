@@ -14,7 +14,7 @@ class FileService(
     private val storageService: StorageService
     ) {
 
-    fun createFile(uploadedFile: UploadedFile, user: User): Long? {
+    fun createFile(uploadedFile: UploadedFile, articleId: Long?, user: User): Long? {
         val id = fileDao.create(
             FileModel(
                 name = uploadedFile.filename(),

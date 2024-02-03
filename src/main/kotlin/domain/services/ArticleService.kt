@@ -21,6 +21,9 @@ class ArticleService(private val articleDao: ArticleDao){
     }
 
     fun getByAuthorId(id: Long?): List<Article>{
+        if (id == null){
+            throw BadRequestResponse()
+        }
        return articleDao.findByAuthorId(id)
     }
 
@@ -39,6 +42,9 @@ class ArticleService(private val articleDao: ArticleDao){
     }
 
     fun deleteById(id: Long?){
+        if (id == null){
+            throw BadRequestResponse()
+        }
         articleDao.deleteById(id)
     }
 

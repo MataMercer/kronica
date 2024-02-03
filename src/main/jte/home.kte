@@ -10,12 +10,16 @@ content = @`
             Title
         </label>
         <input id="title" name="title" type="text"/>
-        <label for="body">
+        <label for="editor">
             Body
         </label>
-        <textarea id="body" name="body" rows="20"></textarea>
+<%--        <textarea id="editor" name="body" rows="20"></textarea>--%>
+        <input id="editor" name="body" rows="20"/>
 
         <button class="button">Submit</button>
     </form>
+    <div>
+        <button hx-get="/files/upload/fragment" hx-swap="outerHTML">Add Images</button>
+    </div>
 `,
 )

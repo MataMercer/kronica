@@ -5,8 +5,8 @@ import io.javalin.http.*
 import io.javalin.http.staticfiles.Location
 import io.javalin.rendering.template.JavalinJte
 import io.javalin.security.RouteRole
+import org.apache.commons.io.FilenameUtils
 import org.eclipse.jetty.http.HttpCookie
-import org.eclipse.jetty.http.HttpHeader
 import org.eclipse.jetty.server.session.DatabaseAdaptor
 import org.eclipse.jetty.server.session.DefaultSessionCache
 import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
@@ -21,14 +21,11 @@ import org.matamercer.domain.services.ArticleService
 import org.matamercer.domain.services.FileService
 import org.matamercer.domain.services.UserService
 import org.matamercer.domain.services.storage.FileSystemStorageService
-import org.matamercer.domain.services.storage.StorageService
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
 import org.matamercer.web.LoginRequestForm
 import org.matamercer.web.PageViewModel
 import org.matamercer.web.RegisterUserForm
-import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.util.StringUtils
 import java.util.*
 
 fun main(args: Array<String>){
@@ -39,16 +36,16 @@ fun setupApp(): Javalin {
 
     //wire up the app
     val dataSource = initDataSource()
+
     val app = createJavalinApp()
-    val jdbcTemplate = JdbcTemplate(dataSource)
-    val userDao = UserDaoSql(jdbcTemplate)
+    val userDao = UserDaoSql(dataSource.connection)
     val userService = UserService(userDao)
     val seeder = Seeder(userService)
     seeder.initRootUser()
 
-    val articleDao = ArticleDaoSql(jdbcTemplate)
+    val articleDao = ArticleDaoSql(dataSource.connection)
     val articleService = ArticleService(articleDao)
-    val fileDao = FileDaoSql(jdbcTemplate)
+    val fileDao = FileDaoSql(dataSource.connection)
     val storageService = FileSystemStorageService()
     val fileService = FileService(fileDao, storageService)
 
@@ -225,7 +222,6 @@ fun setupApp(): Javalin {
         }
         else{
             ctx.status(401).result("Unauthorized")
-
         }
     }
 
@@ -246,36 +242,40 @@ fun setupApp(): Javalin {
             title = "File Manager",
             description = "Manage your uploaded files.",
             flash = getFlashedMessages(ctx).toMutableList())
-        ctx.render("file-manager.kte", mapOf("page" to page))
+        ctx.render("filemanager.kte", mapOf("page" to page))
     }, UserRole.ADMIN)
 
     app.post("/files/upload", {ctx ->
         val files = ctx.uploadedFiles()
-
         if (files.isEmpty()){
             throw BadRequestResponse("No files provided.")
         }
 
-        val currentUser = getCurrentUser(ctx) ?: throw UnauthorizedResponse("You must be logged in.")
+        val articleIdStr = ctx.formParam("articleId")
+        val articleId = articleIdStr?.toLong()
 
-        val createdFileIds = files.map { fileService.createFile(it, currentUser) }
+        val currentUser = getCurrentUser(ctx) ?: throw UnauthorizedResponse("You must be logged in.")
+        val createdFileIds = files.map { fileService.createFile(it, articleId, currentUser) }
         ctx.status(201).json(createdFileIds)
     }, UserRole.ADMIN)
 
     app.get("/files/serve/{id}/{filename}") { ctx ->
         val fileId = ctx.pathParam("id").toLong()
         val fileName = ctx.pathParam("filename")
-        val extension = StringUtils.getFilenameExtension(fileName)
+        val extension = FilenameUtils.getExtension(fileName)
         if (extension.isNullOrBlank()){
             throw BadRequestResponse("Filename has no extension. (.png or .jpeg)")
         }
         val contentType = ContentType.getContentTypeByExtension(extension)
             ?: throw BadRequestResponse("Unable to get content type from file extension")
-
         val file = fileService.getFile(fileId, fileName)
         ctx.result(file.inputStream()).contentType(contentType).header("Content-Disposition",
             "inline; filename=\"$fileName\""
         )
+    }
+
+    app.get("/files/upload/fragment") {ctx ->
+        ctx.render("fragment_file_manager.kte")
     }
 
     return app

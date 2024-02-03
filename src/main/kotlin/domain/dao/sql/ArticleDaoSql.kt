@@ -3,16 +3,16 @@ package org.matamercer.domain.dao.sql
 import org.matamercer.domain.dao.ArticleDao
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.User
-import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.RowMapper
-import org.springframework.jdbc.core.queryForObject
-import org.springframework.jdbc.support.GeneratedKeyHolder
+import java.sql.Connection
 import java.sql.Timestamp
 import java.time.LocalDateTime
+import javax.sql.DataSource
 
-class ArticleDaoSql(private val jdbcTemplate: JdbcTemplate):ArticleDao {
-    private val articleMapper = RowMapper<Article> {rs, _ ->
+class ArticleDaoSql(private val conn: Connection,
+):ArticleDao {
+
+
+    private val mapper = RowMapper<Article> { rs ->
         Article(
             id = rs.getLong("id"),
             title = rs.getString("title"),
@@ -26,19 +26,19 @@ class ArticleDaoSql(private val jdbcTemplate: JdbcTemplate):ArticleDao {
         )
     }
     override fun findAll(): List<Article> {
-        return jdbcTemplate.query("""
-            SELECT 
-                articles.*, users.id AS authors_id, 
-                users.name AS authors_name, 
+        val sql = """
+            SELECT
+                articles.*, users.id AS authors_id,
+                users.name AS authors_name,
                 users.role AS authors_role
             FROM articles
             INNER JOIN users ON articles.author_id=users.id
-            """.trimIndent(), articleMapper)
+            """.trimIndent()
+        return mapper.queryForObjectList(sql, conn) {}
     }
 
-    override fun findById(id: Long?): Article? {
-        return try {
-            jdbcTemplate.queryForObject("""
+    override fun findById(id: Long): Article? {
+        val sql = """
                SELECT 
                    articles.*, users.id AS authors_id,
                    users.name AS authors_name,
@@ -46,14 +46,19 @@ class ArticleDaoSql(private val jdbcTemplate: JdbcTemplate):ArticleDao {
                FROM articles
                INNER JOIN users ON articles.author_id=users.id
                WHERE articles.id = ?
-               """.trimIndent(), articleMapper, id)
-        }catch (e: EmptyResultDataAccessException){
-            null
+               """.trimIndent()
+        return mapper.queryForObject(sql, conn){
+            it.setLong(1, id)
         }
+//        return try {
+//            jdbcTemplate.queryForObject(, articleMapper, id)
+//        }catch (e: EmptyResultDataAccessException){
+//            null
+//        }
     }
 
-    override fun findByAuthorId(id: Long?): List<Article>{
-        return jdbcTemplate.query("""
+    override fun findByAuthorId(id: Long): List<Article>{
+        val sql = """
             SELECT 
                 articles.*, users.id AS authors_id, 
                 users.name AS authors_name, 
@@ -61,42 +66,43 @@ class ArticleDaoSql(private val jdbcTemplate: JdbcTemplate):ArticleDao {
             FROM articles
             INNER JOIN users ON articles.author_id=users.id 
             WHERE users.id = ? 
-          """.trimIndent(), articleMapper, id)
+          """.trimIndent()
+        return mapper.queryForObjectList(sql, conn,){
+            it.setLong(1, id)
+        }
     }
 
     override fun create(article: Article): Long? {
-        val keyHolder = GeneratedKeyHolder()
-
-        jdbcTemplate.update({
-            val sql = """
+        val sql = """
                 INSERT INTO articles 
                     (title,
                     body,
                     created_at,
                     updated_at,
                     author_id) 
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?)
                 """.trimIndent()
-            it.prepareStatement(sql, arrayOf("id")).apply {
-                setString(1, article.title)
-                setString(2, article.body)
-                setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()))
-                setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()))
-                article.author.id?.let { it1 -> setLong(5, it1) }
-            }
-        }, keyHolder)
 
-        return keyHolder.key?.toLong()
+        return mapper.update(sql, conn){
+            it.setString(1, article.title)
+            it.setString(2, article.body)
+            it.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()))
+            it.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()))
+            article.author.id?.let { it1 -> it.setLong(5, it1) }
+        }
     }
 
     override fun update(article: Article): Long? {
         TODO("Not yet implemented")
     }
 
-    override fun deleteById(id: Long?) {
-       jdbcTemplate.update("""
+    override fun deleteById(id: Long) {
+        val sql = """
           DELETE FROM articles
           WHERE articles.id = ?
-       """.trimIndent(), id)
+       """.trimIndent()
+        mapper.update(sql, conn){
+            it.setLong(1, id)
+        }
     }
 }
