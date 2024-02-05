@@ -36,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/main/jte/node_modules/
+/src/main/jte/public/build/
