@@ -4,22 +4,30 @@
 page = page ,
 content = @`
     <p class="">Blah blah blah </p>
-    <form class="form" action="/createarticle" method="post">
+    <form class="form" id="createArticleForm" action="/createarticle" method="post">
         <p>Let's write something!</p>
         <label for="title">
             Title
         </label>
         <input id="title" name="title" type="text"/>
-        <label for="editor">
-            Body
-        </label>
-<%--        <textarea id="editor" name="body" rows="20"></textarea>--%>
-        <input id="editor" name="body" rows="20"/>
+<%--        <label for="body">--%>
+<%--            Body--%>
+<%--        </label>--%>
+<%--        <textarea id="body" name="body" rows="20">--%>
+<%--        </textarea>--%>
 
-        <button class="button">Submit</button>
+        <div id="editor"></div>
+        <label for="hiddenBody" hidden="hidden"></label>
+        <textarea id="hiddenBody" name="body" hidden="hidden"></textarea>
+        <button class="button" onclick="">Submit</button>
     </form>
     <div>
         <button hx-get="/files/upload/fragment" hx-swap="outerHTML">Add Images</button>
     </div>
+
+
+    <script type="module" src="public/build/bundle.js">
+
+    </script>
 `,
 )

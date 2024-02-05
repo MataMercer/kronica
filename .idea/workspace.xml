@@ -4,38 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="working file uploads and upgraded to javalin 6">
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/Jtefragment_file_managerGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/Jtefragment_file_managerGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/Jtefragment_file_managerGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion$render$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/fragment_file_manager.kte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/SqlUtils.kt" afterDir="false" />
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="added node and build git ignores">
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion$render$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion$render$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/jte/js/Embed.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/jte/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/jte/public/build/bundle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/jte/public/build/bundle.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/jte/rollup.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Markdown.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion$render$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/jte/file-manager.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/filemanager.kte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/jte/article.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/article.kte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/jte/home.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/home.kte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/jte/layout.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/layout.kte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/jte/user.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/user.kte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/UserDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/UserDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/stylesheets/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/css/main.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,8 +54,9 @@
         <option value="HTML File" />
         <option value="CSS File" />
         <option value="Kotlin Interface" />
-        <option value="Kotlin Class" />
         <option value="Kotlin File" />
+        <option value="JavaScript File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -93,7 +97,7 @@
     &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.UserControllerTest.GET to fetch users returns list of users.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.UserControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;Kotlin.MainKt.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Debug&quot;,
     &quot;Maven.WikiApi [flyway:baseline].executor&quot;: &quot;Run&quot;,
     &quot;Maven.WikiApi [flyway:clean].executor&quot;: &quot;Run&quot;,
     &quot;Maven.WikiApi [flyway:migrate].executor&quot;: &quot;Run&quot;,
@@ -101,7 +105,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Mercer/dev/WikiApp&quot;,
@@ -111,10 +115,13 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -127,6 +134,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Mercer\dev\WikiApp\src\main\jte" />
       <recent name="C:\Users\Mercer\dev\WikiApp\static" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Mercer\dev\WikiApp\src\main\jte" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="domain.dao.sql" />
@@ -141,7 +151,7 @@
       <command value="mvn flyway:migrate" />
     </option>
   </component>
-  <component name="RunManager" selected="Kotlin.MainKt">
+  <component name="RunManager" selected="JUnit.UserControllerTest">
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml">
         <settings />
@@ -192,12 +202,24 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="sourceFilePath" value="docker-compose.yml" />
-        </settings>
-      </deployment>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/src/main/jte/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/src/main/jte/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -213,6 +235,7 @@
       <set>
         <option value="jdk-11.0.21-corretto-11.0.21-249ae16d76d6-d0fa0211" />
         <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-23eed401" />
+        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
       </set>
     </attachedChunks>
   </component>
@@ -255,6 +278,7 @@
       <workItem from="1705817945590" duration="599000" />
       <workItem from="1705895262275" duration="3924000" />
       <workItem from="1705914242486" duration="16000" />
+      <workItem from="1707109796445" duration="17510000" />
     </task>
     <task id="LOCAL-00001" summary="finalized article structure">
       <option name="closed" value="true" />
@@ -288,7 +312,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706608263259</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="got rid of jdbctemplates and any spring dependencies">
+      <option name="closed" value="true" />
+      <created>1706941663069</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1706941663069</updated>
+    </task>
+    <task id="LOCAL-00006" summary="added node and build git ignores">
+      <option name="closed" value="true" />
+      <created>1707117092837</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1707117092837</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -300,7 +340,9 @@
     <MESSAGE value="sql actually compiles now + added class structure for articles" />
     <MESSAGE value="wip file service" />
     <MESSAGE value="working file uploads and upgraded to javalin 6" />
-    <option name="LAST_COMMIT_MESSAGE" value="working file uploads and upgraded to javalin 6" />
+    <MESSAGE value="got rid of jdbctemplates and any spring dependencies" />
+    <MESSAGE value="added node and build git ignores" />
+    <option name="LAST_COMMIT_MESSAGE" value="added node and build git ignores" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

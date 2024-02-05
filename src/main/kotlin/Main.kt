@@ -27,6 +27,8 @@ import org.matamercer.web.LoginRequestForm
 import org.matamercer.web.PageViewModel
 import org.matamercer.web.RegisterUserForm
 import java.util.*
+import org.commonmark.node.*;
+
 
 fun main(args: Array<String>){
     setupApp()
@@ -48,6 +50,8 @@ fun setupApp(): Javalin {
     val fileDao = FileDaoSql(dataSource.connection)
     val storageService = FileSystemStorageService()
     val fileService = FileService(fileDao, storageService)
+
+    val markdown = Markdown()
 
     app.beforeMatched{ctx ->
         val routeRoles = ctx.routeRoles()
@@ -201,7 +205,7 @@ fun setupApp(): Javalin {
             title = foundArticle.title,
             description = "Nothing interesting",
             flash = getFlashedMessages(ctx).toMutableList())
-        ctx.render("article.kte", mapOf("page" to page, "article" to foundArticle))
+        ctx.render("article.kte", mapOf("page" to page, "article" to foundArticle, "markdown" to markdown ))
     }
 
     app.get("/users/{id}") {ctx ->
@@ -335,7 +339,7 @@ fun createJavalinApp(): Javalin {
     val app = Javalin.create { config ->
         val jte = JavalinJte()
         config.fileRenderer(jte)
-        config.staticFiles.add("src/main/resources", Location.EXTERNAL)
+        config.staticFiles.add("src/main/jte", Location.EXTERNAL)
         config.jetty.modifyServletContextHandler { it.sessionHandler = sqlSessionHandler("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1:5432/wikiapi?user=postgres&password=password") }
     }
     return app
