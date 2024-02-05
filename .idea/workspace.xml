@@ -4,42 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="added node and build git ignores">
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion$render$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtearticleGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion$render$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated$Companion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteuserGenerated.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/js/Embed.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/public/build/bundle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/public/build/bundle.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/jte/rollup.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Markdown.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion$render$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated$Companion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtehomeGenerated.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated$Companion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" beforeDir="false" afterPath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JtelayoutGenerated.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion$render$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated$Companion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jte-classes/gg/jte/generated/ondemand/JteloginGenerated.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/jte/article.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/article.kte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/jte/home.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/home.kte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/jte/layout.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/layout.kte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/jte/user.kte" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/user.kte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/stylesheets/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jte/css/main.css" afterDir="false" />
-    </list>
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="git ignore generated kte folder" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -152,12 +117,6 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.UserControllerTest">
-    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml">
-        <settings />
-      </deployment>
-      <method v="2" />
-    </configuration>
     <configuration name="UserControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
@@ -202,6 +161,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/src/main/jte/package.json" />
       <command value="run" />
@@ -235,7 +200,6 @@
       <set>
         <option value="jdk-11.0.21-corretto-11.0.21-249ae16d76d6-d0fa0211" />
         <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-23eed401" />
-        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
       </set>
     </attachedChunks>
   </component>
@@ -328,7 +292,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707117092837</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="git ignore generated kte folder">
+      <option name="closed" value="true" />
+      <created>1707131102908</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1707131102908</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -342,7 +314,8 @@
     <MESSAGE value="working file uploads and upgraded to javalin 6" />
     <MESSAGE value="got rid of jdbctemplates and any spring dependencies" />
     <MESSAGE value="added node and build git ignores" />
-    <option name="LAST_COMMIT_MESSAGE" value="added node and build git ignores" />
+    <MESSAGE value="git ignore generated kte folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="git ignore generated kte folder" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
