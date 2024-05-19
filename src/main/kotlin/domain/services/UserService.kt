@@ -4,6 +4,7 @@ import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
 import io.javalin.http.UnauthorizedResponse
 import org.matamercer.domain.dao.UserDao
+import org.matamercer.domain.models.CurrentUserDto
 import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UserDto
 import org.matamercer.security.UserRole
@@ -23,6 +24,7 @@ class UserService(val userDao: UserDao) {
             role = user.role
         )
     }
+
     fun getByEmail(email: String?): User {
         if (email.isNullOrBlank()) throw BadRequestResponse()
         val user = userDao.findByEmail(email)

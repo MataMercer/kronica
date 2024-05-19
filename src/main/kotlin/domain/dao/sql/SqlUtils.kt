@@ -1,9 +1,7 @@
 package org.matamercer.domain.dao.sql
 
-import java.sql.Connection
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.Statement
+import java.sql.*
+import java.time.LocalDateTime
 
 class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
     private fun getRowObject(resultSet: ResultSet): T?{
@@ -56,4 +54,11 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
     }
 
 }
+
+fun genTimestamp(): Timestamp {
+    return Timestamp.valueOf(LocalDateTime.now())
+}
+
+
+
 

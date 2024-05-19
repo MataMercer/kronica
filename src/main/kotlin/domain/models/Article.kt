@@ -9,9 +9,9 @@ data class Article(
     val author: User,
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
-
     val timelineData: TimelineData? = null,
     val characterData: CharacterData? = null,
+    val attachments: List<FileModel> = listOf()
 )
 
 data class TimelineData(
@@ -25,6 +25,6 @@ data class CharacterData(
    val age: Int? = null,
    val birthday: Date? = null,
    val firstSeen: String,
-    val status: String,
-    val occupation: String,
+   val status: String,
+   val occupation: String,
 )

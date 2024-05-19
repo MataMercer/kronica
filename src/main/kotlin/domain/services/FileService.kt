@@ -1,5 +1,6 @@
 package org.matamercer.domain.services
 
+import io.javalin.http.NotFoundResponse
 import io.javalin.http.UploadedFile
 import org.matamercer.domain.dao.FileDao
 import org.matamercer.domain.models.FileModel
@@ -19,14 +20,22 @@ class FileService(
             FileModel(
                 name = uploadedFile.filename(),
                 author = user,
+                owningArticleId = articleId,
             )
         )
        storageService.store(Paths.get(id.toString()), uploadedFile)
         return id
     }
-    fun getFile(id: Long, fileName: String): File {
+    fun getStorageFile(id: Long, fileName: String): File {
         return storageService.loadAsFile(getPath(id, fileName))
     }
+
+    //not needed
+//    fun attachFileToArticle(fileId: Long, articleId: Long) {
+//        val foundFile = fileDao.findById(fileId) ?: throw NotFoundResponse()
+//        foundFile.owningArticleId = articleId
+//        fileDao.update(foundFile)
+//    }
 
     private fun getPath(id:Long, fileName: String): Path {
         return Paths.get("$id/$fileName")

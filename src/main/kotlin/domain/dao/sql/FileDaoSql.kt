@@ -21,8 +21,20 @@ class FileDaoSql(private val conn: Connection): FileDao{
             )
         )
     }
-    override fun findById() {
-        TODO("Not yet implemented")
+    override fun findById(id: Long): FileModel? {
+        val sql = """
+            SELECT
+                files.*,
+                users.id AS authors_id,
+                users.name AS authors_name,
+                users.role AS authors_role,
+            FROM files
+            INNER JOIN users ON files.author_id=users.id
+            WHERE files.id = ?
+        """.trimIndent()
+        return mapper.queryForObject(sql, conn){
+            it.setLong(1, id)
+        }
     }
 
     override fun create(fileModel: FileModel): Long? {
@@ -40,6 +52,24 @@ class FileDaoSql(private val conn: Connection): FileDao{
             it.setString(2, fileModel.name)
             it.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()))
             it.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()))
+        }
+    }
+
+    override fun update(fileModel: FileModel): Long? {
+        return mapper.update("""
+                UPDATE files
+                SET
+                    author_id = ?
+                    owning_article_id = ?
+                    name = ?
+                    updated_at = ?              
+                WHERE files.id = ?
+            """.trimIndent(), conn){
+            fileModel.author.id?.let { id -> it.setLong(1, id) }
+            fileModel.owningArticleId?.let { it1 -> it.setLong(2, it1) }
+            it.setString(3, fileModel.name)
+            it.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()))
+            fileModel.id?.let { id -> it.setLong(5, id) }
         }
     }
 

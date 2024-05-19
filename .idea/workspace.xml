@@ -4,7 +4,73 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="git ignore generated kte folder" />
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="git ignore generated kte folder">
+      <change afterPath="$PROJECT_DIR$/docs/openapi.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/.eslintrc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/AuthProtection.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/Footer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/LogoutButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/about/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/actions.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/articles/ArticleThumb.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/articles/FileUploader.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/fetch/PublicUsers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/fetch/auth.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/globals.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useCurrentUser.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/login/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/navbar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/settings/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/components.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/components/ui/card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/components/ui/dialog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/lib/utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/middleware.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/next.config.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/postcss.config.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/public/next.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/public/vercel.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/tailwind.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/test/polarbear.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/TransactionManager.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/IntegrationUtils.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceUnitTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/DataSource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/DataSource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/SqlUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/SqlUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/security/Crypto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/security/Crypto.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/ViewModels.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/ViewModels.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,10 +84,10 @@
         <option value="Kotlin Enum" />
         <option value="HTML File" />
         <option value="CSS File" />
-        <option value="Kotlin Interface" />
-        <option value="Kotlin File" />
         <option value="JavaScript File" />
+        <option value="Kotlin Interface" />
         <option value="Kotlin Class" />
+        <option value="Kotlin File" />
       </list>
     </option>
   </component>
@@ -44,6 +110,12 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="openjdk-19" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -55,46 +127,72 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserControllerTest.GET to fetch users returns list of users.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.UserControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;Kotlin.MainKt.executor&quot;: &quot;Debug&quot;,
-    &quot;Maven.WikiApi [flyway:baseline].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.WikiApi [flyway:clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.WikiApi [flyway:migrate].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.WikiApi [flyway:undo].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mercer/dev/WikiApp&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Docker.docker-compose.yml.test_db: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
+    "JUnit.ArticleControllerTest.when Create Article return 200 response.executor": "Run",
+    "JUnit.ArticleControllerTest.when Create Article returns ok.executor": "Debug",
+    "JUnit.ArticleControllerTest.when create article with empty form return bad response.executor": "Run",
+    "JUnit.ArticleServiceUnitTest.executor": "Coverage",
+    "JUnit.ArticleServiceUnitTest.whenCreateArticleReturnId.executor": "Run",
+    "JUnit.ArticleServiceUnitTest.whenCreateArticle_returnId.executor": "Run",
+    "JUnit.ArticleServiceUnitTest.whenDeleteByIdWithWrongAuthor_throwForbiddenResponse.executor": "Run",
+    "JUnit.ArticleServiceUnitTest.whenDeleteById_delete.executor": "Run",
+    "JUnit.ArticleServiceUnitTest.whenFindById_returnArticle.executor": "Run",
+    "JUnit.UserControllerTest.GET to fetch users returns list of users.executor": "Run",
+    "JUnit.UserControllerTest.Login returns 200.executor": "Run",
+    "JUnit.UserControllerTest.Login returns 300.executor": "Run",
+    "JUnit.UserControllerTest.Login with 200.executor": "Run",
+    "JUnit.UserControllerTest.Login with correct credentials returns ok.executor": "Run",
+    "JUnit.UserControllerTest.Login with wrong credentials returns unauthorized.executor": "Run",
+    "JUnit.UserControllerTest.Logout returns ok.executor": "Run",
+    "JUnit.UserControllerTest.When logged in getCurrentuser returns ok response.executor": "Run",
+    "JUnit.UserControllerTest.When logged out getCurrentuser returns bad response.executor": "Run",
+    "JUnit.UserControllerTest.currentuser returns ok response.executor": "Run",
+    "JUnit.UserControllerTest.executor": "Run",
+    "JUnit.UserControllerTest.find 1 user returns ok response.executor": "Run",
+    "JUnit.UserControllerTest.logout return ok and successfully unauths user.executor": "Run",
+    "JUnit.UserControllerTest.logout return ok and successfully.executor": "Run",
+    "JUnit.UserControllerTest.logout return ok.executor": "Run",
+    "JUnit.UserControllerTest.logout returns ok.executor": "Run",
+    "JUnit.UserControllerTest.testv2.executor": "Run",
+    "JUnit.kotlin in WikiApi.executor": "Coverage",
+    "Kotlin.MainKt.executor": "Run",
+    "Maven.WikiApi [flyway:baseline].executor": "Run",
+    "Maven.WikiApi [flyway:clean].executor": "Run",
+    "Maven.WikiApi [flyway:migrate].executor": "Run",
+    "Maven.WikiApi [flyway:undo].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Mercer/dev/WikiApp",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.build.executor": "Run",
+    "npm.dev.executor": "Run",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.runner",
+    "ts.external.directory.path": "C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Mercer\dev\WikiApp\src\main\jte" />
@@ -116,8 +214,8 @@
       <command value="mvn flyway:migrate" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.UserControllerTest">
-    <configuration name="UserControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.ArticleControllerTest.when Create Article returns ok">
+    <configuration name="ArticleControllerTest.when Create Article returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
         <pattern>
@@ -126,31 +224,73 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UserControllerTest.GET to fetch users returns list of users" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
-      <option name="METHOD_NAME" value="GET to fetch users returns list of users" />
+      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
+      <option name="METHOD_NAME" value="when Create Article returns ok" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.matamercer.MainKt" />
+    <configuration name="ArticleControllerTest.when create article with empty form return bad response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
+      <option name="METHOD_NAME" value="when create article with empty form return bad response" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserControllerTest.Logout returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
+      <option name="METHOD_NAME" value="Logout returns ok" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserControllerTest.When logged in getCurrentuser returns ok response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
+      <option name="METHOD_NAME" value="When logged in getCurrentuser returns ok response" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserControllerTest.When logged out getCurrentuser returns bad response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
+      <option name="METHOD_NAME" value="When logged out getCurrentuser returns bad response" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -167,41 +307,22 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/src/main/jte/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/src/main/jte/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
+    <list>
+      <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
+      <item itemvalue="JUnit.UserControllerTest.When logged in getCurrentuser returns ok response" />
+      <item itemvalue="JUnit.UserControllerTest.When logged out getCurrentuser returns bad response" />
+      <item itemvalue="JUnit.ArticleControllerTest.when create article with empty form return bad response" />
+      <item itemvalue="JUnit.UserControllerTest.Logout returns ok" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.MainKt" />
-        <item itemvalue="JUnit.UserControllerTest.GET to fetch users returns list of users" />
-        <item itemvalue="JUnit.UserControllerTest" />
+        <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
+        <item itemvalue="JUnit.UserControllerTest.When logged in getCurrentuser returns ok response" />
+        <item itemvalue="JUnit.ArticleControllerTest.when create article with empty form return bad response" />
+        <item itemvalue="JUnit.UserControllerTest.Logout returns ok" />
+        <item itemvalue="JUnit.UserControllerTest.When logged out getCurrentuser returns bad response" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-11.0.21-corretto-11.0.21-249ae16d76d6-d0fa0211" />
-        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-23eed401" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -317,8 +438,63 @@
     <MESSAGE value="git ignore generated kte folder" />
     <option name="LAST_COMMIT_MESSAGE" value="git ignore generated kte folder" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt</url>
+          <line>87</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt</url>
+          <line>95</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
+          <line>94</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
+          <line>96</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
+          <line>83</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
+          <line>88</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt</url>
+          <line>71</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="okhttp3.internal.http.RealResponseBody" memberName="source" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/WikiApp$ArticleServiceUnitTest.ic" NAME="ArticleServiceUnitTest Coverage Results" MODIFIED="1715855993614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>unit.service.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/WikiApp$ArticleServiceUnitTest_whenFindById_returnArticle.ic" NAME="ArticleServiceUnitTest.whenFindById_returnArticle Coverage Results" MODIFIED="1715072695672" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>unit.service.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/WikiApp$kotlin_in_WikiApi.ic" NAME="kotlin in WikiApi Coverage Results" MODIFIED="1715856049865" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

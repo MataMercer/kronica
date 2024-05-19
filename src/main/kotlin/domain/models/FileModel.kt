@@ -8,4 +8,5 @@ class FileModel(
     val updatedAt: Date? = null,
     val name: String,
     val author: User,
+    var owningArticleId: Long? = null,
 )
