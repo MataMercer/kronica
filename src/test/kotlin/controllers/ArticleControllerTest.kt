@@ -77,14 +77,37 @@ class ArticleControllerTest {
             .addFormDataPart("title", fixtures.testArticle.title)
             .addFormDataPart("body", fixtures.testArticle.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .build()
 
         val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/articles/create")
+            .url("${getHostUrl(app)}/api/articles")
             .post(requestBody).build()
 
-//        val res = authClient.post("/api/articles/create", request)
         val res = authClient.okHttp.newCall(request).execute()
+        val body = res.body.toString()
+        assertThat(res.code == 200).isTrue()
+    }
+
+    @Test
+    fun `when Create Article without attachments returns ok`(){
+        val createArticleForm = CreateArticleForm(
+            title = fixtures.testArticle.title,
+            body = fixtures.testArticle.body
+        )
+
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("title", fixtures.testArticle.title)
+            .addFormDataPart("body", fixtures.testArticle.body)
+            .build()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles")
+            .post(requestBody).build()
+
+        val res = authClient.okHttp.newCall(request).execute()
+        val body = res.body.toString()
         assertThat(res.code == 200).isTrue()
     }
 
@@ -94,7 +117,7 @@ class ArticleControllerTest {
             title = null,
             body = null
         )
-        val res = authClient.post("/api/articles/create", createArticleForm)
+        val res = authClient.post("/api/articles", createArticleForm)
         assertThat(res.isSuccessful).isFalse()
     }
 

@@ -31,18 +31,17 @@ export default function CreateArticleButton() {
     const [showArticleForm, setShowArticleForm] = useState(true);
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
-        const response = await fetch(
-            "http://localhost:7070/api/articles/create",
-            {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    title: data.title,
-                    body: data.body,
-                }),
-            }
-        );
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("body", data.body);
+        const response = await fetch("http://localhost:7070/api/articles", {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify({
+                title: data.title,
+                body: data.body,
+            }),
+        });
 
         refreshArticles();
     };

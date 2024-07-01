@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Swagger Petstore - OpenAPI 3.0
+  title: Kronica - OpenAPI 3.0
   description: |-
     This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
     Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
@@ -23,9 +23,9 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-  - url: https://petstore3.swagger.io/api/v3
+  - url: https://localhost:7070/api
 tags:
-  - name: pet
+  - name: article
     description: Everything about your Pets
     externalDocs:
       description: Find out more
@@ -38,10 +38,10 @@ tags:
   - name: user
     description: Operations about user
 paths:
-  /pet:
+  /article:
     put:
       tags:
-        - pet
+        - article
       summary: Update an existing pet
       description: Update an existing pet by Id
       operationId: updatePet

@@ -5,71 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="git ignore generated kte folder">
-      <change afterPath="$PROJECT_DIR$/docs/openapi.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/.eslintrc.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/AuthProtection.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/Footer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/LogoutButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/about/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/actions.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/articles/ArticleThumb.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/articles/FileUploader.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/fetch/PublicUsers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/fetch/auth.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/globals.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useCurrentUser.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/login/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/navbar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/settings/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/components.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/components/ui/card.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/components/ui/dialog.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/lib/utils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/middleware.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/next.config.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/postcss.config.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/public/next.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/public/vercel.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/tailwind.config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/test/polarbear.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/TransactionManager.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/IntegrationUtils.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceUnitTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/error.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/DataSource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/DataSource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/designdoc.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/designdoc.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docs/openapi.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/auth.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useCurrentUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useCurrentUser.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/ArticleDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/FileDaoSql.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/SqlUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/sql/SqlUtils.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/security/Crypto.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/security/Crypto.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/ViewModels.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/ViewModels.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +84,8 @@
     "Docker.docker-compose.yml.test_db: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "JUnit.ArticleControllerTest.when Create Article return 200 response.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article returns ok.executor": "Debug",
+    "JUnit.ArticleControllerTest.when Create Article returns ok.executor": "Run",
+    "JUnit.ArticleControllerTest.when Create Article without attachments returns ok.executor": "Run",
     "JUnit.ArticleControllerTest.when create article with empty form return bad response.executor": "Run",
     "JUnit.ArticleServiceUnitTest.executor": "Coverage",
     "JUnit.ArticleServiceUnitTest.whenCreateArticleReturnId.executor": "Run",
@@ -160,7 +111,7 @@
     "JUnit.UserControllerTest.logout returns ok.executor": "Run",
     "JUnit.UserControllerTest.testv2.executor": "Run",
     "JUnit.kotlin in WikiApi.executor": "Coverage",
-    "Kotlin.MainKt.executor": "Run",
+    "Kotlin.MainKt.executor": "Debug",
     "Maven.WikiApi [flyway:baseline].executor": "Run",
     "Maven.WikiApi [flyway:clean].executor": "Run",
     "Maven.WikiApi [flyway:migrate].executor": "Run",
@@ -183,7 +134,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.runner",
+    "settings.editor.selected.configurable": "settings.sync",
     "ts.external.directory.path": "C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   },
@@ -214,7 +165,7 @@
       <command value="mvn flyway:migrate" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.ArticleControllerTest.when Create Article returns ok">
+  <component name="RunManager" selected="Kotlin.MainKt">
     <configuration name="ArticleControllerTest.when Create Article returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
@@ -226,6 +177,22 @@
       <option name="PACKAGE_NAME" value="controllers" />
       <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
       <option name="METHOD_NAME" value="when Create Article returns ok" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ArticleControllerTest.when Create Article without attachments returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
+      <option name="METHOD_NAME" value="when Create Article without attachments returns ok" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -247,22 +214,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserControllerTest.Logout returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
-      <option name="METHOD_NAME" value="Logout returns ok" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="UserControllerTest.When logged in getCurrentuser returns ok response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
@@ -279,18 +230,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserControllerTest.When logged out getCurrentuser returns bad response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.matamercer.MainKt" />
       <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
-      <option name="METHOD_NAME" value="When logged out getCurrentuser returns bad response" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -308,19 +250,19 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.ArticleControllerTest.when Create Article without attachments returns ok" />
       <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
       <item itemvalue="JUnit.UserControllerTest.When logged in getCurrentuser returns ok response" />
-      <item itemvalue="JUnit.UserControllerTest.When logged out getCurrentuser returns bad response" />
       <item itemvalue="JUnit.ArticleControllerTest.when create article with empty form return bad response" />
-      <item itemvalue="JUnit.UserControllerTest.Logout returns ok" />
+      <item itemvalue="Kotlin.MainKt" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Kotlin.MainKt" />
         <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
+        <item itemvalue="JUnit.ArticleControllerTest.when Create Article without attachments returns ok" />
         <item itemvalue="JUnit.UserControllerTest.When logged in getCurrentuser returns ok response" />
         <item itemvalue="JUnit.ArticleControllerTest.when create article with empty form return bad response" />
-        <item itemvalue="JUnit.UserControllerTest.Logout returns ok" />
-        <item itemvalue="JUnit.UserControllerTest.When logged out getCurrentuser returns bad response" />
       </list>
     </recent_temporary>
   </component>
@@ -442,39 +384,19 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt</url>
-          <line>87</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt</url>
           <line>95</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
-          <line>94</line>
-          <option name="timeStamp" value="27" />
+          <url>file://$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt</url>
+          <line>86</line>
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
-          <line>96</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
-          <line>83</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/Main.kt</url>
-          <line>88</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt</url>
-          <line>71</line>
-          <option name="timeStamp" value="33" />
+          <line>161</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

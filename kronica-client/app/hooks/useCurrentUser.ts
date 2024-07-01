@@ -7,10 +7,6 @@ export async function fetchCurrentUser() {
     credentials: "include",
     next: { tags: ['currentuser'] }
   });
-  if (!res.ok) {
-    const error = new Error("Failed to get currentUser");
-    throw error
-  }
 
   if (res.ok) {
     const data = res.json();

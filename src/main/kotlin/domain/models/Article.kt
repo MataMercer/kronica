@@ -14,6 +14,16 @@ data class Article(
     val attachments: List<FileModel> = listOf()
 )
 
+data class ArticleDto(
+    val id: Long? = null,
+    val title: String,
+    val body: String,
+    val author: UserDto,
+    val createdAt: Date? = null,
+    val updatedAt: Date? = null,
+    val attachments: List<FileModelDto> = listOf()
+)
+
 data class TimelineData(
    val name: String,
    val firstSeen: String,

@@ -60,14 +60,17 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val articleDao = ArticleDaoSql(dataSource.connection)
     val fileDao = FileDaoSql(dataSource.connection)
-    val storageService = FileSystemStorageService()
-    storageService.init()
-    val fileService = FileService(fileDao, storageService)
-    val articleService = ArticleService(articleDao, fileService)
 
+    val storageService = FileSystemStorageService()
     if (appMode == AppMode.TEST){
         storageService.deleteAll()
     }
+    storageService.init()
+
+    val fileService = FileService(fileDao, storageService)
+    val articleService = ArticleService(articleDao, fileService)
+
+
     app.beforeMatched { ctx ->
         val routeRoles = ctx.routeRoles()
 
@@ -132,7 +135,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         ctx.req().session.invalidate()
     }, UserRole.AUTHENTICATED_USER)
 
-    app.post("/api/register") { ctx ->
+    app.post("/api/auth/register") { ctx ->
         val registerUserForm = ctx.bodyValidator<RegisterUserForm>()
             .check({ !it.name.isNullOrBlank() }, "Username is empty")
             .check({ !it.email.isNullOrBlank() }, "Email is empty")
@@ -142,7 +145,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         loginUserToSession(ctx, user)
     }
 
-    app.post("/api/articles/create", { ctx ->
+    app.post("/api/articles", { ctx ->
 //        val createArticleForm = ctx.bodyValidator<CreateArticleForm>()
 //            .check({ !it.title.isNullOrBlank() }, "Title is empty")
 //            .check({ !it.body.isNullOrBlank() }, "Body is empty")
@@ -185,109 +188,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     app.error(404) { ctx ->
         ctx.result("Error 404: Not found")
     }
-//
-//    app.get("/",{ctx ->
-//        val page = PageViewModel(
-//            ctx = ctx,
-//            title = "Home",
-//            description = "Nothing interesting",
-//            flash = getFlashedMessages(ctx).toMutableList())
-//        ctx.render("home.kte", Collections.singletonMap("page", page))
-//    }, UserRole.AUTHENTICATED_USER)
-//
-//
-//    app.get("/welcome"){ctx ->
-//        val page = PageViewModel(
-//            ctx = ctx,
-//            title = "Welcome",
-//            description = "Nothing interesting",
-//            flash = getFlashedMessages(ctx).toMutableList())
-//        ctx.render("welcome.kte", Collections.singletonMap("page", page))
-//    }
-//
-//    app.get("/about"){ctx ->
-//        val page = PageViewModel(
-//            ctx = ctx,
-//            title = "About",
-//            description = "Nothing interesting")
-//        ctx.render("about.kte", Collections.singletonMap("page", page))
-//    }
-//
-//    app.get("/login", {ctx ->
-//        val page = PageViewModel(
-//            ctx = ctx,
-//            title = "Login",
-//            description = "Nothing interesting",
-//            flash = getFlashedMessages(ctx).toMutableList())
-//        ctx.render("login.kte", Collections.singletonMap("page", page))
-//    }, UserRole.UNAUTHENTICATED_USER)
-//
-//    app.post("/login", {ctx ->
-//        val loginRequestForm = LoginRequestForm(
-//            email = ctx.formParam("email"),
-//            password = ctx.formParam("password")
-//        )
-//        val user = userService.authenticateUser(loginRequestForm)
-//        loginUserToSession(ctx, user)
-//        flashMsg(ctx, "You are now logged in")
-//        ctx.redirect("/")
-//    }, UserRole.UNAUTHENTICATED_USER)
-//
-//    app.post("/logout", {ctx->
-//        ctx.req().session.invalidate()
-//    }, UserRole.AUTHENTICATED_USER)
-//
-//    app.post("/createarticle", {ctx ->
-//        val createArticleForm = CreateArticleForm(
-//            title = ctx.formParam("title"),
-//            body = ctx.formParam("body")
-//        )
-//        val currentUser = getCurrentUser(ctx) ?: throw BadRequestResponse()
-//        val id = articleService.create(createArticleForm, currentUser )
-//        ctx.redirect("/articles/${id}")
-//    }, UserRole.UNAUTHENTICATED_USER)
-//
-//    app.get("/articles/{id}") {ctx ->
-//        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
-//        val page = PageViewModel(
-//            ctx = ctx,
-//            title = foundArticle.title,
-//            description = "Nothing interesting",
-//        ctx.render("article.kte", mapOf("page" to page, "article" to foundArticle, "markdown" to markdown ))
-//    }
-//
-//    app.get("/users/{id}") {ctx ->
-//        val foundUser = userService.getById(ctx.pathParam("id").toLong())
-//        val foundArticlesByUser = articleService.getByAuthorId(foundUser.id)
-//        val page = PageViewModel(
-//            ctx = ctx,
-//            title = foundUser.name,
-//            description = "Nothing interesting",
-//            flash = getFlashedMessages(ctx).toMutableList())
-//        ctx.render("user.kte", mapOf("page" to page, "user" to foundUser, "articles" to foundArticlesByUser))
-//    }
-//
-//    app.delete("/articles/{id}"){ctx ->
-//        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
-//        if (foundArticle.author.id == getCurrentUser(ctx)?.id){
-//           articleService.deleteById(ctx.pathParam("id").toLong())
-//        }
-//        else{
-//            ctx.status(401).result("Unauthorized")
-//        }
-//    }
-//
-//    app.get("/characters/{id}") {ctx ->
-//
-//        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
-//        val page = PageViewModel(
-//            ctx = ctx,
-//            title = foundArticle.title,
-//            description = "Nothing interesting",
-//            flash = getFlashedMessages(ctx).toMutableList())
-//        ctx.render("article.kte", mapOf("page" to page, "article" to foundArticle))
-//    }
-
 
     app.post("/files/upload", { ctx ->
         val files = ctx.uploadedFiles()

@@ -17,8 +17,8 @@ export async function fetchAllArticles() {
     next: { tags: ['articles'] }
   });
   if (!res.ok) {
-    // const error = new Error("Failed to get currentUser");
-    // throw error
+    const error = new Error("Failed to get currentUser");
+    throw error
   }
 
   if (res.ok) {

@@ -16,8 +16,8 @@ export async function fetchCurrentUser() {
     next: { tags: ['currentuser'] }
   });
   if (!res.ok) {
-    // const error = new Error("Failed to get currentUser");
-    // throw error
+    const error = new Error("Failed to get currentUser");
+    throw error
   }
 
   if (res.ok) {
