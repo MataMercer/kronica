@@ -13,7 +13,7 @@ export default async function Navbar() {
                     <Link href="/">HOME</Link>
                 </li>
 
-                {!currentUser ? (
+                {!currentUser.id ? (
                     <li>
                         <Link href="/login">LOGIN</Link>
                     </li>

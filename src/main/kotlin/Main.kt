@@ -108,7 +108,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         val foundUser = userService.getById(ctx.pathParam("id").toLong())
         ctx.json(userService.toDto(foundUser))
     }
-    app.get("/api/auth/currentuser", { ctx ->
+    app.get("/api/auth/currentuser") { ctx ->
         val id = ctx.sessionAttribute<String>("current_user_id")?.toLong()
         var name = ctx.sessionAttribute<String>("current_user_name");
         val role = getCurrentUserRole(ctx)
@@ -116,7 +116,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
             name = ""
         }
         ctx.json(CurrentUserDto(id = id, name = name, role = role))
-    }, UserRole.AUTHENTICATED_USER)
+    }
     app.get("/api/secured", { ctx ->
         ctx.result("Secured hello !")
     }, UserRole.AUTHENTICATED_USER)
