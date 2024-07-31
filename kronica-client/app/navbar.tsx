@@ -7,7 +7,7 @@ import { fetchCurrentUser } from "./fetch/auth";
 export default async function Navbar() {
     const currentUser = await fetchCurrentUser();
     return (
-        <nav className="flex text-2xl min-h-[5vh]  pt-5 border-black border-solid border-b-[1px]">
+        <nav className="flex text-2xl min-h-[5vh]  pt-5 bg-black text-white">
             <ul className="flex space-x-5 pt-3 ml-10">
                 <li>
                     <Link href="/">HOME</Link>

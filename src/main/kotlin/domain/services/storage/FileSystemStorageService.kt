@@ -12,7 +12,7 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 class FileSystemStorageService() : StorageService {
-    private val rootLocation: Path = Paths.get("/user-upload-storage")
+    private val rootLocation: Path = Paths.get("./user-upload-storage")
     override fun store(fileDestPath: Path, uploadedFile: UploadedFile) {
         val filename = FilenameUtils.normalize(uploadedFile.filename())
         try {
