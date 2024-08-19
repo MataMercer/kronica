@@ -85,3 +85,8 @@
     border: 1px solid black;
     padding: 5px 10px 5px;
   }
+
+  a:hover, #logout-button:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }

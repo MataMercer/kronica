@@ -12,6 +12,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { refreshArticles } from "./actions";
 import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
+import React from "react";
 
 type Inputs = {
     title: string;
@@ -29,7 +30,7 @@ export default function CreateArticleButton() {
     } = useForm<Inputs>();
 
     const [showArticleForm, setShowArticleForm] = useState(false);
-
+    const ref = React.useRef();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const formData = new FormData();
         console.log(data);
@@ -42,13 +43,14 @@ export default function CreateArticleButton() {
         });
 
         refreshArticles();
-        setShowArticleForm(false);
+        // setShowArticleForm(false);
+        ref.current?.click();
         reset();
     };
 
     return (
-        <Dialog open={showArticleForm}>
-            <DialogTrigger asChild>
+        <Dialog>
+            <DialogTrigger asChild ref={ref}>
                 <button
                     className="button"
                     onClick={() => {
@@ -101,12 +103,7 @@ export default function CreateArticleButton() {
                             />
                         </label>
 
-                        <button
-                            className="button"
-                            onClick={() => setShowArticleForm(false)}
-                        >
-                            Add Files
-                        </button>
+                        <button className="button">Add Files</button>
                     </div>
                     <DialogFooter>
                         <button className="button" type="submit">

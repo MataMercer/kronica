@@ -8,7 +8,7 @@ export default async function Home() {
     const articles = await fetchAllArticles();
 
     return (
-        <main className="flex min-h-screen flex-col p-10">
+        <>
             <h1 className="text-3xl self-center ">HOME</h1>
             <AuthProtectionSSR>
                 <div className="m-10 self-center">
@@ -28,6 +28,6 @@ export default async function Home() {
                     <div>There are no articles.</div>
                 )}
             </div>
-        </main>
+        </>
     );
 }

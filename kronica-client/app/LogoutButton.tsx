@@ -16,5 +16,9 @@ async function onLogout() {
 }
 
 export default function LogoutButton() {
-    return <button onClick={() => onLogout()}>LOGOUT</button>;
+    return (
+        <button id="logout-button" onClick={() => onLogout()}>
+            LOGOUT
+        </button>
+    );
 }

@@ -25,7 +25,7 @@ export default function ArticleThumb({ article }: Props) {
         >
             <div className="flex flex-col">
                 <h3 className="text-xl font-bold capitalize">
-                    {article.title}
+                    <a href={`/articles/${article.id}`}>{article.title}</a>
                 </h3>
                 <div>BY: {article.author.name}</div>
                 <div data-color-mode="light">
