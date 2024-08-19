@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="git ignore generated kte folder">
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/AuthProtectionSSR.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/AuthProtectionSSR.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/AuthProtectionSSR.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -7,6 +7,5 @@ export default async function AuthProtectionSSR({
 }>) {
     const currentUser = await fetchCurrentUser();
     const loggedOut = !!currentUser.id;
-    console.log(loggedOut);
     return <>{!!loggedOut && children}</>;
 }
