@@ -27,6 +27,7 @@ export default function ArticleThumb({ article }: Props) {
                 <h3 className="text-xl font-bold capitalize">
                     <a href={`/articles/${article.id}`}>{article.title}</a>
                 </h3>
+                <div>{article.attachments.length}</div>
                 <div>BY: {article.author.name}</div>
                 <div data-color-mode="light">
                     {article.body ? (

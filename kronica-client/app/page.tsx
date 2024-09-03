@@ -3,10 +3,12 @@ import { fetchAllArticles } from "./fetch/articles";
 import CreateArticleButton from "./CreateArticleButton";
 import ArticleThumb from "./components/articles/ArticleThumb";
 import AuthProtectionSSR from "./AuthProtectionSSR";
+import SortableInput from "./components/inputs/SortableInput";
 
 export default async function Home() {
     const articles = await fetchAllArticles();
 
+    console.log(articles);
     return (
         <>
             <h1 className="text-3xl self-center ">HOME</h1>

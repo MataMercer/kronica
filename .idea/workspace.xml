@@ -5,15 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="git ignore generated kte folder">
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/articles/[id]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/Dnd/Draggable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/Dnd/Droppable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/Dnd/SortableItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/SortableInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/UploadInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/LogoutButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/LogoutButton.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kronica-client/app/components/articles/ArticleThumb.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/components/articles/ArticleThumb.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kronica-client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,73 +73,73 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Docker.docker-compose.yml.test_db: Compose Deployment.executor": "Run",
-    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article return 200 response.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article returns ok.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article without attachments returns ok.executor": "Run",
-    "JUnit.ArticleControllerTest.when create article with empty form return bad response.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.executor": "Coverage",
-    "JUnit.ArticleServiceUnitTest.whenCreateArticleReturnId.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenCreateArticle_returnId.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenDeleteByIdWithWrongAuthor_throwForbiddenResponse.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenDeleteById_delete.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenFindById_returnArticle.executor": "Run",
-    "JUnit.UserControllerTest.GET to fetch users returns list of users.executor": "Run",
-    "JUnit.UserControllerTest.Login returns 200.executor": "Run",
-    "JUnit.UserControllerTest.Login returns 300.executor": "Run",
-    "JUnit.UserControllerTest.Login with 200.executor": "Run",
-    "JUnit.UserControllerTest.Login with correct credentials returns ok.executor": "Run",
-    "JUnit.UserControllerTest.Login with wrong credentials returns unauthorized.executor": "Run",
-    "JUnit.UserControllerTest.Logout returns ok.executor": "Run",
-    "JUnit.UserControllerTest.When logged in getCurrentuser returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.When logged out getCurrentuser returns bad response.executor": "Run",
-    "JUnit.UserControllerTest.currentuser returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.executor": "Run",
-    "JUnit.UserControllerTest.find 1 user returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.logout return ok and successfully unauths user.executor": "Run",
-    "JUnit.UserControllerTest.logout return ok and successfully.executor": "Run",
-    "JUnit.UserControllerTest.logout return ok.executor": "Run",
-    "JUnit.UserControllerTest.logout returns ok.executor": "Run",
-    "JUnit.UserControllerTest.testv2.executor": "Run",
-    "JUnit.kotlin in WikiApi.executor": "Coverage",
-    "Kotlin.MainKt.executor": "Run",
-    "Maven.WikiApi [flyway:baseline].executor": "Run",
-    "Maven.WikiApi [flyway:clean].executor": "Run",
-    "Maven.WikiApi [flyway:migrate].executor": "Run",
-    "Maven.WikiApi [flyway:undo].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/mdenholm/dev/kronica",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.build.executor": "Run",
-    "npm.dev.executor": "Run",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "ts.external.directory.path": "C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Docker.docker-compose.yml.test_db: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when Create Article return 200 response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when Create Article returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when Create Article without attachments returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when create article with empty form return bad response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenCreateArticleReturnId.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenCreateArticle_returnId.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenDeleteByIdWithWrongAuthor_throwForbiddenResponse.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenDeleteById_delete.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenFindById_returnArticle.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.GET to fetch users returns list of users.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login returns 200.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login returns 300.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login with 200.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login with correct credentials returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login with wrong credentials returns unauthorized.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Logout returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.When logged in getCurrentuser returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.When logged out getCurrentuser returns bad response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.currentuser returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.find 1 user returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout return ok and successfully unauths user.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout return ok and successfully.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout return ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.testv2.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.kotlin in WikiApi.executor&quot;: &quot;Coverage&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:baseline].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:migrate].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:undo].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/mdenholm/dev/kronica&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Mercer\dev\WikiApp\src\main\jte" />

@@ -13,10 +13,13 @@ import { refreshArticles } from "./actions";
 import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
 import React from "react";
+import UploadInput, { FileInput } from "./components/inputs/UploadInput";
 
 type Inputs = {
     title: string;
     body: string;
+    attachments: string[];
+    uploadedAttachments: FileInput[];
 };
 
 export default function CreateArticleButton() {
@@ -24,10 +27,18 @@ export default function CreateArticleButton() {
         register,
         handleSubmit,
         watch,
+        setValue,
         reset,
         formState: { errors },
         control,
-    } = useForm<Inputs>();
+    } = useForm<Inputs>({
+        defaultValues: {
+            title: "ExampleTitle",
+            body: "ExampleBody",
+            attachments: [],
+            uploadedAttachments: [],
+        },
+    });
 
     const [showArticleForm, setShowArticleForm] = useState(false);
     const ref = React.useRef();
@@ -36,6 +47,14 @@ export default function CreateArticleButton() {
         console.log(data);
         formData.append("title", data.title);
         formData.append("body", data.body);
+        formData.append(
+            "uploadedAttachments",
+            data.uploadedAttachments
+                .filter((it) => {
+                    return it.data;
+                })
+                .map((it) => it.data)
+        );
         const response = await fetch("http://localhost:7070/api/articles", {
             method: "POST",
             credentials: "include",
@@ -103,7 +122,25 @@ export default function CreateArticleButton() {
                             />
                         </label>
 
-                        <button className="button">Add Files</button>
+                        <label className="flex flex-col" htmlFor="">
+                            File Attachments
+                            <Controller
+                                name="uploadedAttachments"
+                                control={control}
+                                render={({ field }) => (
+                                    <UploadInput
+                                        id="uploadedAttachments"
+                                        setFileInputs={(files: FileInput[]) => {
+                                            setValue(
+                                                "uploadedAttachments",
+                                                files
+                                            );
+                                        }}
+                                        fileInputs={field.value}
+                                    />
+                                )}
+                            ></Controller>
+                        </label>
                     </div>
                     <DialogFooter>
                         <button className="button" type="submit">

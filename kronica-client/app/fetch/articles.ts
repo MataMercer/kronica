@@ -6,6 +6,7 @@ export type Article = {
   title: string;
   body: string;
   author: PublicUser;
+  attachments: string[];
 }
 
 export async function fetchAllArticles() {
@@ -23,6 +24,7 @@ export async function fetchAllArticles() {
 
   if (res.ok) {
     const data = res.json();
+
     return data as Promise<Article[]>;
   }
 }
