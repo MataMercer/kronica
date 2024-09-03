@@ -47,14 +47,12 @@ export default function CreateArticleButton() {
         console.log(data);
         formData.append("title", data.title);
         formData.append("body", data.body);
-        formData.append(
-            "uploadedAttachments",
-            data.uploadedAttachments
-                .filter((it) => {
-                    return it.data;
-                })
-                .map((it) => it.data)
-        );
+        data.uploadedAttachments
+            .filter((it) => it.data)
+            .map((it) => {
+                it.data && formData.append("uploadedAttachments", it.data);
+            });
+
         const response = await fetch("http://localhost:7070/api/articles", {
             method: "POST",
             credentials: "include",
