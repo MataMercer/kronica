@@ -43,15 +43,17 @@ class FileDaoSql(private val conn: Connection): FileDao{
                     (
                     author_id,
                     name,
+                    owning_article_id,
                     created_at,
                     updated_at
                     )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?)
             """.trimIndent(), conn){
             fileModel.author.id?.let { id -> it.setLong(1, id) }
             it.setString(2, fileModel.name)
-            it.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()))
+            fileModel.owningArticleId?.let { it1 -> it.setLong(3, it1) }
             it.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()))
+            it.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()))
         }
     }
 

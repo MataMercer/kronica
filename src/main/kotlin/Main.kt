@@ -46,7 +46,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val dataSource: HikariDataSource
     if (appMode == AppMode.TEST){
-        dataSource = initTestDataSource()
+//        dataSource = initTestDataSource()
+        dataSource = initDataSource()
     }else{
         dataSource = initDataSource()
     }
