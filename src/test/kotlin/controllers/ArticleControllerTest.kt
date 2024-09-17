@@ -67,6 +67,7 @@ class ArticleControllerTest {
 
     @AfterEach
     fun afterEachTest() {
+
         app.stop()
     }
 

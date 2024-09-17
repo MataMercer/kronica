@@ -5,5 +5,16 @@ const removeImportsFun = removeImports({
 });
 // const nextConfig = removeImportsFun({});
 
-const nextConfig = {};
+const nextConfig = {
+    images: {
+        remotePatterns: [
+            {
+                protocol: "http",
+                hostname: "localhost",
+                port: "7070",
+                pathname: "/files/serve/**",
+            },
+        ],
+    },
+};
 export default nextConfig;

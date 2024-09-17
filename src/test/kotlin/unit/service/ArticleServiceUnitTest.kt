@@ -10,6 +10,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -56,6 +57,8 @@ class ArticleServiceUnitTest {
         //make callbacks pass through transact
         every { transactionManager.wrap(any()) } answers { (firstArg<()->Unit>())()}
     }
+
+
 
     @Test
     fun `When findById, return the article`(){

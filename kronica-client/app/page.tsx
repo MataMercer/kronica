@@ -21,7 +21,7 @@ export default async function Home() {
             <h2 className="text-2xl border-black border-b-[1px] mb-10">
                 NEW ARTICLES
             </h2>
-            <div className="grid sm:grid-cols-4 gap-4">
+            <div className="grid sm:grid-cols-5 gap-4">
                 {articles ? (
                     articles.map((article) => (
                         <ArticleThumb key={article.id} article={article} />

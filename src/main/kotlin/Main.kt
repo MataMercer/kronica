@@ -173,7 +173,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     }
 
     app.get("/api/articles") { ctx ->
-        val authorId = ctx.queryParam("author_id")
+        val authorId = ctx.queryParam("author_id")?.toLongOrNull()
         if (authorId != null) {
             val foundArticlesByUser = articleService.getByAuthorId(authorId.toLong())
             ctx.json(foundArticlesByUser)

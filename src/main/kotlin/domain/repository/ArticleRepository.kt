@@ -70,6 +70,7 @@ class ArticleRepository(
             fileModels.forEach{
                 fileDao.create(conn, it)
             }
+            res = res?.let { aggregate(conn, it) }
         }
         return res
     }

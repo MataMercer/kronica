@@ -71,7 +71,7 @@ CREATE TABLE articles
     timeline_data_id BIGINT,
 
     CONSTRAINT pk_articles PRIMARY KEY (id),
-    CONSTRAINT fk_author_id FOREIGN KEY (author_id) REFERENCES users (id),
+    CONSTRAINT fk_author_id FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT fk_parent_article_Id FOREIGN KEY (parent_article_id) REFERENCES articles (id),
     CONSTRAINT fk_child_article_Id FOREIGN KEY (child_article_id) REFERENCES articles (id),
     CONSTRAINT fk_timeline_id FOREIGN KEY (timeline_id) REFERENCES timeline_data (id),
@@ -136,8 +136,8 @@ CREATE TABLE files
     name VARCHAR(255),
 
     CONSTRAINT pk_files PRIMARY KEY (id),
-    CONSTRAINT fk_author_id FOREIGN KEY (author_id) REFERENCES users (id),
-    CONSTRAINT fk_owning_article_id FOREIGN KEY (owning_article_id) REFERENCES articles (id)
+    CONSTRAINT fk_author_id FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_owning_article_id FOREIGN KEY (owning_article_id) REFERENCES articles (id) ON DELETE CASCADE
 );
 --
 --CREATE TABLE article_gallery_pics(

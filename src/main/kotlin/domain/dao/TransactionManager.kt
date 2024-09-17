@@ -19,6 +19,8 @@ class TransactionManager(
             e.printStackTrace()
             conn.rollback()
             throw InternalServerErrorResponse()
+        } finally {
+            conn.close()
         }
     }
 }

@@ -6,7 +6,11 @@ export type Article = {
   title: string;
   body: string;
   author: PublicUser;
-  attachments: string[];
+  attachments: FileModel[];
+}
+export type FileModel = {
+  id: number;
+  name: string;
 }
 
 export async function fetchAllArticles() {
