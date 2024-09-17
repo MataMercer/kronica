@@ -58,6 +58,33 @@ can link or "reply" left, down, or right. This builds an alternative timeline.
 chronologically according to your canon.
 - CRUD all resources.
 
+# Software Architecture
+
+This app uses a domain driven design.
+
+- Data Transfer Object (DTO) Layer
+  - Objects that store data coming in to and from outside the server.
+- Controller Layer: 
+  - Responsible for taking in JSON or multipart data from the client
+  - Validates data coming in
+  - Sends out data from services.
+  - handles auth
+- Service Layer:
+  - handles any business logic on data coming in from the client
+  and stores it.
+  - handles ownership authorization.
+- Repository Layer:
+  - Serves as a middleware between the Service layer and the DAO.
+  - Collates data such as nested objects so it can deliver complete data to the server.
+  - Handles transactions for multiple Models.
+  - Hides DB implementation details from the Service layer.
+- Data Access Object (DAO) Layer:
+  - Hides ugly SQL queries away.
+  - Maps data to and from Model objects.
+- Model:
+  - Object representing a table row from our DB.
+
+
 # Data Structure
 
 ## Timeline

@@ -14,8 +14,5 @@ class FileModel(
 data class FileModelDto(
     val id: Long? = null,
     val name: String,
-    val authorId: Long?,
-    val owningArticleId: Long? = null,
-    val url: String
 )
 

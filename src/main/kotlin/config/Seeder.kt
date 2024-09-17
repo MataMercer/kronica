@@ -7,8 +7,9 @@ import org.matamercer.web.RegisterUserForm
 
 class Seeder(private val userService: UserService){
     fun initRootUser(){
-        val rootUser = userService.userDao.findByEmail("example@gmail.com")
-        if (rootUser == null)
-        userService.registerUser(RegisterUserForm("example@gmail.com", "Root", "password"), UserRole.ROOT)
+        val rootUser = userService.getByEmail("example@gmail.com")
+        if (rootUser == null){
+            userService.registerUser(RegisterUserForm("example@gmail.com", "Root", "password"), UserRole.ROOT)
+        }
     }
 }

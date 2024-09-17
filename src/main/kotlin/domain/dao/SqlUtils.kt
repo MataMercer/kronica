@@ -1,4 +1,4 @@
-package org.matamercer.domain.dao.sql
+package org.matamercer.domain.dao
 
 import java.sql.*
 import java.time.LocalDateTime
@@ -39,7 +39,7 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
         return obj
     }
 
-    fun update(sql: String, conn: Connection, statementSetter: (st: PreparedStatement) -> Unit): Long?{
+    fun update(sql: String, conn: Connection, statementSetter: (st: PreparedStatement) -> Unit): Long{
         val st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         st.apply(statementSetter)
         st.executeUpdate()
@@ -50,6 +50,9 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
         }
         rs.close()
         st.close()
+        if (id == null){
+            throw SQLException("Id not found")
+        }
         return id
     }
 

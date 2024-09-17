@@ -13,15 +13,14 @@ import org.eclipse.jetty.server.session.DefaultSessionCache
 import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.Seeder
-import org.matamercer.domain.dao.sql.ArticleDaoSql
-import org.matamercer.domain.dao.sql.FileDaoSql
-import org.matamercer.domain.dao.sql.UserDaoSql
-import org.matamercer.domain.models.CurrentUser
+import org.matamercer.domain.dao.ArticleDao
+import org.matamercer.domain.dao.FileDao
+import org.matamercer.domain.dao.TransactionManager
+import org.matamercer.domain.dao.UserDao
 import org.matamercer.domain.models.CurrentUserDto
 import org.matamercer.domain.models.User
-import org.matamercer.domain.models.UsersDto
+import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.services.ArticleService
-import org.matamercer.domain.services.FileService
 import org.matamercer.domain.services.UserService
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.security.UserRole
@@ -53,14 +52,16 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     }
     migrate(dataSource)
 
+    val transactionManager = TransactionManager(dataSource)
+
     val app = createJavalinApp()
-    val userDao = UserDaoSql(dataSource.connection)
-    val userService = UserService(userDao)
+    val userDao = UserDao()
+    val userService = UserService(userDao, dataSource)
     val seeder = Seeder(userService)
     seeder.initRootUser()
 
-    val articleDao = ArticleDaoSql(dataSource.connection)
-    val fileDao = FileDaoSql(dataSource.connection)
+    val articleDao = ArticleDao()
+    val fileDao = FileDao()
 
     val storageService = FileSystemStorageService()
     if (appMode == AppMode.TEST){
@@ -68,8 +69,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     }
     storageService.init()
 
-    val fileService = FileService(fileDao, storageService)
-    val articleService = ArticleService(articleDao, fileService)
+    val articleRepository = ArticleRepository(articleDao, fileDao, transactionManager, dataSource)
+    val articleService = ArticleService(articleRepository, storageService)
 
 
     app.beforeMatched { ctx ->
@@ -103,7 +104,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     }
 
     app.get("/api/users") { ctx ->
-        ctx.json(UsersDto(userDao.findAll(), userDao.findAll().size))
+//        ctx.json(UsersDto(userDao.findAll(), userDao.findAll().size))
     }
     app.get("/api/users/{id}") { ctx ->
         val foundUser = userService.getById(ctx.pathParam("id").toLong())
@@ -162,7 +163,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
         val articleId = articleService.create(createArticleForm, author)
         val a = articleService.getById(articleId)
-        ctx.json(a)
+        val dto = articleService.toDto(a)
+        ctx.json(dto)
     }, UserRole.AUTHENTICATED_USER)
 
     app.get("/api/articles/{id}") { ctx ->
@@ -190,20 +192,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         ctx.result("Error 404: Not found")
     }
 
-    app.post("/files/upload", { ctx ->
-        val files = ctx.uploadedFiles()
-        if (files.isEmpty()) {
-            throw BadRequestResponse("No files provided.")
-        }
-
-        val articleIdStr = ctx.formParam("articleId")
-        val articleId = articleIdStr?.toLong()
-
-        val currentUser = getCurrentUser(ctx) ?: throw UnauthorizedResponse("You must be logged in.")
-        val createdFileIds = files.map { fileService.createFile(it, articleId, currentUser) }
-        ctx.status(201).json(createdFileIds)
-    }, UserRole.ADMIN)
-
     app.get("/files/serve/{id}/{filename}") { ctx ->
         val fileId = ctx.pathParam("id").toLong()
         val fileName = ctx.pathParam("filename")
@@ -213,14 +201,12 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         }
         val contentType = ContentType.getContentTypeByExtension(extension)
             ?: throw BadRequestResponse("Unable to get content type from file extension")
-        val file = fileService.getStorageFile(fileId, fileName)
+        val file = storageService.loadAsFile(fileId, fileName)
         ctx.result(file.inputStream()).contentType(contentType).header(
             "Content-Disposition",
             "inline; filename=\"$fileName\""
         )
     }
-
-
     return app
 }
 

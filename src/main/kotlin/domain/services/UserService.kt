@@ -4,42 +4,42 @@ import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
 import io.javalin.http.UnauthorizedResponse
 import org.matamercer.domain.dao.UserDao
-import org.matamercer.domain.models.CurrentUserDto
 import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UserDto
 import org.matamercer.security.UserRole
-import org.matamercer.security.verifyPassword
 import org.matamercer.security.hashPassword
+import org.matamercer.security.verifyPassword
 import org.matamercer.web.LoginRequestForm
 import org.matamercer.web.RegisterUserForm
+import javax.sql.DataSource
 
-class UserService(val userDao: UserDao) {
+class UserService(val userDao: UserDao, val dataSource: DataSource) {
 
     fun toDto(user: User): UserDto {
         return UserDto(
             id = user.id,
             name = user.name,
-            email = user.email,
             createdAt = user.createdAt,
             role = user.role
         )
     }
 
-    fun getByEmail(email: String?): User {
+    fun getByEmail(email: String?): User? {
         if (email.isNullOrBlank()) throw BadRequestResponse()
-        val user = userDao.findByEmail(email)
-        user ?: throw NotFoundResponse()
+        val conn = dataSource.connection
+        val user = userDao.findByEmail(conn, email)
         return user
     }
 
     fun getById(id: Long?): User {
         if (id == null) throw BadRequestResponse()
-        val user = userDao.findById(id)
+        val conn = dataSource.connection
+        val user = userDao.findById(conn, id)
         user ?: throw NotFoundResponse()
         return user
     }
     fun authenticateUser(loginRequestForm: LoginRequestForm): User{
-        val foundUser = getByEmail(loginRequestForm.email)
+        val foundUser = getByEmail(loginRequestForm.email) ?: throw NotFoundResponse()
         if (loginRequestForm.password.isNullOrBlank()){
             throw BadRequestResponse()
         }
@@ -51,13 +51,14 @@ class UserService(val userDao: UserDao) {
 
     fun registerUser(registerUserForm: RegisterUserForm, userRole: UserRole = UserRole.AUTHENTICATED_USER): User{
         if (registerUserForm.name != null && registerUserForm.email != null && registerUserForm.password != null){
-            val newUserId = userDao.create(
+            val conn = dataSource.connection
+            val newUserId = userDao.create(conn,
                 User(name = registerUserForm.name,
                     email = registerUserForm.email,
                     hashedPassword = hashPassword(registerUserForm.password),
                     role = userRole))
             if (newUserId != null) {
-                val newUser = userDao.findById(newUserId)
+                val newUser = userDao.findById(conn, newUserId)
                 if (newUser != null){
                     return newUser
                 }

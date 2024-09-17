@@ -1,5 +1,6 @@
 package controllers
 
+import com.fasterxml.jackson.databind.util.JSONPObject
 import createAuthClient
 import fixtures.Fixtures
 import getHostUrl
@@ -7,14 +8,19 @@ import io.javalin.Javalin
 import io.javalin.testtools.HttpClient
 import io.javalin.testtools.JavalinTest
 import io.javalin.testtools.TestConfig
+import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.internal.http.promisesBody
 import org.assertj.core.api.Assertions.assertThat
+import org.jetbrains.kotlin.js.parser.sourcemaps.JsonObject
+import org.jetbrains.kotlin.js.parser.sourcemaps.parseJson
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
+import org.matamercer.domain.models.ArticleDto
 import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UsersDto
 import org.matamercer.security.UserRole
@@ -85,7 +91,8 @@ class ArticleControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
-        val body = res.body.toString()
+        val body = res.body?.string()
+        print(body)
         assertThat(res.code == 200).isTrue()
     }
 

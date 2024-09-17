@@ -11,7 +11,7 @@ data class Article(
     val updatedAt: Date? = null,
     val timelineData: TimelineData? = null,
     val characterData: CharacterData? = null,
-    val attachments: List<FileModel> = listOf()
+    var attachments: List<FileModel> = listOf()
 )
 
 data class ArticleDto(

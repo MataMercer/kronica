@@ -26,10 +26,10 @@ data class CurrentUser(
 data class UserDto(
     val id: Long?,
     val name: String,
-    val email: String?,
     val role: UserRole,
     val createdAt: Date?
 )
+
 
 data class CurrentUserDto(
     val id: Long?,
