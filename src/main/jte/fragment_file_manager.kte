@@ -1,6 +1,0 @@
-<p class="">This is the File Manager. </p>
-<p>show files here. </p>
-<form method="post" action="/upload" enctype="multipart/form-data">
-    <input type="file" name="files" multiple>
-    <button>Submit</button>
-</form>
