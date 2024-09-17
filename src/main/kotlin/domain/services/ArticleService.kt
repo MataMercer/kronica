@@ -1,8 +1,6 @@
 package org.matamercer.domain.services
 
 import io.javalin.http.*
-import org.matamercer.domain.dao.ArticleDao
-import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.services.storage.StorageService
@@ -10,7 +8,6 @@ import org.matamercer.domain.services.storage.exceptions.StorageException
 import org.matamercer.web.CreateArticleForm
 import java.nio.file.Path
 import java.nio.file.Paths
-import javax.sql.DataSource
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
@@ -37,45 +34,52 @@ class ArticleService(
     }
 
     fun create(createArticleForm: CreateArticleForm, author: User): Long {
-        if (createArticleForm.title != null && createArticleForm.body != null) {
-            val article = articleRepository.create(
-                Article(
-                    title = createArticleForm.title,
-                    body = createArticleForm.body,
-                    author = author,
-                    attachments = createArticleForm.uploadedAttachments.map { u ->
-                        FileModel(
-                            name = u.filename(),
-                            author = author,
-                        )
-                    }
-                )
+        validateForm(createArticleForm)
+
+        val attachments = createArticleForm.uploadedAttachments.map { u ->
+            FileModel(
+                name = u.filename(),
+                author = author,
             )
-            if (article?.id == null){
-                throw InternalServerErrorResponse()
-            }
-            val fileModels = article.attachments
+        }
+        val article = articleRepository.create(
+            Article(
+                title = createArticleForm.title!!,
+                body = createArticleForm.body!!,
+                author = author,
+                attachments = attachments
+            )
+        )
+        if (article?.id == null) {
+            throw InternalServerErrorResponse()
+        }
 
-            val map = mutableMapOf<Path, UploadedFile>()
-            for(index in fileModels.indices){
-                val fileModel = fileModels[index]
-                val path = Paths.get(fileModel.id.toString())
-                val upload = createArticleForm.uploadedAttachments[index]
-                map[path] = upload
-            }
-            try {
-                storageService.storeFiles(map)
-            }catch (e: StorageException){
-                rollbackArticleCreate(article.id)
-            }
+        val fileModels = article.attachments
 
-            return article.id
-        } else {
+        val map = mutableMapOf<Path, UploadedFile>()
+        for (index in fileModels.indices) {
+            val fileModel = fileModels[index]
+            val path = Paths.get(fileModel.id.toString())
+            val upload = createArticleForm.uploadedAttachments[index]
+            map[path] = upload
+        }
+
+        try {
+            storageService.storeFiles(map)
+        } catch (e: StorageException) {
+            rollbackArticleCreate(article.id)
+        }
+
+        return article.id
+    }
+
+    private fun validateForm(createArticleForm: CreateArticleForm) {
+        if (createArticleForm.title == null && createArticleForm.body == null) {
             throw BadRequestResponse()
         }
     }
 
-    private fun rollbackArticleCreate(id: Long){
+    private fun rollbackArticleCreate(id: Long) {
         articleRepository.deleteById(id)
         throw InternalServerErrorResponse()
     }

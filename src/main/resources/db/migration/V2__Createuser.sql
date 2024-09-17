@@ -111,6 +111,7 @@ CREATE TABLE tags
     name    VARCHAR(255) NOT NULL ,
 
     CONSTRAINT pk_tags PRIMARY KEY (id)
+    CONSTRAINT uc_name UNIQUE (name)
 );
 
 CREATE TABLE tags_to_articles

@@ -42,13 +42,10 @@ enum class AppMode{
 }
 
 fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
-
-    val dataSource: HikariDataSource
-    if (appMode == AppMode.TEST){
-//        dataSource = initTestDataSource()
-        dataSource = initDataSource()
+    val dataSource: HikariDataSource = if (appMode == AppMode.TEST){
+        initTestDataSource()
     }else{
-        dataSource = initDataSource()
+        initDataSource()
     }
     migrate(dataSource)
 

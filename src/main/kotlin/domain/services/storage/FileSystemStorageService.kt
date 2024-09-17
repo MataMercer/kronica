@@ -21,13 +21,9 @@ class FileSystemStorageService() : StorageService {
         if (uploadedFile.size() == 0L) {
             throw StorageException("Failed to store empty file $filename")
         }
-        if (filename.contains("..")) {
-            // This is a security check
-            throw StorageException(
-                "Cannot store file with relative path outside current directory "
-                        + filename
-            )
-        }
+
+        fileNameSecurityCheck(filename)
+
         uploadedFile.content().use { inputStream ->
             var combinedFileDestPath = rootLocation.resolve(fileDestPath)
             combinedFileDestPath = Files.createDirectory(combinedFileDestPath)
@@ -37,6 +33,12 @@ class FileSystemStorageService() : StorageService {
             )
         }
 
+    }
+
+    private fun fileNameSecurityCheck(filename: String){
+        if (filename.contains("..")) {
+            throw StorageException("Cannot store file with relative path outside current directory $filename")
+        }
     }
 
     override fun storeFiles(map: Map<Path, UploadedFile>) {
@@ -103,7 +105,6 @@ class FileSystemStorageService() : StorageService {
 
     override fun init() {
         try {
-
             Files.createDirectories(rootLocation)
         } catch (e: IOException) {
             e.printStackTrace()
