@@ -1,4 +1,4 @@
-package org.matamercer.controllers
+package org.matamercer.web.controllers
 
 import io.javalin.http.HandlerType
 import org.matamercer.security.UserRole

@@ -22,3 +22,8 @@ data class CreateArticleForm(
     val uploadedAttachments: List<UploadedFile> = listOf(),
     val uploadedAttachmentInsertions: List<Int> = listOf()
 )
+
+data class CreateTimelineForm(
+    val name: String?,
+    val description: String?
+)

@@ -13,16 +13,15 @@ import org.eclipse.jetty.server.session.DefaultSessionCache
 import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.Seeder
-import org.matamercer.controllers.ArticleController
-import org.matamercer.controllers.Router
-import org.matamercer.domain.dao.ArticleDao
-import org.matamercer.domain.dao.FileDao
-import org.matamercer.domain.dao.TransactionManager
-import org.matamercer.domain.dao.UserDao
+import org.matamercer.domain.dao.*
+import org.matamercer.web.controllers.ArticleController
+import org.matamercer.web.controllers.Router
 import org.matamercer.domain.models.CurrentUserDto
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.ArticleRepository
+import org.matamercer.domain.repository.TimelineRepository
 import org.matamercer.domain.services.ArticleService
+import org.matamercer.domain.services.TimelineService
 import org.matamercer.domain.services.UserService
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.security.UserRole
@@ -30,6 +29,8 @@ import org.matamercer.security.generateCsrfToken
 import org.matamercer.web.CreateArticleForm
 import org.matamercer.web.LoginRequestForm
 import org.matamercer.web.RegisterUserForm
+import org.matamercer.web.controllers.TimelineController
+import org.matamercer.web.controllers.UserController
 
 
 fun main(args: Array<String>) {
@@ -62,6 +63,11 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val articleDao = ArticleDao()
     val fileDao = FileDao()
 
+    val timelineDao = TimelineDao()
+    val timelineRepository = TimelineRepository(timelineDao, dataSource)
+    val timelineService = TimelineService(timelineRepository)
+
+
     val storageService = FileSystemStorageService()
     if (appMode == AppMode.TEST){
         storageService.deleteAll()
@@ -74,8 +80,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     app.beforeMatched { ctx ->
         val routeRoles = ctx.routeRoles()
-
-//        val jsessionid = ctx.req().getCookie("JSESSIONID")
 
         if (routeRoles.isEmpty()) {
             return@beforeMatched
@@ -103,13 +107,12 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     }
 
     val articleController = ArticleController(articleService)
-    val router = Router(articleController, app)
+    val timelineController = TimelineController(timelineService)
+    val userController = UserController(userService)
+    val router = Router(articleController, timelineController, userController, app)
     router.setupRoutes()
 
-    app.get("/api/users/{id}") { ctx ->
-        val foundUser = userService.getById(ctx.pathParam("id").toLong())
-        ctx.json(userService.toDto(foundUser))
-    }
+
     app.get("/api/auth/currentuser") { ctx ->
         val id = ctx.sessionAttribute<String>("current_user_id")?.toLong()
         var name = ctx.sessionAttribute<String>("current_user_name");

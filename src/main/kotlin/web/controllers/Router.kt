@@ -1,4 +1,4 @@
-package org.matamercer.controllers
+package org.matamercer.web.controllers
 
 import io.javalin.Javalin
 import io.javalin.http.Context
@@ -8,11 +8,15 @@ import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class Router(
     private val articleController: ArticleController,
+    private val timelineController: TimelineController,
+    private val userController: UserController,
     private val app: Javalin
 ) {
 
     fun setupRoutes(){
         addRoutes(articleController)
+        addRoutes(timelineController)
+        addRoutes(userController)
     }
 
     private fun addRoutes(obj: Any){

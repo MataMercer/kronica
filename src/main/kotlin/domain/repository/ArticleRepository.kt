@@ -53,14 +53,8 @@ class ArticleRepository(
     fun create(article: Article): Article?{
         var res: Article? = null
         transactionManager.wrap { conn ->  
-            val id = articleDao.create(conn,
-                Article(
-                    title = article.title,
-                    body = article.body,
-                    author = article.author
-                )
-            )
-                res = articleDao.findById(conn, id)
+            val id = articleDao.create(conn, article)
+            res = articleDao.findById(conn, id)
 
             val fileModels = article.attachments.map { FileModel(
                 name = it.name,

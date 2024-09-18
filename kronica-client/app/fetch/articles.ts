@@ -1,11 +1,11 @@
 import { cookies } from "next/headers";
-import { PublicUser } from "./PublicUsers";
+import { User } from "./PublicUsers";
 
 export type Article = {
   id: number;
   title: string;
   body: string;
-  author: PublicUser;
+  author: User;
   attachments: FileModel[];
 }
 export type FileModel = {

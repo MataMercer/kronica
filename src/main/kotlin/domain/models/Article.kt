@@ -9,8 +9,8 @@ data class Article(
     val author: User,
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
-    val timelineData: TimelineData? = null,
     val characterData: CharacterData? = null,
+    val timeline: Timeline? = null,
     var attachments: List<FileModel> = listOf()
 )
 
@@ -24,10 +24,7 @@ data class ArticleDto(
     val attachments: List<FileModelDto> = listOf()
 )
 
-data class TimelineData(
-   val name: String,
-   val firstSeen: String,
-)
+
 
 data class CharacterData(
    val name: String,

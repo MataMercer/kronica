@@ -2,6 +2,7 @@ package fixtures
 
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.FileModel
+import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
 
@@ -34,6 +35,12 @@ class Fixtures {
         body = "body",
         author = rootUser,
         attachments = listOf(testFile)
+    )
+
+    val testTimeline = Timeline(
+        id = 1,
+        name= "First Timeline",
+        description = "This is a timeline about aliens."
     )
 
 

@@ -1,4 +1,4 @@
-package org.matamercer.controllers
+package org.matamercer.web.controllers
 
 import io.javalin.Javalin
 import io.javalin.http.Context
@@ -21,6 +21,7 @@ class ArticleController(
     @Route(HandlerType.GET,"/api/articles")
     fun getArticles(ctx: Context) {
         val authorId = ctx.queryParam("author_id")?.toLongOrNull()
+        val timelineId = ctx.queryParam("timeline_id")?.toLongOrNull()
         if (authorId != null) {
             val foundArticlesByUser = articleService.getByAuthorId(authorId.toLong())
             ctx.json(foundArticlesByUser)
