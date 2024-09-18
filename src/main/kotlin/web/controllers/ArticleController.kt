@@ -1,6 +1,5 @@
 package org.matamercer.web.controllers
 
-import io.javalin.Javalin
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import org.matamercer.domain.services.ArticleService
@@ -8,17 +7,18 @@ import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
 
+@Controller("/api/articles")
 class ArticleController(
     private val articleService: ArticleService
 ) {
 
-    @Route(HandlerType.GET, "/api/articles/{id}")
+    @Route(HandlerType.GET, "/{id}")
     fun getArticle(ctx: Context){
         val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
         ctx.json(foundArticle)
     }
 
-    @Route(HandlerType.GET,"/api/articles")
+    @Route(HandlerType.GET,"/")
     fun getArticles(ctx: Context) {
         val authorId = ctx.queryParam("author_id")?.toLongOrNull()
         val timelineId = ctx.queryParam("timeline_id")?.toLongOrNull()
@@ -31,13 +31,13 @@ class ArticleController(
         }
     }
 
-    @Route(HandlerType.DELETE,"/api/articles/{id}")
+    @Route(HandlerType.DELETE,"/{id}")
     fun deleteArticle (ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         articleService.deleteById(currentUser, ctx.pathParam("id").toLong())
     }
 
-    @Route(HandlerType.POST,"/api/articles")
+    @Route(HandlerType.POST,"/")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun createArticle(ctx: Context){
 //        val createArticleForm = ctx.bodyValidator<CreateArticleForm>()

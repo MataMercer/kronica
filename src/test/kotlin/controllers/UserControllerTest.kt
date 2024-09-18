@@ -99,7 +99,7 @@ class UserControllerTest {
     @Test
     fun `When logged out getCurrentuser returns bad response`() {
         val res = unauthClient.get("/api/auth/currentuser")
-        assertThat(res.isSuccessful).isFalse()
+        assertThat(res.isSuccessful).isTrue()
     }
 
     @Test

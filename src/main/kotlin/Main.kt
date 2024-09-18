@@ -14,8 +14,6 @@ import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.Seeder
 import org.matamercer.domain.dao.*
-import org.matamercer.web.controllers.ArticleController
-import org.matamercer.web.controllers.Router
 import org.matamercer.domain.models.CurrentUserDto
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.ArticleRepository
@@ -29,8 +27,7 @@ import org.matamercer.security.generateCsrfToken
 import org.matamercer.web.CreateArticleForm
 import org.matamercer.web.LoginRequestForm
 import org.matamercer.web.RegisterUserForm
-import org.matamercer.web.controllers.TimelineController
-import org.matamercer.web.controllers.UserController
+import org.matamercer.web.controllers.*
 
 
 fun main(args: Array<String>) {
@@ -67,7 +64,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val timelineRepository = TimelineRepository(timelineDao, dataSource)
     val timelineService = TimelineService(timelineRepository)
 
-
     val storageService = FileSystemStorageService()
     if (appMode == AppMode.TEST){
         storageService.deleteAll()
@@ -76,7 +72,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val articleRepository = ArticleRepository(articleDao, fileDao, transactionManager, dataSource)
     val articleService = ArticleService(articleRepository, storageService)
-
 
     app.beforeMatched { ctx ->
         val routeRoles = ctx.routeRoles()
@@ -109,47 +104,9 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val articleController = ArticleController(articleService)
     val timelineController = TimelineController(timelineService)
     val userController = UserController(userService)
-    val router = Router(articleController, timelineController, userController, app)
+    val authController = AuthController(userService)
+    val router = Router(articleController, timelineController, userController, authController, app)
     router.setupRoutes()
-
-
-    app.get("/api/auth/currentuser") { ctx ->
-        val id = ctx.sessionAttribute<String>("current_user_id")?.toLong()
-        var name = ctx.sessionAttribute<String>("current_user_name");
-        val role = getCurrentUserRole(ctx)
-        if (name == null) {
-            name = ""
-        }
-        ctx.json(CurrentUserDto(id = id, name = name, role = role))
-    }
-    app.get("/api/secured", { ctx ->
-        ctx.result("Secured hello !")
-    }, UserRole.AUTHENTICATED_USER)
-    app.post("/api/auth/login", { ctx ->
-        val loginRequestForm = ctx.bodyValidator<LoginRequestForm>()
-            .check({ !it.email.isNullOrBlank() }, "Email is empty")
-            .check({ !it.password.isNullOrBlank() }, "Password is empty")
-            .get()
-        val user = userService.authenticateUser(loginRequestForm)
-        loginUserToSession(ctx, user)
-        ctx.sessionAttribute<String>("csrf_token")?.let { ctx.cookie("CSRF-TOKEN", it) }
-    }, UserRole.UNAUTHENTICATED_USER)
-
-
-    app.post("/api/auth/logout", { ctx ->
-        ctx.req().session.invalidate()
-    }, UserRole.AUTHENTICATED_USER)
-
-    app.post("/api/auth/register") { ctx ->
-        val registerUserForm = ctx.bodyValidator<RegisterUserForm>()
-            .check({ !it.name.isNullOrBlank() }, "Username is empty")
-            .check({ !it.email.isNullOrBlank() }, "Email is empty")
-            .check({ !it.password.isNullOrBlank() }, "Password is empty")
-            .get()
-        val user = userService.registerUser(registerUserForm)
-        loginUserToSession(ctx, user)
-    }
-
 
     app.error(404) { ctx ->
         ctx.result("Error 404: Not found")

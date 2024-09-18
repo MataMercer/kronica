@@ -5,37 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="git ignore generated kte folder">
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/CreateTimelineButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/fetch/timelines.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/users/[id]/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Tag.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Timeline.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/TimelineService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/TimelineController.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/UserController.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/TimelineControllerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/AuthController.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/unit/dao/ArticleDaoUnitTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-upload-storage/1/polarbear.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-upload-storage/2/polarbear.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/PublicUsers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/PublicUsers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/DataSource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/DataSource.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/controllers/ArticleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/controllers/ControllerAnnotations.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ControllerAnnotations.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/controllers/Router.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/Router.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__Createuser.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ControllerAnnotations.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ControllerAnnotations.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/Router.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/Router.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-upload-storage/1/Screenshot 2024-09-08 200759df.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-upload-storage/4/1717689349314818.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-upload-storage/5/Screenshot 2024-09-08 200529dffd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/UserControllerTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +94,7 @@
     "JUnit.TimelineControllerTest.when Create Timeline returns ok.executor": "Run",
     "JUnit.TimelineControllerTest.when get timelines by author returns ok.executor": "Run",
     "JUnit.UserControllerTest.GET to fetch users returns list of users.executor": "Run",
+    "JUnit.UserControllerTest.GET to fetch users returns ok response.executor": "Run",
     "JUnit.UserControllerTest.Login returns 200.executor": "Run",
     "JUnit.UserControllerTest.Login returns 300.executor": "Run",
     "JUnit.UserControllerTest.Login with 200.executor": "Run",
@@ -189,8 +171,8 @@
       <command value="mvn flyway:migrate" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.UserControllerTest.Logout returns ok">
-    <configuration name="UserControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.ArticleControllerTest.when Create Article without attachments returns ok">
+    <configuration name="ArticleControllerTest.when Create Article returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
         <pattern>
@@ -199,13 +181,30 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
+      <option name="METHOD_NAME" value="when Create Article returns ok" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserControllerTest.Login with wrong credentials returns unauthorized" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ArticleControllerTest.when Create Article without attachments returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
+      <option name="METHOD_NAME" value="when Create Article without attachments returns ok" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserControllerTest.GET to fetch users returns ok response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
         <pattern>
@@ -215,7 +214,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="controllers" />
       <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
-      <option name="METHOD_NAME" value="Login with wrong credentials returns unauthorized" />
+      <option name="METHOD_NAME" value="GET to fetch users returns ok response" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -253,22 +252,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserControllerTest.find 1 user returns ok response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.UserControllerTest" />
-      <option name="METHOD_NAME" value="find 1 user returns ok response" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="WikiApp" />
       <method v="2">
@@ -282,19 +265,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.UserControllerTest" />
-      <item itemvalue="JUnit.UserControllerTest.Login with wrong credentials returns unauthorized" />
+      <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
+      <item itemvalue="JUnit.ArticleControllerTest.when Create Article without attachments returns ok" />
+      <item itemvalue="JUnit.UserControllerTest.GET to fetch users returns ok response" />
       <item itemvalue="JUnit.UserControllerTest.Logout returns ok" />
       <item itemvalue="JUnit.UserControllerTest.When logged out getCurrentuser returns bad response" />
-      <item itemvalue="JUnit.UserControllerTest.find 1 user returns ok response" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ArticleControllerTest.when Create Article without attachments returns ok" />
+        <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
+        <item itemvalue="JUnit.UserControllerTest.GET to fetch users returns ok response" />
         <item itemvalue="JUnit.UserControllerTest.Logout returns ok" />
         <item itemvalue="JUnit.UserControllerTest.When logged out getCurrentuser returns bad response" />
-        <item itemvalue="JUnit.UserControllerTest.Login with wrong credentials returns unauthorized" />
-        <item itemvalue="JUnit.UserControllerTest" />
-        <item itemvalue="JUnit.UserControllerTest.find 1 user returns ok response" />
       </list>
     </recent_temporary>
   </component>

@@ -123,5 +123,9 @@ class ArticleControllerTest {
         assertThat(res.isSuccessful).isFalse()
     }
 
+    fun `when get article by id return ok response`(){
+
+    }
+
 
 }

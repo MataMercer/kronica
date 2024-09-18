@@ -10,6 +10,7 @@ class Router(
     private val articleController: ArticleController,
     private val timelineController: TimelineController,
     private val userController: UserController,
+    private val authController: AuthController,
     private val app: Javalin
 ) {
 
@@ -17,9 +18,14 @@ class Router(
         addRoutes(articleController)
         addRoutes(timelineController)
         addRoutes(userController)
+        addRoutes(authController)
     }
 
     private fun addRoutes(obj: Any){
+
+        val controllerAnnotation = obj::class.java.getAnnotation(Controller::class.java)
+        val pathPrefix = controllerAnnotation?.path ?: ""
+
         val methods = obj::class.java.methods
         methods.filter {
             it.isAnnotationPresent(Route::class.java)
@@ -32,19 +38,18 @@ class Router(
             if (roleAnnotation == null){
                 app.addHttpHandler(
                     routeAnnotation.type,
-                    routeAnnotation.path,
+                    pathPrefix + routeAnnotation.path,
                     handler
                 )
             }else{
                 app.addHttpHandler(
                     routeAnnotation.type,
-                    routeAnnotation.path,
+                    pathPrefix + routeAnnotation.path,
                     handler,
                     roleAnnotation.role
                 )
             }
-
-
         }
     }
+
 }

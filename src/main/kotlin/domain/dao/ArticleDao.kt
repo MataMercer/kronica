@@ -9,6 +9,17 @@ class ArticleDao(
 ) {
 
     private val mapper = RowMapper { rs ->
+
+        val timelineId = rs.getLong("timelines_id")
+        var timeline: Timeline? = null
+        if (timelineId != 0L){
+            timeline = Timeline(
+                id = timelineId,
+                name = rs.getString("timelines_name"),
+                description = rs.getString("timelines_description")
+            )
+        }
+
         Article(
             id = rs.getLong("id"),
             title = rs.getString("title"),
@@ -20,11 +31,7 @@ class ArticleDao(
                 name = rs.getString("authors_name"),
                 role = enumValueOf(rs.getString("authors_role"))
             ),
-            timeline = Timeline(
-                id = rs.getLong("timelines_id"),
-                name = rs.getString("timelines_name"),
-                description = rs.getString("timelines_description")
-            )
+            timeline = timeline
         )
     }
 
@@ -62,7 +69,7 @@ class ArticleDao(
                FROM articles
                INNER JOIN users 
                    ON articles.author_id=users.id
-               INNER JOIN timelines 
+               LEFT JOIN timelines 
                    ON articles.timeline_id=timelines.id
                WHERE articles.id = ?
                """.trimIndent()
