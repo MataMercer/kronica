@@ -13,6 +13,8 @@ import org.eclipse.jetty.server.session.DefaultSessionCache
 import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.Seeder
+import org.matamercer.controllers.ArticleController
+import org.matamercer.controllers.Router
 import org.matamercer.domain.dao.ArticleDao
 import org.matamercer.domain.dao.FileDao
 import org.matamercer.domain.dao.TransactionManager
@@ -100,9 +102,10 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         }
     }
 
-    app.get("/api/users") { ctx ->
-//        ctx.json(UsersDto(userDao.findAll(), userDao.findAll().size))
-    }
+    val articleController = ArticleController(articleService)
+    val router = Router(articleController, app)
+    router.setupRoutes()
+
     app.get("/api/users/{id}") { ctx ->
         val foundUser = userService.getById(ctx.pathParam("id").toLong())
         ctx.json(userService.toDto(foundUser))
@@ -144,46 +147,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         loginUserToSession(ctx, user)
     }
 
-    app.post("/api/articles", { ctx ->
-//        val createArticleForm = ctx.bodyValidator<CreateArticleForm>()
-//            .check({ !it.title.isNullOrBlank() }, "Title is empty")
-//            .check({ !it.body.isNullOrBlank() }, "Body is empty")
-//            .get()
-        val createArticleForm = CreateArticleForm(
-            title = ctx.formParam("title"),
-            body = ctx.formParam("body"),
-            attachments = ctx.formParams("attachments").map { it.toLong() },
-            uploadedAttachments = ctx.uploadedFiles(),
-            uploadedAttachmentInsertions = ctx.formParams("uploadedAttachmentInsertions").map { it.toInt() }
-        )
-        val author = getCurrentUser(ctx)
-
-        val articleId = articleService.create(createArticleForm, author)
-        val a = articleService.getById(articleId)
-        val dto = articleService.toDto(a)
-        ctx.json(dto)
-    }, UserRole.AUTHENTICATED_USER)
-
-    app.get("/api/articles/{id}") { ctx ->
-        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
-        ctx.json(foundArticle)
-    }
-
-    app.get("/api/articles") { ctx ->
-        val authorId = ctx.queryParam("author_id")?.toLongOrNull()
-        if (authorId != null) {
-            val foundArticlesByUser = articleService.getByAuthorId(authorId.toLong())
-            ctx.json(foundArticlesByUser)
-        } else {
-            val foundArticles = articleService.getAll()
-            ctx.json(foundArticles)
-        }
-    }
-
-    app.delete("/api/articles/{id}"){ ctx ->
-        val currentUser = getCurrentUser(ctx)
-        articleService.deleteById(currentUser, ctx.pathParam("id").toLong())
-    }
 
     app.error(404) { ctx ->
         ctx.result("Error 404: Not found")
@@ -243,9 +206,6 @@ fun authorizeCheck(currentUserRole: UserRole, routeRoles: Set<RouteRole>): Boole
 
 fun createJavalinApp(): Javalin {
     val app = Javalin.create { config ->
-        val jte = JavalinJte()
-        config.fileRenderer(jte)
-        config.staticFiles.add("src/main/jte", Location.EXTERNAL)
         config.jetty.modifyServletContextHandler {
             it.sessionHandler = sqlSessionHandler(
                 "org.postgresql.Driver",

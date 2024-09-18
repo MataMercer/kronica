@@ -158,11 +158,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>gg.jte</groupId>
-            <artifactId>jte</artifactId>
-            <version>3.1.6</version>
-        </dependency>
-        <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
             <version>6.0.0</version>
@@ -171,16 +166,6 @@
             <groupId>io.javalin</groupId>
             <artifactId>javalin-rendering</artifactId>
             <version>6.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>gg.jte</groupId>
-            <artifactId>jte-watcher</artifactId>
-            <version>3.1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>gg.jte</groupId>
-            <artifactId>jte-kotlin</artifactId>
-            <version>3.1.6</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
