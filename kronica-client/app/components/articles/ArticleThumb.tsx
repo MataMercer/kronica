@@ -4,6 +4,7 @@ import { refreshArticles } from "@/app/actions";
 import { Article } from "@/app/fetch/articles";
 import MDEditor from "@uiw/react-md-editor";
 import Image from "next/image";
+import Link from "next/link";
 
 const onDelete = async (id: number) => {
     const response = await fetch(`http://localhost:7070/api/articles/${id}`, {
@@ -26,7 +27,9 @@ export default function ArticleThumb({ article }: Props) {
         >
             <div className="flex flex-col">
                 <h3 className="text-xl font-bold capitalize">
-                    <a href={`/articles/${article.id}`}>{article.title}</a>
+                    <Link href={`/articles/${article.id}`}>
+                        {article.title}
+                    </Link>
                 </h3>
                 {article.attachments.length > 0 && (
                     <Image

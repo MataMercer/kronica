@@ -4,6 +4,7 @@ import org.matamercer.domain.dao.ArticleDao
 import org.matamercer.domain.dao.FileDao
 import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.models.Article
+import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.models.FileModel
 import java.sql.Connection
 import javax.sql.DataSource
@@ -25,10 +26,10 @@ class ArticleRepository(
         return a
     }
 
-    fun findAll(): List<Article>{
+    fun findAll(query: ArticleQuery): List<Article>{
         var articles = emptyList<Article>()
        transactionManager.wrap { conn ->
-           articles = articleDao.findAll(conn).map {
+           articles = articleDao.findAll(conn, query).map {
                aggregate(conn, it)
            }
        }
@@ -46,14 +47,15 @@ class ArticleRepository(
     }
 
     fun deleteById(id: Long){
-        val conn = dataSource.connection
-        articleDao.deleteById(conn, id)
+        dataSource.connection.use { conn ->
+            articleDao.deleteById(conn, id)
+        }
     }
 
-    fun create(article: Article): Article?{
+    fun create(article: Article, timelineId: Long?): Article?{
         var res: Article? = null
-        transactionManager.wrap { conn ->  
-            val id = articleDao.create(conn, article)
+        transactionManager.wrap { conn ->
+            val id = articleDao.create(conn, article, timelineId)
             res = articleDao.findById(conn, id)
 
             val fileModels = article.attachments.map { FileModel(

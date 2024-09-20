@@ -69,7 +69,7 @@ class ArticleServiceUnitTest {
 
     @Test
     fun `When create article, create the article and return the id`(){
-        every { articleDaoSql.create(any(), any()) } returns testArticle.id!!
+        every { articleDaoSql.create(any(), any(), any()) } returns testArticle.id!!
         val art = articleService.create(testArticleForm, testUser)
 
         //TODO: verfiy files creation is done.

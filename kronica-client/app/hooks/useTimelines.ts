@@ -1,13 +1,6 @@
+import useSWR from "swr";
+import { Timeline } from "../fetch/timelines";
 
-import { cookies } from "next/headers";
-import { User } from "./users";
-
-export type Timeline = {
-  id: number;
-  name: string;
-  description: string;
-  author: User;
-}
 
 export async function fetchAllTimelines(authorId: number) {
   const urlSearchParams = new URLSearchParams({
@@ -17,7 +10,6 @@ export async function fetchAllTimelines(authorId: number) {
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
-    headers: { Cookie: cookies().toString() },
     next: { tags: ['timelines'] }
   });
   if (!res.ok) {
@@ -31,4 +23,15 @@ export async function fetchAllTimelines(authorId: number) {
 
     return data as Promise<Timeline[]>;
   }
+}
+
+export default function useTimelines(authorId?: number) {
+  const { data, mutate, error } = useSWR(authorId ? ["useTimelines", authorId] : null, ([URL, authorId]) => fetchAllTimelines(authorId));
+
+  const loading = !data && !error;
+  return {
+    loading,
+    timelines: data,
+    mutate
+  };
 }

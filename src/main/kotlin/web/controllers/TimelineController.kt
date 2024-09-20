@@ -27,10 +27,9 @@ class TimelineController(
     }
 
     @Route(HandlerType.GET, "/api/timelines")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun getTimelines(ctx: Context){
-        val author = getCurrentUser(ctx)
-        val timelines = timelineService.getTimelines(author)
+        val authorId = ctx.queryParam("author_id")?.toLongOrNull()
+        val timelines = timelineService.getTimelines(authorId)
         ctx.json(timelines)
     }
 }

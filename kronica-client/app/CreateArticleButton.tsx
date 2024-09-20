@@ -14,12 +14,15 @@ import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
 import React from "react";
 import UploadInput, { FileInput } from "./components/inputs/UploadInput";
+import useTimelines from "./hooks/useTimelines";
+import useCurrentUser from "./hooks/useCurrentUser";
 
 type Inputs = {
     title: string;
     body: string;
     attachments: string[];
     uploadedAttachments: FileInput[];
+    timelineId: number;
 };
 
 export default function CreateArticleButton() {
@@ -40,13 +43,20 @@ export default function CreateArticleButton() {
         },
     });
 
+    const { user, loading, loggedOut, mutate } = useCurrentUser();
+    const userId = user && user.id;
+    const { timelines } = useTimelines(userId);
+    console.log("Timelines: " + timelines);
+
     const [showArticleForm, setShowArticleForm] = useState(false);
     const ref = React.useRef();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const formData = new FormData();
-        console.log(data);
         formData.append("title", data.title);
         formData.append("body", data.body);
+        if (data.timelineId) {
+            formData.append("timelineId", data.timelineId.toString());
+        }
         data.uploadedAttachments
             .filter((it) => it.data)
             .map((it) => {
@@ -90,6 +100,23 @@ export default function CreateArticleButton() {
                                 id="title"
                                 defaultValue="Untitled"
                             />
+                        </label>
+                        <label className="flex flex-col" htmlFor="name">
+                            Timeline (Optional)
+                            <select
+                                {...register("timelineId")}
+                                disabled={!!!timelines}
+                            >
+                                <option key={0} value={undefined}>
+                                    None
+                                </option>
+                                {timelines &&
+                                    timelines.map((it) => (
+                                        <option key={it.id} value={it.id}>
+                                            {it.name}
+                                        </option>
+                                    ))}
+                            </select>
                         </label>
                         <label className="flex flex-col" htmlFor="body">
                             Body

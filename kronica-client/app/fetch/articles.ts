@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { User } from "./PublicUsers";
+import { User } from "./users";
 
 export type Article = {
   id: number;
@@ -13,8 +13,16 @@ export type FileModel = {
   name: string;
 }
 
-export async function fetchAllArticles() {
-  const url = "http://localhost:7070/api/articles";
+export async function fetchAllArticles(authorId?: number, timelineId?: number) {
+  const urlSearchParams = new URLSearchParams({
+  })
+  if (authorId && authorId !== null) {
+    urlSearchParams.set("author_id", authorId.toString())
+  }
+  if (timelineId && timelineId !== null) {
+    urlSearchParams.set("timeline_id", timelineId.toString())
+  }
+  const url = `http://localhost:7070/api/articles?${urlSearchParams}`;
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",

@@ -21,8 +21,8 @@ class ArticleService(
         return article
     }
 
-    fun getAll(): List<Article> {
-        return articleRepository.findAll()
+    fun getAll(query: ArticleQuery): List<Article> {
+        return articleRepository.findAll(query)
     }
 
     fun getByAuthorId(id: Long?): List<Article> {
@@ -47,8 +47,9 @@ class ArticleService(
                 title = createArticleForm.title!!,
                 body = createArticleForm.body!!,
                 author = author,
-                attachments = attachments
-            )
+                attachments = attachments,
+            ),
+            createArticleForm.timelineId
         )
         if (article?.id == null) {
             throw InternalServerErrorResponse()

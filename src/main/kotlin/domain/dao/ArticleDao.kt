@@ -1,9 +1,15 @@
 package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.Article
+import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
 import java.sql.Connection
+import java.sql.SQLType
+import java.sql.Types
+
+
+
 
 class ArticleDao(
 ) {
@@ -35,7 +41,7 @@ class ArticleDao(
         )
     }
 
-    fun findAll(conn: Connection): List<Article> {
+    fun findAll(conn: Connection, query: ArticleQuery?): List<Article> {
         val sql = """
             SELECT
                 articles.*,
@@ -49,9 +55,15 @@ class ArticleDao(
                 timelines.description AS timelines_description
             FROM articles
             INNER JOIN users ON articles.author_id=users.id
-            INNER JOIN timelines ON articles.timeline_id=timelines.id
+            LEFT JOIN timelines ON articles.timeline_id=timelines.id
+            WHERE ${if(query?.authorId!=null) "users.id = ?" else "TRUE"  }
+            AND ${if(query?.timelineId!=null) "timelines.id = ?" else "TRUE"  } 
             """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {}
+        return mapper.queryForObjectList(sql, conn) {
+            var i = 0
+            query?.authorId?.let { it1 -> it.setLong(++i, it1) }
+            query?.timelineId?.let { it1 -> it.setLong(++i, it1) }
+        }
     }
 
     fun findById(conn: Connection, id: Long): Article? {
@@ -109,15 +121,16 @@ class ArticleDao(
         }
     }
 
-    fun create(conn: Connection, article: Article): Long {
+    fun create(conn: Connection, article: Article, timelineId: Long?): Long {
         val sql = """
                 INSERT INTO articles
                     (title,
                     body,
                     created_at,
                     updated_at,
-                    author_id)
-                VALUES (?, ?, ?, ?, ?)
+                    author_id,
+                    timeline_id)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """.trimIndent()
 
         return mapper.update(sql, conn) {
@@ -126,6 +139,11 @@ class ArticleDao(
             it.setTimestamp(3, genTimestamp())
             it.setTimestamp(4, genTimestamp())
             article.author.id?.let { it1 -> it.setLong(5, it1) }
+            if (timelineId == null){
+                it.setNull(6, Types.NULL)
+            }else{
+                it.setLong(6, timelineId)
+            }
         }
     }
 

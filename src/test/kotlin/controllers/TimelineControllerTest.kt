@@ -85,16 +85,20 @@ class TimelineControllerTest {
         val requestBody = JavalinJackson().toJsonString(createTimelineForm).toRequestBody()
         val createRequest1 = Request.Builder()
             .url("${getHostUrl(app)}/api/timelines")
-            .post(requestBody).build()
+            .post(requestBody)
+            .build()
         val createRequestRes = authClient.okHttp.newCall(createRequest1).execute()
         val createRequest1Body = createRequestRes.body?.string()
         print(createRequest1Body)
         assertThat(createRequestRes.code == 200).isTrue()
 
 
+
         val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/timelines")
-            .get().build()
+            .url("${getHostUrl(app)}/api/timelines/?author_id=${fixtures.rootUser.id}")
+            .get()
+            .build()
+
         val res = authClient.okHttp.newCall(request).execute()
         val body = res.body?.string()
         print(body)

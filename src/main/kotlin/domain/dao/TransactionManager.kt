@@ -9,18 +9,18 @@ class TransactionManager(
     private val dataSource: DataSource
 ) {
     fun wrap(callback: (conn: Connection) -> Unit) {
-        val conn = dataSource.connection
-        try {
-            conn.autoCommit = false
-            callback(conn)
-            conn.commit();
-            conn.autoCommit = true
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            conn.rollback()
-            throw InternalServerErrorResponse()
-        } finally {
-            conn.close()
+        dataSource.connection.use{ conn ->
+            try {
+                conn.autoCommit = false
+                callback(conn)
+                conn.commit();
+                conn.autoCommit = true
+            } catch (e: SQLException) {
+                e.printStackTrace()
+                conn.rollback()
+                throw InternalServerErrorResponse()
+            }
         }
+
     }
 }

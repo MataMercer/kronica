@@ -9,7 +9,6 @@ import { fetchAllTimelines } from "./fetch/timelines";
 
 export default async function Home() {
     const articles = await fetchAllArticles();
-    const timelines = await fetchAllTimelines();
 
     console.log(articles);
     return (
@@ -33,15 +32,6 @@ export default async function Home() {
                 {articles ? (
                     articles.map((article) => (
                         <ArticleThumb key={article.id} article={article} />
-                    ))
-                ) : (
-                    <div>There are no articles.</div>
-                )}
-            </div>
-            <div className="grid sm:grid-cols-5 gap-4">
-                {timelines ? (
-                    timelines.map((timeline) => (
-                        <div key={timeline.id}>{timeline.name}</div>
                     ))
                 ) : (
                     <div>There are no articles.</div>

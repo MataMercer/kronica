@@ -61,7 +61,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val fileDao = FileDao()
 
     val timelineDao = TimelineDao()
-    val timelineRepository = TimelineRepository(timelineDao, dataSource)
+    val timelineRepository = TimelineRepository(timelineDao, dataSource, transactionManager)
     val timelineService = TimelineService(timelineRepository)
 
     val storageService = FileSystemStorageService()

@@ -19,6 +19,7 @@ data class CreateArticleForm(
     val title: String?,
     val body: String?,
     val attachments: List<Long> = listOf(),
+    val timelineId: Long? = null,
     val uploadedAttachments: List<UploadedFile> = listOf(),
     val uploadedAttachmentInsertions: List<Int> = listOf()
 )

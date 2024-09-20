@@ -10,7 +10,7 @@ data class Article(
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
     val characterData: CharacterData? = null,
-    val timeline: Timeline? = null,
+    var timeline: Timeline? = null,
     var attachments: List<FileModel> = listOf()
 )
 
@@ -22,6 +22,11 @@ data class ArticleDto(
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
     val attachments: List<FileModelDto> = listOf()
+)
+
+data class ArticleQuery(
+    val authorId: Long? = null,
+    val timelineId: Long? = null
 )
 
 

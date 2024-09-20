@@ -54,7 +54,8 @@ CREATE TABLE timelines
 
 
     CONSTRAINT pk_timelines PRIMARY KEY (id),
-    CONSTRAINT fk_author_id FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
+    CONSTRAINT fk_author_id FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT uc_timelines_name UNIQUE (name)
 );
 
 CREATE TABLE articles

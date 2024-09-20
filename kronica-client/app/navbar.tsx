@@ -20,7 +20,7 @@ export default async function Navbar() {
                 ) : (
                     <>
                         <li>
-                            <Link href="/user">
+                            <Link href={`/users/${currentUser.id}`}>
                                 🟢{currentUser.name.toUpperCase()}
                             </Link>
                         </li>

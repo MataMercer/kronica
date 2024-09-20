@@ -26,17 +26,19 @@ class UserService(val userDao: UserDao, val dataSource: DataSource) {
 
     fun getByEmail(email: String?): User? {
         if (email.isNullOrBlank()) throw BadRequestResponse()
-        val conn = dataSource.connection
-        val user = userDao.findByEmail(conn, email)
-        return user
+        dataSource.connection.use { conn ->
+            val user = userDao.findByEmail(conn, email)
+            return user
+        }
     }
 
     fun getById(id: Long?): User {
         if (id == null) throw BadRequestResponse()
-        val conn = dataSource.connection
-        val user = userDao.findById(conn, id)
-        user ?: throw NotFoundResponse()
-        return user
+        dataSource.connection.use { conn ->
+            val user = userDao.findById(conn, id)
+            user ?: throw NotFoundResponse()
+            return user
+        }
     }
     fun authenticateUser(loginRequestForm: LoginRequestForm): User{
         val foundUser = getByEmail(loginRequestForm.email) ?: throw NotFoundResponse()
@@ -51,22 +53,23 @@ class UserService(val userDao: UserDao, val dataSource: DataSource) {
 
     fun registerUser(registerUserForm: RegisterUserForm, userRole: UserRole = UserRole.AUTHENTICATED_USER): User{
         if (registerUserForm.name != null && registerUserForm.email != null && registerUserForm.password != null){
-            val conn = dataSource.connection
-            val newUserId = userDao.create(conn,
-                User(name = registerUserForm.name,
-                    email = registerUserForm.email,
-                    hashedPassword = hashPassword(registerUserForm.password),
-                    role = userRole))
-            if (newUserId != null) {
-                val newUser = userDao.findById(conn, newUserId)
-                if (newUser != null){
-                    return newUser
+            dataSource.connection.use { conn ->
+                val newUserId = userDao.create(conn,
+                    User(name = registerUserForm.name,
+                        email = registerUserForm.email,
+                        hashedPassword = hashPassword(registerUserForm.password),
+                        role = userRole))
+                if (newUserId != null) {
+                    val newUser = userDao.findById(conn, newUserId)
+                    if (newUser != null){
+                        return newUser
+                    }
+                    else{
+                        throw NotFoundResponse()
+                    }
+                }else{
+                    throw BadRequestResponse()
                 }
-                else{
-                    throw NotFoundResponse()
-                }
-            }else{
-                throw BadRequestResponse()
             }
         }else{
             throw BadRequestResponse()

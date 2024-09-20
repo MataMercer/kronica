@@ -69,7 +69,35 @@ class ArticleControllerTest {
     fun `when Create Article returns ok`(){
         val createArticleForm = CreateArticleForm(
             title = fixtures.testArticle.title,
-            body = fixtures.testArticle.body
+            body = fixtures.testArticle.body,
+            timelineId = null
+        )
+
+        val uploadFile = File("resources/test/polarbear.jpg")
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("title", fixtures.testArticle.title)
+            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .build()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles")
+            .post(requestBody).build()
+
+        val res = authClient.okHttp.newCall(request).execute()
+        val body = res.body?.string()
+        print(body)
+        assertThat(res.code == 200).isTrue()
+    }
+
+    @Test
+    fun `when Create Article with Timeline returns ok`(){
+        val createArticleForm = CreateArticleForm(
+            title = fixtures.testArticle.title,
+            body = fixtures.testArticle.body,
+                    timelineId = null
         )
 
         val uploadFile = File("resources/test/polarbear.jpg")
@@ -95,7 +123,8 @@ class ArticleControllerTest {
     fun `when Create Article without attachments returns ok`(){
         val createArticleForm = CreateArticleForm(
             title = fixtures.testArticle.title,
-            body = fixtures.testArticle.body
+            body = fixtures.testArticle.body,
+            timelineId = null
         )
 
         val requestBody = MultipartBody.Builder()
@@ -117,7 +146,9 @@ class ArticleControllerTest {
     fun `when create article with empty form return bad response`(){
         val createArticleForm = CreateArticleForm(
             title = null,
-            body = null
+            body = null,
+                    timelineId = null
+
         )
         val res = authClient.post("/api/articles", createArticleForm)
         assertThat(res.isSuccessful).isFalse()

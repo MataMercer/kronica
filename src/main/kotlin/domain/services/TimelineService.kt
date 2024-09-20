@@ -23,11 +23,11 @@ class TimelineService(
 
     }
 
-    fun getTimelines(author: User): List<Timeline>{
-        if (author.id == null){
+    fun getTimelines(authorId: Long?): List<Timeline>{
+        if (authorId == null){
             throw BadRequestResponse("")
         }
-        return timelineRepository.findByAuthorId(author.id)
+        return timelineRepository.findByAuthorId(authorId)
     }
 
     private fun validateForm(timelineForm: CreateTimelineForm){
