@@ -2,6 +2,7 @@ package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.ArticleDao
 import org.matamercer.domain.dao.FileDao
+import org.matamercer.domain.dao.TimelineDao
 import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.ArticleQuery
@@ -12,6 +13,7 @@ import javax.sql.DataSource
 class ArticleRepository(
     private val articleDao: ArticleDao,
     private val fileDao: FileDao,
+    private val timelineDao: TimelineDao,
     private val transactionManager: TransactionManager,
     private val dataSource: DataSource
 ) {
@@ -55,13 +57,20 @@ class ArticleRepository(
     fun create(article: Article, timelineId: Long?): Article?{
         var res: Article? = null
         transactionManager.wrap { conn ->
-            val id = articleDao.create(conn, article, timelineId)
-            res = articleDao.findById(conn, id)
+            val newArticleId = articleDao.create(conn, article)
+
+
+            res = articleDao.findById(conn, newArticleId)
+
+            if (timelineId != null){
+                timelineDao.createTimelineEntry(conn, timelineId, newArticleId )
+            }
+
 
             val fileModels = article.attachments.map { FileModel(
                 name = it.name,
                 author = it.author,
-                owningArticleId = id
+                owningArticleId = newArticleId
             ) }
             fileModels.forEach{
                 fileDao.create(conn, it)

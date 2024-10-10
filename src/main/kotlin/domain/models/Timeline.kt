@@ -6,3 +6,10 @@ data class Timeline(
     val description: String,
     val author: User? = null,
     )
+
+data class TimelineDto(
+    val id: Long? = null,
+    val name: String,
+    val description: String,
+    val author: User? = null,
+)

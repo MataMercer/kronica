@@ -21,8 +21,8 @@ class ArticleService(
         return article
     }
 
-    fun getAll(query: ArticleQuery): List<Article> {
-        return articleRepository.findAll(query)
+    fun getAll(query: ArticleQuery): List<ArticleDto> {
+        return articleRepository.findAll(query).map { toDto(it) }
     }
 
     fun getByAuthorId(id: Long?): List<Article> {
@@ -116,7 +116,11 @@ class ArticleService(
                     id = it.id,
                     name = it.name
                 )
-            }
+            },
+            timelineIndex = article.timelineIndex,
+            timelineName =  article.timeline?.name,
+            timelineId = article.timeline?.id
+
         )
     }
 

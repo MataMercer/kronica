@@ -44,12 +44,21 @@ fun initTestDataSource():HikariDataSource{
     return ds
 }
 
-fun migrate(dataSource: HikariDataSource){
+fun migrate(dataSource: HikariDataSource, appMode: AppMode? = AppMode.DEV){
+    val l = mutableListOf<String>()
+    l.add("classpath:/db/migration")
+    if (appMode == AppMode.TEST){
+       l.add("classpath:/db/test")
+    }
+
+
     val flyway = Flyway.configure()
         .cleanDisabled(false)
         .dataSource(dataSource)
+        .locations(*l.toTypedArray())
         .load()
 
     flyway.clean()
     flyway.migrate()
+
 }

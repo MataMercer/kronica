@@ -5,20 +5,15 @@ import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
 import java.sql.Connection
-import java.sql.SQLType
 import java.sql.Types
 
-
-
-
-class ArticleDao(
-) {
+class ArticleDao {
 
     private val mapper = RowMapper { rs ->
 
         val timelineId = rs.getLong("timelines_id")
         var timeline: Timeline? = null
-        if (timelineId != 0L){
+        if (timelineId != 0L) {
             timeline = Timeline(
                 id = timelineId,
                 name = rs.getString("timelines_name"),
@@ -37,7 +32,8 @@ class ArticleDao(
                 name = rs.getString("authors_name"),
                 role = enumValueOf(rs.getString("authors_role"))
             ),
-            timeline = timeline
+            timeline = timeline,
+            timelineIndex = rs.getLong("timeline_entries_timeline_index")
         )
     }
 
@@ -50,14 +46,20 @@ class ArticleDao(
                 users.name AS authors_name,
                 users.role AS authors_role,
                 
+                timeline_entries.timeline_index AS timeline_entries_timeline_index,
+                   
                 timelines.id AS timelines_id,
                 timelines.name AS timelines_name,
                 timelines.description AS timelines_description
             FROM articles
-            INNER JOIN users ON articles.author_id=users.id
-            LEFT JOIN timelines ON articles.timeline_id=timelines.id
-            WHERE ${if(query?.authorId!=null) "users.id = ?" else "TRUE"  }
-            AND ${if(query?.timelineId!=null) "timelines.id = ?" else "TRUE"  } 
+            INNER JOIN users 
+                ON articles.author_id=users.id
+            LEFT JOIN timeline_entries 
+                ON articles.id=timeline_entries.article_id
+            INNER JOIN timelines
+                ON timeline_entries.timeline_id=timelines.id
+            WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
+            AND ${if (query?.timelineId != null) "timelines.id = ?" else "TRUE"} 
             """.trimIndent()
         return mapper.queryForObjectList(sql, conn) {
             var i = 0
@@ -75,14 +77,19 @@ class ArticleDao(
                    users.name AS authors_name,
                    users.role AS authors_role,
                    
+                   timeline_entries.timeline_index AS timeline_entries_timeline_index,
+                   
                    timelines.id AS timelines_id,
                    timelines.name AS timelines_name,
                    timelines.description AS timelines_description
+                   
                FROM articles
                INNER JOIN users 
                    ON articles.author_id=users.id
-               LEFT JOIN timelines 
-                   ON articles.timeline_id=timelines.id
+               LEFT JOIN timeline_entries 
+                ON articles.id=timeline_entries.article_id
+               LEFT JOIN timelines
+                ON timeline_entries.timeline_id=timelines.id    
                WHERE articles.id = ?
                """.trimIndent()
         return mapper.queryForObject(sql, conn) {
@@ -121,35 +128,33 @@ class ArticleDao(
         }
     }
 
-    fun create(conn: Connection, article: Article, timelineId: Long?): Long {
+    fun create(conn: Connection, article: Article): Long {
         val sql = """
                 INSERT INTO articles
                     (title,
                     body,
                     created_at,
                     updated_at,
-                    author_id,
-                    timeline_id)
-                VALUES (?, ?, ?, ?, ?, ?)
+                    author_id
+                    )
+                VALUES (?, ?, ?, ?, ?)
                 """.trimIndent()
 
         return mapper.update(sql, conn) {
-            it.setString(1, article.title)
-            it.setString(2, article.body)
-            it.setTimestamp(3, genTimestamp())
-            it.setTimestamp(4, genTimestamp())
-            article.author.id?.let { it1 -> it.setLong(5, it1) }
-            if (timelineId == null){
-                it.setNull(6, Types.NULL)
-            }else{
-                it.setLong(6, timelineId)
-            }
+            var i = 0
+            it.setString(++i, article.title)
+            it.setString(++i, article.body)
+            it.setTimestamp(++i, genTimestamp())
+            it.setTimestamp(++i, genTimestamp())
+            article.author.id?.let { it1 -> it.setLong(++i, it1) }
         }
     }
 
     fun update(article: Article): Long? {
         TODO("Not yet implemented")
     }
+
+
 
     fun deleteById(conn: Connection, id: Long) {
         val sql = """

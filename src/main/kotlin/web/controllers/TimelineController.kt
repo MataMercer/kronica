@@ -7,12 +7,15 @@ import org.matamercer.domain.services.TimelineService
 import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateTimelineForm
+import org.matamercer.web.UpdateTimelineOrderForm
 
+
+@Controller("/api/timelines")
 class TimelineController(
     private val timelineService: TimelineService
 ) {
 
-    @Route(HandlerType.POST, "/api/timelines")
+    @Route(HandlerType.POST, "/")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun createTimeline(ctx: Context){
         val form = ctx.bodyValidator<CreateTimelineForm>()
@@ -26,10 +29,22 @@ class TimelineController(
         }
     }
 
-    @Route(HandlerType.GET, "/api/timelines")
+    @Route(HandlerType.GET, "/")
     fun getTimelines(ctx: Context){
         val authorId = ctx.queryParam("author_id")?.toLongOrNull()
         val timelines = timelineService.getTimelines(authorId)
         ctx.json(timelines)
+    }
+
+    @Route(HandlerType.PUT, "/{id}/position")
+    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    fun updateOrder(ctx: Context) {
+        val timelineId = ctx.pathParam("id").toLong()
+        val author = getCurrentUser(ctx)
+
+        val form = ctx.bodyValidator<UpdateTimelineOrderForm>()
+//            .check({ it.insertionIndex == null }, "Insertion Index is empty")
+            .get()
+        author.id?.let { timelineService.updateOrder(timelineId, form, it) }
     }
 }

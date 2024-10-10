@@ -2,15 +2,18 @@ package org.matamercer.web.controllers
 
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
+import io.javalin.http.bodyValidator
 import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.services.ArticleService
+import org.matamercer.domain.services.TimelineService
 import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
 
 @Controller("/api/articles")
 class ArticleController(
-    private val articleService: ArticleService
+    private val articleService: ArticleService,
+    private val timelineService: TimelineService
 ) {
 
     @Route(HandlerType.GET, "/{id}")
@@ -34,7 +37,8 @@ class ArticleController(
     @Route(HandlerType.DELETE, "/{id}")
     fun deleteArticle(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
-        articleService.deleteById(currentUser, ctx.pathParam("id").toLong())
+        val articleId = ctx.pathParam("id").toLong()
+        articleService.deleteById(currentUser, articleId)
     }
 
     @Route(HandlerType.POST, "/")
@@ -59,5 +63,8 @@ class ArticleController(
         val dto = articleService.toDto(a)
         ctx.json(dto)
     }
+
+
+
 
 }

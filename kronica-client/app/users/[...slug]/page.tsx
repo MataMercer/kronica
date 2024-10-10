@@ -1,9 +1,3 @@
-import ArticleThumb from "@/app/components/articles/ArticleThumb";
-import { fetchAllArticles, fetchArticle } from "@/app/fetch/articles";
-import { fetchAllTimelines, Timeline } from "@/app/fetch/timelines";
-import { fetchUser } from "@/app/fetch/users";
-import Image from "next/image";
-import Link from "next/link";
 import TimelineSideBar from "../TimelineSideBar";
 import ArticleDisplay from "../ArticlesDisplay";
 

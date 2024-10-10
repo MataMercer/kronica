@@ -28,3 +28,11 @@ data class CreateTimelineForm(
     val name: String?,
     val description: String?
 )
+
+data class UpdateTimelineOrderForm(
+    val updates: List<TimelineOrderUpdate> = listOf()
+)
+data class TimelineOrderUpdate(
+    val newIndex: Long,
+    val articleId: Long,
+)

@@ -11,10 +11,11 @@ export default async function ArticleDisplay({
     return (
         <div className=" grow p-4">
             <div className="text-3xl">Starring</div>
-            <div>No one... yet. Wip</div>
+            <div>No one is listed as starring in this timeline.</div>
             <div className="text-3xl">Articles</div>
+            <button className="button">Kronologize</button>
             <div className="grid sm:grid-cols-5 gap-4">
-                {articles ? (
+                {articles && articles.length > 0 ? (
                     articles.map((article) => (
                         <ArticleThumb key={article.id} article={article} />
                     ))

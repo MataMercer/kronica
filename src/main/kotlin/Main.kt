@@ -3,8 +3,6 @@ package org.matamercer
 import com.zaxxer.hikari.HikariDataSource
 import io.javalin.Javalin
 import io.javalin.http.*
-import io.javalin.http.staticfiles.Location
-import io.javalin.rendering.template.JavalinJte
 import io.javalin.security.RouteRole
 import org.apache.commons.io.FilenameUtils
 import org.eclipse.jetty.http.HttpCookie
@@ -14,7 +12,6 @@ import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.Seeder
 import org.matamercer.domain.dao.*
-import org.matamercer.domain.models.CurrentUserDto
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.repository.TimelineRepository
@@ -24,9 +21,6 @@ import org.matamercer.domain.services.UserService
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.security.UserRole
 import org.matamercer.security.generateCsrfToken
-import org.matamercer.web.CreateArticleForm
-import org.matamercer.web.LoginRequestForm
-import org.matamercer.web.RegisterUserForm
 import org.matamercer.web.controllers.*
 
 
@@ -47,7 +41,12 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     }else{
         initDataSource()
     }
-    migrate(dataSource)
+
+    if (appMode == AppMode.TEST){
+        migrate(dataSource, appMode)
+    }else{
+        migrate(dataSource)
+    }
 
     val transactionManager = TransactionManager(dataSource)
 
@@ -70,7 +69,12 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     }
     storageService.init()
 
-    val articleRepository = ArticleRepository(articleDao, fileDao, transactionManager, dataSource)
+    val articleRepository = ArticleRepository(
+        articleDao = articleDao,
+        fileDao = fileDao,
+        transactionManager =  transactionManager,
+        dataSource = dataSource,
+        timelineDao = timelineDao)
     val articleService = ArticleService(articleRepository, storageService)
 
     app.beforeMatched { ctx ->
@@ -101,7 +105,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         }
     }
 
-    val articleController = ArticleController(articleService)
+    val articleController = ArticleController(articleService, timelineService)
     val timelineController = TimelineController(timelineService)
     val userController = UserController(userService)
     val authController = AuthController(userService)
