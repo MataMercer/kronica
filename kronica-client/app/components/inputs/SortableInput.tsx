@@ -26,6 +26,11 @@ interface InputTypeInterface {
     id: UniqueIdentifier;
 }
 
+type ListMutation = {
+    id: UniqueIdentifier;
+    newIndex: number;
+};
+
 interface Props<T> {
     list: T[];
     setList: (arg0: T[]) => void;

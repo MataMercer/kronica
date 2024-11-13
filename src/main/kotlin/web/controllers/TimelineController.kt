@@ -36,15 +36,19 @@ class TimelineController(
         ctx.json(timelines)
     }
 
-    @Route(HandlerType.PUT, "/{id}/position")
+    @Route(HandlerType.GET, "/{id}")
+    fun getTimeline(ctx: Context){
+        val timelineId = ctx.pathParam("id").toLong()
+        val timeline = timelineService.getTimelineById(timelineId)
+        ctx.json(timeline)
+    }
+
+    @Route(HandlerType.PUT, "/{id}/order")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun updateOrder(ctx: Context) {
         val timelineId = ctx.pathParam("id").toLong()
         val author = getCurrentUser(ctx)
-
-        val form = ctx.bodyValidator<UpdateTimelineOrderForm>()
-//            .check({ it.insertionIndex == null }, "Insertion Index is empty")
-            .get()
+        val form = ctx.bodyValidator<UpdateTimelineOrderForm>().get()
         author.id?.let { timelineService.updateOrder(timelineId, form, it) }
     }
 }

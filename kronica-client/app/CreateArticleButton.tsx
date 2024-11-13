@@ -11,7 +11,7 @@ import {
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { refreshArticles } from "./actions";
 import MDEditor from "@uiw/react-md-editor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import UploadInput, { FileInput } from "./components/inputs/UploadInput";
 import useTimelines from "./hooks/useTimelines";
@@ -43,10 +43,14 @@ export default function CreateArticleButton() {
         },
     });
 
-    const { user, loading, loggedOut, mutate } = useCurrentUser();
+    const {
+        user,
+        loading,
+        loggedOut,
+        mutate: mutateCurrentUser,
+    } = useCurrentUser();
     const userId = user && user.id;
-    const { timelines } = useTimelines(userId);
-    console.log("Timelines: " + timelines);
+    const { timelines, mutate: mutateTimelines } = useTimelines(userId);
 
     const [showArticleForm, setShowArticleForm] = useState(false);
     const ref = React.useRef();
@@ -82,6 +86,7 @@ export default function CreateArticleButton() {
                     className="button"
                     onClick={() => {
                         setShowArticleForm(true);
+                        mutateTimelines();
                     }}
                 >
                     CREATE ARTICLE

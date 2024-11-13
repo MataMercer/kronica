@@ -60,6 +60,7 @@ class ArticleDao {
                 ON timeline_entries.timeline_id=timelines.id
             WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
             AND ${if (query?.timelineId != null) "timelines.id = ?" else "TRUE"} 
+            ${if (query?.timelineId != null) "ORDER BY timeline_entries_timeline_index ASC" else "" }
             """.trimIndent()
         return mapper.queryForObjectList(sql, conn) {
             var i = 0

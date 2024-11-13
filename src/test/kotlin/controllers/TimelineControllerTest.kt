@@ -176,15 +176,12 @@ class TimelineControllerTest {
 
 
         val updateTimelineOrderForm = UpdateTimelineOrderForm(
-            updates = listOf(TimelineOrderUpdate(
-                articleId = 3,
-                newIndex = 1
-            ))
+           listOf(3, 1, 2)
         )
 
         val requestBody = JavalinJackson().toJsonString(updateTimelineOrderForm).toRequestBody()
         val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/timelines/${timelineId}/position")
+            .url("${getHostUrl(app)}/api/timelines/${timelineId}/order")
             .put(requestBody).build()
         val res = authClient.okHttp.newCall(request).execute()
         val body = res.body?.string()
@@ -205,15 +202,12 @@ class TimelineControllerTest {
         val articleId3 = createTestArticle(timelineId)
 
         val updateTimelineOrderForm = UpdateTimelineOrderForm(
-            updates = listOf(TimelineOrderUpdate(
-                articleId = 1,
-                newIndex = 3
-            ))
+            listOf(2, 3, 1)
         )
 
         val requestBody = JavalinJackson().toJsonString(updateTimelineOrderForm).toRequestBody()
         val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/timelines/${timelineId}/position")
+            .url("${getHostUrl(app)}/api/timelines/${timelineId}/order")
             .put(requestBody).build()
         val res = authClient.okHttp.newCall(request).execute()
         val body = res.body?.string()

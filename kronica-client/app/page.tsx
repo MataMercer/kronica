@@ -8,7 +8,7 @@ import CreateTimelineButton from "./CreateTimelineButton";
 import { fetchAllTimelines } from "./fetch/timelines";
 
 export default async function Home() {
-    const articles = await fetchAllArticles();
+    const articles = (await fetchAllArticles())?.content;
 
     console.log(articles);
     return (

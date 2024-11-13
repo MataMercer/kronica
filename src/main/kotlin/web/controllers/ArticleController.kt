@@ -3,12 +3,14 @@ package org.matamercer.web.controllers
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import io.javalin.http.bodyValidator
+import org.matamercer.domain.models.ArticleDto
 import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.services.ArticleService
 import org.matamercer.domain.services.TimelineService
 import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
+import org.matamercer.web.dto.Page
 
 @Controller("/api/articles")
 class ArticleController(
@@ -31,7 +33,10 @@ class ArticleController(
             timelineId = timelineId
         )
         val foundArticles = articleService.getAll(articleQuery)
-        ctx.json(foundArticles)
+        val pagedArticles = Page<ArticleDto>(
+            content = foundArticles
+        )
+        ctx.json(pagedArticles)
     }
 
     @Route(HandlerType.DELETE, "/{id}")

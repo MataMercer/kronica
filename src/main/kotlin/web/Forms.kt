@@ -1,8 +1,6 @@
 package org.matamercer.web
 
 import io.javalin.http.UploadedFile
-import org.matamercer.domain.models.FileModel
-import org.matamercer.security.UserRole
 
 data class LoginRequestForm(
     val email: String?,
@@ -30,9 +28,5 @@ data class CreateTimelineForm(
 )
 
 data class UpdateTimelineOrderForm(
-    val updates: List<TimelineOrderUpdate> = listOf()
-)
-data class TimelineOrderUpdate(
-    val newIndex: Long,
-    val articleId: Long,
+    val order: List<Long> = listOf()
 )

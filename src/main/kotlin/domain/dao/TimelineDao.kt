@@ -100,7 +100,21 @@ class TimelineDao {
 
     }
 
-    fun updateArticleIndex(conn: Connection, articleId: Long, timelineIndex: Long): Long {
+    fun updateTimelineOrder(conn: Connection, articleId: Long, index: Int): Long{
+        val sql = """
+            UPDATE timeline_entries
+            SET timeline_index = ?
+            WHERE article_id = ?
+        """.trimIndent()
+        return mapper.update(sql, conn){
+            var i = 0
+            it.setInt(++i, index )
+            it.setLong(++i, articleId)
+        }
+    }
+
+
+    fun updateArticleIndex__Backup(conn: Connection, articleId: Long, timelineIndex: Long): Long {
         val sql = """
             --- article id 4 move to index 0
             WITH s AS
@@ -117,15 +131,15 @@ class TimelineDao {
                     JOIN articles
                     ON timeline_entries.article_id=articles.id
                     WHERE articles.id=?
-            ) 
+            )
             UPDATE timeline_entries AS t_e
-                SET timeline_index =  
+                SET timeline_index =
                     (
-                            --- If the current item is in between source and target, 
+                            --- If the current item is in between source and target,
                             --- +1 or -1 the index depending if target is moving left or right respectively.
-                            --- If the current item is the target, just give it the 
-                        SELECT 
-                         CASE 
+                            --- If the current item is the target, just give it the
+                        SELECT
+                         CASE
                             WHEN s.timeline_index = t_e.timeline_index THEN ?
                             WHEN ? < t_e.timeline_index THEN t_e.timeline_index + 1
                             WHEN ? >= t_e.timeline_index THEN t_e.timeline_index - 1
@@ -134,11 +148,11 @@ class TimelineDao {
                           END
                          FROM s LIMIT 1
                     )
-                FROM 
+                FROM
                     subq
                 WHERE t_e.timeline_id = subq.timeline_id
                     --- Only update items between inclusively the target and source.
-                    AND ? <= t_e.timeline_index 
+                    AND ? <= t_e.timeline_index
                         AND t_e.timeline_index <= subq.timeline_index
                         AND t_e.timeline_index >= ?
                     OR ? >= t_e.timeline_index

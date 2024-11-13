@@ -1,6 +1,10 @@
 import { cookies } from "next/headers";
 import { User } from "./users";
 
+export type Page<T> = {
+  content: T[]
+}
+
 export type Article = {
   id: number;
   title: string;
@@ -37,7 +41,7 @@ export async function fetchAllArticles(authorId?: number, timelineId?: number) {
   if (res.ok) {
     const data = res.json();
 
-    return data as Promise<Article[]>;
+    return data as Promise<Page<Article>>;
   }
 }
 

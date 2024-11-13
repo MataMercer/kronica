@@ -3,7 +3,6 @@ package org.matamercer.domain.repository
 import org.matamercer.domain.dao.TimelineDao
 import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.models.Timeline
-import org.matamercer.web.TimelineOrderUpdate
 import javax.sql.DataSource
 
 class TimelineRepository(
@@ -35,12 +34,14 @@ class TimelineRepository(
         }
     }
 
-    fun updateOrder(updates: List<TimelineOrderUpdate>){
+    fun updateOrder(timelineId: Long, order: Array<Long>){
         transactionManager.wrap { conn ->
-            updates.forEach{update ->
-                timelineDao.updateArticleIndex(conn, update.articleId, update.newIndex )
+            order.forEachIndexed { index, id ->
+                timelineDao.updateTimelineOrder(conn, id, index)
             }
         }
+
+
 
     }
 }

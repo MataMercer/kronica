@@ -41,7 +41,7 @@ class TimelineService(
 
     fun updateOrder(timelineId: Long, updateTimelineOrderForm: UpdateTimelineOrderForm, authorId: Long){
         checkOwnership(timelineId, authorId)
-        timelineRepository.updateOrder(updateTimelineOrderForm.updates)
+        timelineRepository.updateOrder(timelineId, updateTimelineOrderForm.order.toTypedArray())
     }
 
     fun getTimelineById(timelineId: Long): Timeline {

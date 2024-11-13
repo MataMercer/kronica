@@ -32,3 +32,23 @@ export async function fetchAllTimelines(authorId: number) {
     return data as Promise<Timeline[]>;
   }
 }
+
+export async function fetchTimeline(id: string) {
+  const url = `http://localhost:7070/api/timelines/${id}`;
+  const res = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+    headers: { Cookie: cookies().toString() },
+  });
+  if (!res.ok) {
+    const error = new Error("Failed to get a timeline");
+
+    console.log(res.status)
+    console.log(error.message)
+  }
+
+  if (res.ok) {
+    const data = res.json();
+    return data as Promise<Timeline>;
+  }
+}
