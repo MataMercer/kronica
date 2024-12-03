@@ -1,19 +1,20 @@
 package org.matamercer.domain.repository
 
-import org.matamercer.domain.dao.ArticleDao
-import org.matamercer.domain.dao.FileDao
-import org.matamercer.domain.dao.TimelineDao
-import org.matamercer.domain.dao.TransactionManager
+import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.ArticleQuery
+import org.matamercer.domain.models.Character
+import org.matamercer.domain.models.CharacterQuery
 import org.matamercer.domain.models.FileModel
 import java.sql.Connection
 import javax.sql.DataSource
 
 class ArticleRepository(
     private val articleDao: ArticleDao,
-    private val fileDao: FileDao,
+    private val fileModelDao: FileModelDao,
     private val timelineDao: TimelineDao,
+    private val characterRepository: CharacterRepository,
+    private val characterDao: CharacterDao,
     private val transactionManager: TransactionManager,
     private val dataSource: DataSource
 ) {
@@ -54,7 +55,7 @@ class ArticleRepository(
         }
     }
 
-    fun create(article: Article, timelineId: Long?): Article?{
+    fun create(article: Article, timelineId: Long?, characters: List<Long>): Article?{
         var res: Article? = null
         transactionManager.wrap { conn ->
             val newArticleId = articleDao.create(conn, article)
@@ -73,21 +74,29 @@ class ArticleRepository(
                 owningArticleId = newArticleId
             ) }
             fileModels.forEach{
-                fileDao.create(conn, it)
+                fileModelDao.create(conn, it)
             }
+
+            characters.forEach{
+              characterDao.joinArticle(conn, it, newArticleId)
+            }
+
+
             res = res?.let { aggregate(conn, it) }
         }
         return res
     }
 
     private fun aggregate(conn: Connection, a: Article): Article {
-        val files = a.id?.let { fileDao.findByOwningArticleId(conn, it) }
-        if (files != null) {
+        val files = a.id?.let { fileModelDao.findByOwningArticleId(conn, it) }
+        val characters = a.id?.let{ characterRepository.findAll(CharacterQuery(
+            articleId = a.id
+        ))}
+        if (files != null && characters !=null) {
             a.attachments = files
+            a.characters = characters
         }
         return a
     }
-
-
 }
 

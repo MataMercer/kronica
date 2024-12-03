@@ -14,10 +14,9 @@ import org.matamercer.config.Seeder
 import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.ArticleRepository
+import org.matamercer.domain.repository.CharacterRepository
 import org.matamercer.domain.repository.TimelineRepository
-import org.matamercer.domain.services.ArticleService
-import org.matamercer.domain.services.TimelineService
-import org.matamercer.domain.services.UserService
+import org.matamercer.domain.services.*
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.security.UserRole
 import org.matamercer.security.generateCsrfToken
@@ -57,25 +56,37 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     seeder.initRootUser()
 
     val articleDao = ArticleDao()
-    val fileDao = FileDao()
+    val characterDao = CharacterDao()
+    val fileModelDao = FileModelDao()
 
     val timelineDao = TimelineDao()
     val timelineRepository = TimelineRepository(timelineDao, dataSource, transactionManager)
     val timelineService = TimelineService(timelineRepository)
 
     val storageService = FileSystemStorageService()
+    val fileModelService = FileModelService(storageService = storageService)
+
     if (appMode == AppMode.TEST){
         storageService.deleteAll()
     }
     storageService.init()
 
+    val characterRepository = CharacterRepository(
+        characterDao = characterDao,
+        fileModelDao = fileModelDao,
+        transactionManager = transactionManager,
+        dataSource = dataSource
+    )
     val articleRepository = ArticleRepository(
         articleDao = articleDao,
-        fileDao = fileDao,
+        fileModelDao = fileModelDao,
         transactionManager =  transactionManager,
         dataSource = dataSource,
-        timelineDao = timelineDao)
-    val articleService = ArticleService(articleRepository, storageService)
+        timelineDao = timelineDao,
+        characterRepository = characterRepository,
+        characterDao = characterDao)
+    val articleService = ArticleService(articleRepository, fileModelService)
+    val characterService = CharacterService(characterRepository, fileModelService)
 
     app.beforeMatched { ctx ->
         val routeRoles = ctx.routeRoles()
@@ -109,7 +120,14 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val timelineController = TimelineController(timelineService)
     val userController = UserController(userService)
     val authController = AuthController(userService)
-    val router = Router(articleController, timelineController, userController, authController, app)
+    val characterController = CharacterController(characterService, timelineService)
+    val router = Router(
+        articleController,
+        timelineController,
+        userController,
+        authController,
+        characterController,
+        app)
     router.setupRoutes()
 
     app.error(404) { ctx ->

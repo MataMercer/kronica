@@ -11,7 +11,7 @@ import java.nio.file.Paths
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
-    private val storageService: StorageService
+    private val fileModelService: FileModelService
 ) {
 
     fun getById(id: Long?): Article {
@@ -49,24 +49,15 @@ class ArticleService(
                 author = author,
                 attachments = attachments,
             ),
-            createArticleForm.timelineId
+            createArticleForm.timelineId,
+            createArticleForm.characters
         )
         if (article?.id == null) {
             throw InternalServerErrorResponse()
         }
 
-        val fileModels = article.attachments
-
-        val map = mutableMapOf<Path, UploadedFile>()
-        for (index in fileModels.indices) {
-            val fileModel = fileModels[index]
-            val path = Paths.get(fileModel.id.toString())
-            val upload = createArticleForm.uploadedAttachments[index]
-            map[path] = upload
-        }
-
         try {
-            storageService.storeFiles(map)
+            fileModelService.uploadFiles(article.attachments, createArticleForm.uploadedAttachments)
         } catch (e: StorageException) {
             rollbackArticleCreate(article.id)
         }

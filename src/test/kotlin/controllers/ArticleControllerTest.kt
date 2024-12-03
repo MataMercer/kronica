@@ -39,7 +39,6 @@ import kotlin.test.assertNotNull
 
 class ArticleControllerTest {
     private lateinit var app: Javalin
-    private lateinit var hostUrl: String
     private lateinit var authClient: HttpClient
     private lateinit var unauthClient: HttpClient
     private val testUser = User(

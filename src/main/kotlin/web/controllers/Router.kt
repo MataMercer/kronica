@@ -11,6 +11,7 @@ class Router(
     private val timelineController: TimelineController,
     private val userController: UserController,
     private val authController: AuthController,
+    private val characterController: CharacterController,
     private val app: Javalin
 ) {
 
@@ -19,6 +20,7 @@ class Router(
         addRoutes(timelineController)
         addRoutes(userController)
         addRoutes(authController)
+        addRoutes(characterController)
     }
 
     private fun addRoutes(obj: Any){

@@ -6,6 +6,7 @@ import AuthProtectionSSR from "./AuthProtectionSSR";
 import SortableInput from "./components/inputs/SortableInput";
 import CreateTimelineButton from "./CreateTimelineButton";
 import { fetchAllTimelines } from "./fetch/timelines";
+import CreateCharacterButton from "./CreateCharacterButton";
 
 export default async function Home() {
     const articles = (await fetchAllArticles())?.content;
@@ -21,6 +22,9 @@ export default async function Home() {
                     </div>
                     <div className="m-2 ">
                         <CreateTimelineButton />
+                    </div>
+                    <div className="m-2 ">
+                        <CreateCharacterButton />
                     </div>
                 </div>
             </AuthProtectionSSR>

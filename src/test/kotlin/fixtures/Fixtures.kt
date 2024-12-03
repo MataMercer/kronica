@@ -1,6 +1,7 @@
 package fixtures
 
 import org.matamercer.domain.models.Article
+import org.matamercer.domain.models.Character
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
@@ -37,11 +38,22 @@ class Fixtures {
         attachments = listOf(testFile)
     )
 
+    val testCharacter = Character(
+        id = 1,
+        name = "Amuro",
+        gender = "male",
+        birthday = "Oct 11, 2024",
+        firstSeen = "Episode 1",
+        status = "alive",
+        age = 20,
+        body = "lorem ipsum",
+        author = rootUser,
+        attachments = listOf(testFile),
+    )
+
     val testTimeline = Timeline(
         id = 1,
         name= "First Timeline",
         description = "This is a timeline about aliens."
     )
-
-
 }
