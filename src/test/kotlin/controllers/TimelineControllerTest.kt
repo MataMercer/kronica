@@ -9,7 +9,6 @@ import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
 import io.javalin.json.toJsonString
 import io.javalin.testtools.HttpClient
-import io.javalin.testtools.TestConfig
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -24,24 +23,22 @@ import org.matamercer.AppMode
 import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
-import org.matamercer.web.*
+import org.matamercer.web.CreateTimelineForm
+import org.matamercer.web.LoginRequestForm
+import org.matamercer.web.UpdateTimelineOrderForm
 import java.io.File
 import kotlin.test.assertNotNull
 
 class TimelineControllerTest {
     private lateinit var app: Javalin
-    private lateinit var hostUrl: String
     private lateinit var authClient: HttpClient
     private lateinit var unauthClient: HttpClient
+    private lateinit var jsonUtils: JsonUtils
     private val testUser = User(
         id = 1,
         name = "Root",
         email = "example@gmail.com",
         role = UserRole.ROOT
-    )
-
-    private val testConfig = TestConfig(
-        clearCookies = true
     )
 
     private lateinit var fixtures: Fixtures
@@ -56,14 +53,13 @@ class TimelineControllerTest {
         )
         authClient = createAuthClient(app, loginRequestForm)
         unauthClient = HttpClient(app, OkHttpClient())
+        jsonUtils = JsonUtils()
     }
 
     @AfterEach
     fun afterEachTest() {
         app.stop()
     }
-
-
 
     private fun createTimeline(): Long {
         val createTimelineForm = CreateTimelineForm(
@@ -83,7 +79,6 @@ class TimelineControllerTest {
         return timelineId
     }
 
-
     @Test
     fun `when Create Timeline returns ok`(){
         val createTimelineForm = CreateTimelineForm(
@@ -96,8 +91,6 @@ class TimelineControllerTest {
             .url("${getHostUrl(app)}/api/timelines")
             .post(requestBody).build()
         val res = authClient.okHttp.newCall(request).execute()
-        val body = res.body?.string()
-        print(body)
         assertThat(res.code == 200).isTrue()
     }
 
@@ -119,8 +112,6 @@ class TimelineControllerTest {
         print(createRequest1Body)
         assertThat(createRequestRes.code == 200).isTrue()
 
-
-
         val request = Request.Builder()
             .url("${getHostUrl(app)}/api/timelines/?author_id=${fixtures.rootUser.id}")
             .get()
@@ -132,7 +123,6 @@ class TimelineControllerTest {
         assertThat(res.code == 200).isTrue()
     }
 
-
     private fun responseBodyToJson(body: ResponseBody): JsonNode {
         val mapper = ObjectMapper()
         val bodyStr = body.string()
@@ -140,8 +130,7 @@ class TimelineControllerTest {
         return jsonRes
     }
 
-    fun createTestArticle(timelineId: Long):Long{
-
+    private fun createTestArticle(timelineId: Long):Long{
         val uploadFile = File("resources/test/polarbear.jpg")
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -157,13 +146,7 @@ class TimelineControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
-        val body = res.body
-        assertThat(res.code == 200).isTrue()
-        assertNotNull(body)
-
-        val resJson = responseBodyToJson(body)
-        val id = resJson["id"].toString()
-        return id.toLong()
+        return jsonUtils.getIdFromResponse(res)
     }
 
 
@@ -186,12 +169,8 @@ class TimelineControllerTest {
         val res = authClient.okHttp.newCall(request).execute()
         val body = res.body?.string()
         print(body)
-        assertThat(res.code == 200).isTrue()
-
-
         val articlesRes = authClient.get("/api/articles")
         assertThat(articlesRes.isSuccessful).isTrue()
-        print(articlesRes.body?.string())
     }
 
     @Test

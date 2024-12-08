@@ -59,7 +59,8 @@ class ArticleController(
             timelineId = ctx.formParam("timelineId")?.toLongOrNull(),
             attachments = ctx.formParams("attachments").map { it.toLong() },
             uploadedAttachments = ctx.uploadedFiles(),
-            uploadedAttachmentInsertions = ctx.formParams("uploadedAttachmentInsertions").map { it.toInt() }
+            uploadedAttachmentInsertions = ctx.formParams("uploadedAttachmentInsertions").map { it.toInt() },
+            characters = ctx.formParams("characters").map { it.toLong() }
         )
         val author = getCurrentUser(ctx)
 

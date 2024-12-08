@@ -16,6 +16,8 @@ import React from "react";
 import UploadInput, { FileInput } from "./components/inputs/UploadInput";
 import useTimelines from "./hooks/useTimelines";
 import useCurrentUser from "./hooks/useCurrentUser";
+import useCharacters from "./hooks/useCharacters";
+import { useToast } from "@/components/hooks/use-toast";
 
 type Inputs = {
     title: string;
@@ -23,6 +25,7 @@ type Inputs = {
     attachments: string[];
     uploadedAttachments: FileInput[];
     timelineId: number;
+    characters: number[];
 };
 
 export default function CreateArticleButton() {
@@ -53,13 +56,20 @@ export default function CreateArticleButton() {
     const { timelines, mutate: mutateTimelines } = useTimelines(userId);
 
     const [showArticleForm, setShowArticleForm] = useState(false);
+    const { characters, mutate: mutateCharacters } = useCharacters(userId);
     const ref = React.useRef();
+    const { toast } = useToast();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("body", data.body);
         if (data.timelineId) {
             formData.append("timelineId", data.timelineId.toString());
+        }
+        if (data.characters) {
+            data.characters.forEach((c) => {
+                formData.append("characters", c.toString());
+            });
         }
         data.uploadedAttachments
             .filter((it) => it.data)
@@ -73,10 +83,17 @@ export default function CreateArticleButton() {
             body: formData,
         });
 
-        refreshArticles();
-        // setShowArticleForm(false);
-        ref.current?.click();
-        reset();
+        if (response.ok) {
+            toast({
+                title: "Article Successfully Created",
+                description: data.title,
+            });
+
+            refreshArticles();
+            // setShowArticleForm(false);
+            ref.current?.click();
+            reset();
+        }
     };
 
     return (
@@ -87,6 +104,7 @@ export default function CreateArticleButton() {
                     onClick={() => {
                         setShowArticleForm(true);
                         mutateTimelines();
+                        mutateCharacters();
                     }}
                 >
                     CREATE ARTICLE
@@ -117,6 +135,22 @@ export default function CreateArticleButton() {
                                 </option>
                                 {timelines &&
                                     timelines.map((it) => (
+                                        <option key={it.id} value={it.id}>
+                                            {it.name}
+                                        </option>
+                                    ))}
+                            </select>
+                        </label>
+                        <label className="flex flex-col" htmlFor="name">
+                            Starring Characters (Optional, hold ctrl for
+                            multiple)
+                            <select
+                                {...register("characters")}
+                                disabled={!!!timelines}
+                                multiple
+                            >
+                                {characters &&
+                                    characters.map((it) => (
                                         <option key={it.id} value={it.id}>
                                             {it.name}
                                         </option>

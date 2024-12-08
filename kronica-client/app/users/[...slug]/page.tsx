@@ -12,15 +12,15 @@ export default async function UserProfilePage({
     const timelineId = (slug[1] && Number(slug[1])) as number;
 
     return (
-        <div className="grid grid-cols-5">
-            <div className="col-span-1 border-b-[20px] border-black "></div>
-            <div className="col-span-4">
+        <div className="grid md:grid-cols-5 gap-5 bg-black">
+            <div className="md:col-span-1  "></div>
+            <div className="md:col-span-4 bg-white">
                 <UserProfileSection userId={id} />
             </div>
-            <div>
+            <div className="bg-white md:col-span-1">
                 <TimelineSideBar authorId={id} activeTimelineId={timelineId} />
             </div>
-            <div className="col-span-4">
+            <div className="bg-white md:col-span-4">
                 <ArticleDisplay timelineId={timelineId} />
             </div>
         </div>

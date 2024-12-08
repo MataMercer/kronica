@@ -1,33 +1,51 @@
+"use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { cookies } from "next/headers";
 import LogoutButton from "./LogoutButton";
-import { fetchCurrentUser } from "./fetch/auth";
+import Image from "next/image";
+import useCurrentUser from "./hooks/useCurrentUser";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
-export default async function Navbar() {
-    const currentUser = await fetchCurrentUser();
+export default function Navbar() {
+    const {
+        user: currentUser,
+        loading,
+        loggedOut,
+        mutate: mutateCurrentUser,
+    } = useCurrentUser();
     return (
-        <nav className="flex text-2xl min-h-[5vh]  pt-5 bg-black text-white">
-            <ul className="flex space-x-5 pt-3 ml-10">
-                <li>
-                    <Link href="/">HOME</Link>
-                </li>
+        <nav className="fixed w-[100%] flex text-2xl min-h-[60px] bg-black text-white">
+            <Link className="ml-10" href="/">
+                <Image src="/logo.png" width={150} height={75} />
+            </Link>
 
-                {!currentUser.id ? (
-                    <li>
+            <ul className="flex justify-end space-x-5 pt-3 ml-10">
+                {currentUser && currentUser.id ? (
+                    <>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                @{currentUser.name.toUpperCase()}
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem className="">
+                                    <Link href={`/users/${currentUser.id}`}>
+                                        PROFILE
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <LogoutButton />
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </>
+                ) : (
+                    <li className="">
                         <Link href="/login">LOGIN</Link>
                     </li>
-                ) : (
-                    <>
-                        <li>
-                            <Link href={`/users/${currentUser.id}`}>
-                                🟢{currentUser.name.toUpperCase()}
-                            </Link>
-                        </li>
-                        <li>
-                            <LogoutButton />
-                        </li>
-                    </>
                 )}
             </ul>
         </nav>

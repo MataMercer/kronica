@@ -1,5 +1,7 @@
 import { cookies } from "next/headers";
 import { User } from "./users";
+import { Character } from "./characters";
+import { Timeline } from "./timelines";
 
 export type Page<T> = {
   content: T[]
@@ -11,6 +13,8 @@ export type Article = {
   body: string;
   author: User;
   attachments: FileModel[];
+  characters: Character[];
+  timeline: Timeline;
 }
 export type FileModel = {
   id: number;

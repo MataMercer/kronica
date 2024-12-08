@@ -32,10 +32,10 @@ class CharacterController(
             timelineId = timelineId
         )
         val foundCharacters = characterService.getAll(characterQuery)
-        val pagedArticles = Page<CharacterDto>(
+        val pagedCharacters = Page<CharacterDto>(
             content = foundCharacters
         )
-        ctx.json(pagedArticles)
+        ctx.json(pagedCharacters)
     }
 
     @Route(HandlerType.DELETE, "/{id}")

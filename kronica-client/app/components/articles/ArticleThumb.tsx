@@ -22,7 +22,7 @@ type Props = {
 export default function ArticleThumb({ article }: Props) {
     return (
         <div
-            className="flex flex-row justify-center border-black border-[1px] border-b-[5px] mt-3 mb-3 p-3"
+            className="flex flex-row justify-center border-black border-[1px] border-b-[5px] mt-1 mb-1 p-2"
             key={article.id}
         >
             <div className="flex flex-col">
@@ -55,6 +55,14 @@ export default function ArticleThumb({ article }: Props) {
                     >
                         x
                     </button>
+                </div>
+                <div>
+                    Starring:{" "}
+                    {article.characters.map((c) => (
+                        <Link key={c.id} href={`/characters/${c.id}`}>
+                            {c.name}
+                        </Link>
+                    ))}
                 </div>
             </div>
         </div>

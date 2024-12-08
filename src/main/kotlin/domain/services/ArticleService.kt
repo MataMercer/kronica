@@ -11,7 +11,8 @@ import java.nio.file.Paths
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
-    private val fileModelService: FileModelService
+    private val fileModelService: FileModelService,
+    private val characterService: CharacterService
 ) {
 
     fun getById(id: Long?): Article {
@@ -110,7 +111,10 @@ class ArticleService(
             },
             timelineIndex = article.timelineIndex,
             timelineName =  article.timeline?.name,
-            timelineId = article.timeline?.id
+            timelineId = article.timeline?.id,
+            characters =  article.characters.map {
+                characterService.toDto(it)
+            }
 
         )
     }

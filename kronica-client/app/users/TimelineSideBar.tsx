@@ -11,14 +11,14 @@ export default async function TimelineSideBar({
 }: TimelineSideBarProps) {
     const timelines = await fetchAllTimelines(authorId);
     return (
-        <div className="flex flex-col  border-r-[20px] border-black h-[100vh]">
-            <div className="text-3xl   m-4">Timelines</div>
-            <div className="flex flex-col">
+        <div className="flex flex-col   md:h-[100vh]">
+            <div className="text-2xl   m-1">Timelines</div>
+            <div className="flex md:flex-col">
                 <Link
                     href={`/users/${authorId}`}
                     key={0}
-                    className={`p-3 border-[1px] m-3 border-black text-2xl border-b-4 
-                ${!!!activeTimelineId && "bg-blue-400 text-white ml-6 mr-0"}
+                    className={`p-2 border-2 m-1 border-black text-xl border-b-4 
+                ${!!!activeTimelineId && "bg-blue-400 text-white font-bold"}
                 `}
                 >
                     ALL
@@ -50,8 +50,8 @@ function TimelineButton({ timeline, authorId, active }: TimelineButtonProps) {
         <Link
             href={`/users/${authorId}/${timeline.id}`}
             key={timeline.id}
-            className={`p-3 border-[1px] m-3 border-black text-2xl border-b-4 
-                ${active && "bg-blue-400 text-white ml-6 mr-0"}
+            className={`p-2 border-2 m-1 border-black text-xl border-b-4 
+                ${active && "bg-blue-400 text-white  font-bold"}
                 `}
         >
             {timeline.name.toUpperCase()}

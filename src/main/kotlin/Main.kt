@@ -85,8 +85,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         timelineDao = timelineDao,
         characterRepository = characterRepository,
         characterDao = characterDao)
-    val articleService = ArticleService(articleRepository, fileModelService)
     val characterService = CharacterService(characterRepository, fileModelService)
+    val articleService = ArticleService(articleRepository, fileModelService, characterService)
 
     app.beforeMatched { ctx ->
         val routeRoles = ctx.routeRoles()

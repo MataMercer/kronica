@@ -8,7 +8,7 @@ export default async function UserProfileSection({
 }: UserProfileSectionProps) {
     const user = await fetchUser(userId.toString());
     return (
-        <div className=" border-b-[20px] border-black ">
+        <div className="  ">
             {user && <div className="text-3xl">@{user.name}</div>}
             <p className="">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque

@@ -55,10 +55,8 @@ class CharacterDao {
                 ON characters.author_id=users.id
             LEFT JOIN articles_to_characters
                 ON characters.id=articles_to_characters.character_id
-            LEFT JOIN articles
-                ON articles_to_characters.article_id=articles.id 
             WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
-            AND ${if (query?.articleId != null) "articles.id = ?" else "TRUE"} 
+            AND ${if (query?.articleId != null) "articles_to_characters.article_id = ?" else "TRUE"} 
             """.trimIndent()
         return mapper.queryForObjectList(sql, conn) {
             var i = 0
@@ -103,7 +101,7 @@ class CharacterDao {
         val sql = """
             INSERT INTO articles_to_characters
             (
-                article_id
+                article_id,
                 character_id
             )
             VALUES (?, ?)

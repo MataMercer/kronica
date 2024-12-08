@@ -30,6 +30,7 @@ import org.matamercer.domain.models.UsersDto
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
 import org.matamercer.web.CreateArticleForm
+import org.matamercer.web.CreateCharacterForm
 import org.matamercer.web.CreateTimelineForm
 import org.matamercer.web.LoginRequestForm
 import java.io.File
@@ -41,24 +42,16 @@ class ArticleControllerTest {
     private lateinit var app: Javalin
     private lateinit var authClient: HttpClient
     private lateinit var unauthClient: HttpClient
+
     private val testUser = User(
         id = 1,
         name = "Root",
         email = "example@gmail.com",
         role = UserRole.ROOT
     )
-    private val testUsers = UsersDto(
-        users = mutableListOf<User>(
-            testUser
-        ),
-        count = 1
-    )
-
-    private val testConfig = TestConfig(
-        clearCookies = true
-    )
 
     private lateinit var fixtures: Fixtures
+    private lateinit var jsonUtils: JsonUtils
     @BeforeEach
     fun beforeEachTest() {
         fixtures = Fixtures()
@@ -70,6 +63,7 @@ class ArticleControllerTest {
         )
         authClient = createAuthClient(app, loginRequestForm)
         unauthClient = HttpClient(app, OkHttpClient())
+        jsonUtils = JsonUtils()
     }
 
     @AfterEach
@@ -80,12 +74,6 @@ class ArticleControllerTest {
 
     @Test
     fun `when Create Article returns ok`(){
-        val createArticleForm = CreateArticleForm(
-            title = fixtures.testArticle.title,
-            body = fixtures.testArticle.body,
-            timelineId = null
-        )
-
         val uploadFile = File("resources/test/polarbear.jpg")
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -105,13 +93,6 @@ class ArticleControllerTest {
         assertThat(res.code == 200).isTrue()
     }
 
-    private fun responseBodyToJson(body: ResponseBody): JsonNode {
-        val mapper = ObjectMapper()
-        val bodyStr = body.string()
-        val jsonRes = mapper.readTree(bodyStr)
-        return jsonRes
-    }
-
 
     private fun createTimeline(): Long {
         val createTimelineForm = CreateTimelineForm(
@@ -124,11 +105,7 @@ class ArticleControllerTest {
             .url("${getHostUrl(app)}/api/timelines")
             .post(requestBody).build()
         val res = authClient.okHttp.newCall(request).execute()
-        val mapper = ObjectMapper()
-        val body = res.body?.string()
-        val jsonRes = mapper.readTree(body)
-        val timelineId = jsonRes["id"].toString().toLong()
-        return timelineId
+        return jsonUtils.getIdFromResponse(res)
     }
 
     @Test
@@ -153,22 +130,15 @@ class ArticleControllerTest {
         val body = res.body
         assertThat(res.code == 200).isTrue()
         assertNotNull(body)
-
-        val resJson = responseBodyToJson(body)
+        val resJson = jsonUtils.getJsonFromResponse(res)
         val id = resJson["id"].toString()
-        val resTimelineId = resJson["timeline"]["id"].toString()
+        val resTimelineId = resJson["timelineId"].toString()
         assertThat(id=="1").isTrue()
         assertThat(resTimelineId=="1").isTrue()
     }
 
     @Test
     fun `when Create Article without attachments returns ok`(){
-        val createArticleForm = CreateArticleForm(
-            title = fixtures.testArticle.title,
-            body = fixtures.testArticle.body,
-            timelineId = null
-        )
-
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("title", fixtures.testArticle.title)
@@ -180,7 +150,6 @@ class ArticleControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
-        val body = res.body.toString()
         assertThat(res.code == 200).isTrue()
     }
 
@@ -194,6 +163,51 @@ class ArticleControllerTest {
         )
         val res = authClient.post("/api/articles", createArticleForm)
         assertThat(res.isSuccessful).isFalse()
+    }
+
+    private fun createCharacter(): Long {
+        val testCharacter = fixtures.testCharacter
+        val uploadFile = File("resources/test/polarbear.jpg")
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("name", testCharacter.name)
+            .addFormDataPart("age", testCharacter.age.toString())
+            .addFormDataPart("gender", testCharacter.gender)
+            .addFormDataPart("birthday", testCharacter.birthday)
+            .addFormDataPart("firstSeen", testCharacter.firstSeen)
+            .addFormDataPart("status", testCharacter.status)
+            .addFormDataPart("body", testCharacter.body)
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .build()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/characters")
+            .post(requestBody).build()
+
+        val res = authClient.okHttp.newCall(request).execute()
+        return jsonUtils.getIdFromResponse(res)
+    }
+
+    @Test
+    fun `when create articles with characters return good response`(){
+
+        val characterId = createCharacter()
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("title", fixtures.testArticle.title)
+            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("characters", characterId.toString())
+            .build()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles")
+            .post(requestBody).build()
+
+        val res = authClient.okHttp.newCall(request).execute()
+        val json = jsonUtils.getJsonFromResponse(res)
+        assertThat(res.code == 200).isTrue()
+        assertThat(json["characters"]).isNotNull()
     }
 
     fun `when get article by id return ok response`(){

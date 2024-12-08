@@ -3,6 +3,7 @@ package org.matamercer.web.controllers
 import io.javalin.Javalin
 import io.javalin.http.Context
 import org.matamercer.security.UserRole
+import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
@@ -13,6 +14,7 @@ class Router(
     private val authController: AuthController,
     private val characterController: CharacterController,
     private val app: Javalin
+
 ) {
 
     fun setupRoutes(){
@@ -35,7 +37,12 @@ class Router(
             val routeAnnotation = method.getAnnotation(Route::class.java)
             val roleAnnotation = method.getAnnotation(RequiredRole::class.java)
             val handler:(Context)->Unit = { ctx: Context ->
-                method.invoke(obj, ctx)
+                try {
+                    method.invoke(obj, ctx)
+                }catch (e:InvocationTargetException){
+                    print("Invocation Target Exception")
+
+                }
             }
             if (roleAnnotation == null){
                 app.addHttpHandler(

@@ -14,10 +14,10 @@ export default async function ArticleDisplay({
         ? await fetchTimeline(timelineId.toString())
         : undefined;
     return (
-        <div className=" grow p-4">
+        <div className="grow">
             {timeline && (
                 <>
-                    <h1 className="text-center text-4xl border-black border-b-[1px]">
+                    <h1 className="m-2 p-2 text-center font-extrabold text-4xl border-black border-[1px]">
                         {timeline.name}
                     </h1>
                     <p>{timeline.description}</p>
@@ -26,9 +26,11 @@ export default async function ArticleDisplay({
                     <div>No characters</div>
                 </>
             )}
-            <div className="text-3xl">Articles</div>
-            <KronologizeButton timelineId={timelineId} />
-            <div className="grid sm:grid-cols-5 gap-4">
+            <div className="flex space-x-2">
+                <div className="text-3xl">Articles</div>
+                <KronologizeButton timelineId={timelineId} />
+            </div>
+            <div className="grid sm:grid-cols-5 gap-1">
                 {articles && articles.length > 0 ? (
                     articles.map((article) => (
                         <ArticleThumb key={article.id} article={article} />

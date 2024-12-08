@@ -16,13 +16,19 @@ import React from "react";
 import UploadInput, { FileInput } from "./components/inputs/UploadInput";
 import useTimelines from "./hooks/useTimelines";
 import useCurrentUser from "./hooks/useCurrentUser";
+import useCharacters from "./hooks/useCharacters";
 
 type Inputs = {
     name: string;
+    gender: string;
+    age: number;
+    birthday: string;
+    firstSeen: string;
+    status: string;
+
     body: string;
     attachments: string[];
     uploadedAttachments: FileInput[];
-    timelineId: number;
 };
 
 export default function CreateCharacterButton() {
@@ -36,7 +42,7 @@ export default function CreateCharacterButton() {
         control,
     } = useForm<Inputs>({
         defaultValues: {
-            title: "ExampleTitle",
+            name: "ExampleName",
             body: "ExampleBody",
             attachments: [],
             uploadedAttachments: [],
@@ -50,33 +56,37 @@ export default function CreateCharacterButton() {
         mutate: mutateCurrentUser,
     } = useCurrentUser();
     const userId = user && user.id;
-    const { timelines, mutate: mutateTimelines } = useTimelines(userId);
 
     const [showArticleForm, setShowCharacterForm] = useState(false);
     const ref = React.useRef();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const formData = new FormData();
-        formData.append("title", data.title);
+        formData.append("name", data.name);
+        formData.append("gender", data.gender);
+        formData.append("age", data.age.toString());
+        formData.append("birthday", data.birthday);
+        formData.append("firstSeen", data.firstSeen);
+        formData.append("status", data.status);
         formData.append("body", data.body);
-        if (data.timelineId) {
-            formData.append("timelineId", data.timelineId.toString());
-        }
+
         data.uploadedAttachments
             .filter((it) => it.data)
             .map((it) => {
                 it.data && formData.append("uploadedAttachments", it.data);
             });
 
-        const response = await fetch("http://localhost:7070/api/articles", {
+        const response = await fetch("http://localhost:7070/api/characters", {
             method: "POST",
             credentials: "include",
             body: formData,
         });
 
-        refreshArticles();
-        // setShowArticleForm(false);
-        ref.current?.click();
-        reset();
+        if (response.ok) {
+            refreshArticles();
+            ref.current?.click();
+            reset();
+        } else {
+        }
     };
 
     return (
@@ -86,7 +96,6 @@ export default function CreateCharacterButton() {
                     className="button"
                     onClick={() => {
                         setShowCharacterForm(true);
-                        mutateTimelines();
                     }}
                 >
                     CREATE CHARACTER
@@ -106,23 +115,52 @@ export default function CreateCharacterButton() {
                                 defaultValue="Unnamed"
                             />
                         </label>
-                        <label className="flex flex-col" htmlFor="name">
-                            Timeline (Optional)
-                            <select
-                                {...register("timelineId")}
-                                disabled={!!!timelines}
-                            >
-                                <option key={0} value={undefined}>
-                                    None
-                                </option>
-                                {timelines &&
-                                    timelines.map((it) => (
-                                        <option key={it.id} value={it.id}>
-                                            {it.name}
-                                        </option>
-                                    ))}
-                            </select>
+                        <label className="flex flex-col" htmlFor="gender">
+                            Gender
+                            <input
+                                {...register("gender", { required: true })}
+                                id="gender"
+                                defaultValue="Male"
+                            />
                         </label>
+                        <label className="flex flex-col" htmlFor="age">
+                            Age
+                            <input
+                                {...register("age", {
+                                    min: 1,
+                                    max: 30000,
+                                    required: true,
+                                })}
+                                id="age"
+                                defaultValue="18"
+                                type="number"
+                            />
+                        </label>
+                        <label className="flex flex-col" htmlFor="birthday">
+                            Birthday
+                            <input
+                                {...register("birthday", { required: true })}
+                                id="birthday"
+                                defaultValue="Jan 1, 1990"
+                            />
+                        </label>
+                        <label className="flex flex-col" htmlFor="firstSeen">
+                            First Seen
+                            <input
+                                {...register("firstSeen", { required: true })}
+                                id="firstSeen"
+                                defaultValue="Episode 1"
+                            />
+                        </label>
+                        <label className="flex flex-col" htmlFor="Status">
+                            Status
+                            <input
+                                {...register("status", { required: true })}
+                                id="Status"
+                                defaultValue="Alive"
+                            />
+                        </label>
+
                         <label className="flex flex-col" htmlFor="body">
                             Body
                             {/* <textarea
@@ -141,12 +179,6 @@ export default function CreateCharacterButton() {
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
-                                        {/* <MDEditor.Markdown
-                                                source={field.value}
-                                                style={{
-                                                    whiteSpace: "pre-wrap",
-                                                }}
-                                            /> */}
                                     </div>
                                 )}
                             />

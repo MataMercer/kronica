@@ -56,6 +56,7 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
         return id
     }
 
+
 }
 
 fun genTimestamp(): Timestamp {

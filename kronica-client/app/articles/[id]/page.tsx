@@ -16,7 +16,9 @@ export default async function ArticlePage({
                     <h1 className="text-3xl font-bold">
                         {article && article.title}
                     </h1>
-                    <p>{article && article.body}</p>
+                    {article.timeline && (
+                        <h2>Timeline {article.timeline.name}</h2>
+                    )}
                     {article.attachments.map((it) => (
                         <Image
                             key={it.id}
@@ -26,6 +28,7 @@ export default async function ArticlePage({
                             alt="article attachment"
                         />
                     ))}
+                    <p>{article && article.body}</p>
                 </div>
             )}
         </div>
