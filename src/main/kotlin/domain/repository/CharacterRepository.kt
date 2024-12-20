@@ -44,11 +44,16 @@ class CharacterRepository(
             val fileModels = character.attachments.map { FileModel(
                 name = it.name,
                 author = it.author,
-                owningCharacterId = newCharacterId
             ) }
 
             fileModels.forEach{
                 fileModelDao.create(conn, it)
+            }
+
+            fileModels.map { it.id }.forEach{
+                if (it != null) {
+                    fileModelDao.joinCharacter(conn, it, newCharacterId )
+                }
             }
             c = c?.let { aggregate(conn, it) }
         }

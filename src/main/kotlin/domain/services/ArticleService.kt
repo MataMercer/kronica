@@ -5,6 +5,7 @@ import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.services.storage.StorageService
 import org.matamercer.domain.services.storage.exceptions.StorageException
+import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -27,16 +28,12 @@ class ArticleService(
     }
 
     fun getByAuthorId(id: Long?): List<Article> {
-        if (id == null) {
-            throw BadRequestResponse()
-        }
-
+        if (id == null) throw BadRequestResponse()
         return articleRepository.findByAuthorId(id)
     }
 
     fun create(createArticleForm: CreateArticleForm, author: User): Long {
         validateForm(createArticleForm)
-
         val attachments = createArticleForm.uploadedAttachments.map { u ->
             FileModel(
                 name = u.filename(),
@@ -53,9 +50,7 @@ class ArticleService(
             createArticleForm.timelineId,
             createArticleForm.characters
         )
-        if (article?.id == null) {
-            throw InternalServerErrorResponse()
-        }
+        if (article?.id == null) throw InternalServerErrorResponse()
 
         try {
             fileModelService.uploadFiles(article.attachments, createArticleForm.uploadedAttachments)
@@ -78,15 +73,9 @@ class ArticleService(
     }
 
     fun deleteById(currentUser: User, id: Long?) {
-        if (id == null) {
-            throw BadRequestResponse()
-        }
-
-        val article = articleRepository.findById(id)
-
-        if (currentUser.id != article?.author?.id) {
-            throw ForbiddenResponse()
-        }
+        if (id == null) throw BadRequestResponse()
+        val article = articleRepository.findById(id) ?: throw NotFoundResponse()
+        authCheck(currentUser, article)
         articleRepository.deleteById(id)
     }
 
@@ -117,6 +106,12 @@ class ArticleService(
             }
 
         )
+    }
+
+    private fun authCheck(currentUser: User, article: Article){
+        if (currentUser.id != article.author.id && currentUser.role.authLevel < UserRole.ADMIN.authLevel) {
+            throw ForbiddenResponse()
+        }
     }
 
 

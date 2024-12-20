@@ -1,5 +1,7 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.models.Profile
+import org.matamercer.domain.models.SocialMediaLink
 import org.matamercer.domain.models.User
 import java.sql.Connection
 import java.sql.Timestamp
@@ -44,29 +46,80 @@ class UserDao {
         }
     }
 
-    fun create(conn: Connection, user: User): Long? {
+    fun create(conn: Connection, user: User, profileId: Long): Long {
         return mapper.update("""
                 INSERT INTO users 
                     (name,
                     email,
                     hashed_password,
                     role,
-                    created_at) 
-                VALUES (?, ?, ?, ?, ?)
+                    created_at,
+                    profile_id) 
+                VALUES (?, ?, ?, ?, ?, ?)
                 """.trimIndent(), conn){
-            it.setString(1, user.name)
-            it.setString(2, user.email)
-            it.setString(3, user.hashedPassword)
-            it.setString(4, user.role.name)
-            it.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()))
+            var i = 0
+            it.setString(++i, user.name)
+            it.setString(++i, user.email)
+            it.setString(++i, user.hashedPassword)
+            it.setString(++i, user.role.name)
+            it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
+            it.setLong(++i, profileId)
         }
     }
 
-    fun update(conn: Connection, id: Long): User? {
-        TODO("Not yet implemented")
+    fun createProfile(conn: Connection, profile: Profile): Long{
+        val sql = """
+           INSERT INTO profiles
+               (description)
+              VALUES (?)
+        """.trimIndent()
+
+        return mapper.update(sql, conn){
+            it.setString(1, profile.description)
+        }
+    }
+    
+    fun createSocialMediaLink(conn: Connection, socialMediaLink: SocialMediaLink, profileId: Long ): Long{
+        val sql = """
+           INSERT INTO social_media_links
+               (url, platform, profile_id)
+              VALUES (?, ?)
+        """.trimIndent()
+
+        return mapper.update(sql, conn){
+            var i = 0
+            it.setString(++i, socialMediaLink.url)
+            it.setString(++i, socialMediaLink.platform)
+            it.setLong(++i, profileId)
+        }
+    }
+
+    fun update(conn: Connection, user: User): Long {
+        val sql = """
+            UPDATE users
+            SET name = ?,
+                email = ?,
+                hashed_password = ?,
+                role = ?
+            WHERE id = ?
+        """.trimIndent()
+        return mapper.update(sql, conn){
+            var i = 0
+            it.setString(++i, user.name)
+            it.setString(++i, user.email)
+            it.setString(++i, user.hashedPassword)
+            it.setString(++i, user.role.name)
+            user.id?.let { id -> it.setLong(++i, id) }
+        }
     }
 
     fun delete(conn: Connection, id: Long) {
-        TODO("Not yet implemented")
+        val sql = """
+            DELETE FROM users
+            WHERE id = ?
+        """.trimIndent()
+        mapper.update(sql, conn){
+            it.setLong(1, id)
+        }
     }
 }

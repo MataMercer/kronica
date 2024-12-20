@@ -16,6 +16,7 @@ import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.repository.CharacterRepository
 import org.matamercer.domain.repository.TimelineRepository
+import org.matamercer.domain.repository.UserRepository
 import org.matamercer.domain.services.*
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.security.UserRole
@@ -50,8 +51,10 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val transactionManager = TransactionManager(dataSource)
 
     val app = createJavalinApp()
+
     val userDao = UserDao()
-    val userService = UserService(userDao, dataSource)
+    val userRepository = UserRepository(userDao, transactionManager, dataSource)
+    val userService = UserService(userRepository)
     val seeder = Seeder(userService)
     seeder.initRootUser()
 
@@ -88,39 +91,13 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val characterService = CharacterService(characterRepository, fileModelService)
     val articleService = ArticleService(articleRepository, fileModelService, characterService)
 
-    app.beforeMatched { ctx ->
-        val routeRoles = ctx.routeRoles()
-
-        if (routeRoles.isEmpty()) {
-            return@beforeMatched
-        }
-
-        val method = ctx.req().method
-        if ((method == "post" || method == "put" || method == "delete") &&
-            ctx.req().getHeader("X-XSRF-TOKEN") != ctx.sessionAttribute<String>("csrf_token")
-        ) {
-            throw UnauthorizedResponse("Action is denied")
-        }
-
-        val userRole = getCurrentUserRole(ctx)
-        if (routeRoles.first() == UserRole.UNAUTHENTICATED_USER && userRole != UserRole.UNAUTHENTICATED_USER) {
-            throw UnauthorizedResponse("Access is denied")
-        }
-
-        if (authorizeCheck(userRole, routeRoles)) {
-            return@beforeMatched
-        } else if (userRole == UserRole.UNAUTHENTICATED_USER) {
-            throw UnauthorizedResponse("Access is denied")
-        } else {
-            throw UnauthorizedResponse("Access is denied")
-        }
-    }
 
     val articleController = ArticleController(articleService, timelineService)
     val timelineController = TimelineController(timelineService)
     val userController = UserController(userService)
     val authController = AuthController(userService)
     val characterController = CharacterController(characterService, timelineService)
+
     val router = Router(
         articleController,
         timelineController,

@@ -13,6 +13,7 @@ data class Character(
     val age: Int,
     val body: String,
     var attachments: List<FileModel> = listOf(),
+    var profilePictures: List<FileModel> = listOf(),
     val createdAt: Date? = null,
     val updatedAt: Date? = null
     )

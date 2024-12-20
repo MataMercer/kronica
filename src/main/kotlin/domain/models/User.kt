@@ -14,7 +14,19 @@ data class User(
     val email: String? = null,
     val hashedPassword: String? = null,
     val role: UserRole,
-    val createdAt: Date? = null
+    val createdAt: Date? = null,
+    val avatar: FileModel? = null
+)
+
+data class Profile(
+    val id: Long? = null,
+    val description: String
+)
+
+data class SocialMediaLink(
+    val id: Long,
+    val url: String,
+    val platform: String
 )
 
 data class CurrentUser(
@@ -29,7 +41,6 @@ data class UserDto(
     val role: UserRole,
     val createdAt: Date?
 )
-
 
 data class CurrentUserDto(
     val id: Long?,

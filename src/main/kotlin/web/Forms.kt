@@ -13,6 +13,17 @@ data class RegisterUserForm(
     val password: String?,
 )
 
+data class UpdateUserForm(
+    val id: String,
+    val email: String?,
+    val name: String?,
+    val hashedPassword: String?,
+    val role: String,
+)
+data class UpdateProfileForm(
+    val description: String?
+)
+
 data class CreateArticleForm(
     val title: String?,
     val body: String?,

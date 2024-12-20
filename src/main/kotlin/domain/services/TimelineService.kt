@@ -3,6 +3,7 @@ package org.matamercer.domain.services
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
 import io.javalin.http.UnauthorizedResponse
+import org.matamercer.domain.models.CurrentUser
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.TimelineRepository
@@ -39,8 +40,8 @@ class TimelineService(
         }
     }
 
-    fun updateOrder(timelineId: Long, updateTimelineOrderForm: UpdateTimelineOrderForm, authorId: Long){
-        checkOwnership(timelineId, authorId)
+    fun updateOrder(timelineId: Long, updateTimelineOrderForm: UpdateTimelineOrderForm, currentUser: User){
+        checkAuth(currentUser, timelineId)
         timelineRepository.updateOrder(timelineId, updateTimelineOrderForm.order.toTypedArray())
     }
 
@@ -49,10 +50,15 @@ class TimelineService(
         return t
     }
 
-    fun checkOwnership(timelineId: Long, authorId: Long ){
-        val t = getTimelineById(timelineId)
+    fun delete(currentUser: User, timelineId: Long){
+        checkAuth(currentUser, timelineId)
+        timelineRepository.delete(timelineId)
+    }
 
-        if (t.author?.id != authorId){
+    private fun checkAuth(currentUser: User, timelineId: Long){
+
+        val t = getTimelineById(timelineId)
+        if (t.author?.id != currentUser.id){
            throw UnauthorizedResponse("User is not the author of this timeline.")
         }
     }

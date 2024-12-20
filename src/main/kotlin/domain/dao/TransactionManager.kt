@@ -8,13 +8,14 @@ import javax.sql.DataSource
 class TransactionManager(
     private val dataSource: DataSource
 ) {
-    fun wrap(callback: (conn: Connection) -> Unit) {
+    fun <T>wrap(callback: (conn: Connection) -> T):T {
         dataSource.connection.use{ conn ->
             try {
                 conn.autoCommit = false
-                callback(conn)
+                val res = callback(conn)
                 conn.commit();
                 conn.autoCommit = true
+                return res
             } catch (e: SQLException) {
                 e.printStackTrace()
                 conn.rollback()

@@ -2,10 +2,11 @@ package org.matamercer.web.controllers
 
 import io.javalin.Javalin
 import io.javalin.http.Context
+import io.javalin.http.UnauthorizedResponse
+import org.matamercer.authorizeCheck
+import org.matamercer.getCurrentUserRole
 import org.matamercer.security.UserRole
 import java.lang.reflect.InvocationTargetException
-import kotlin.reflect.KClass
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class Router(
     private val articleController: ArticleController,
@@ -18,6 +19,7 @@ class Router(
 ) {
 
     fun setupRoutes(){
+        addRouteAuthorization()
         addRoutes(articleController)
         addRoutes(timelineController)
         addRoutes(userController)
@@ -25,8 +27,38 @@ class Router(
         addRoutes(characterController)
     }
 
-    private fun addRoutes(obj: Any){
+    private fun addRouteAuthorization(){
+        app.beforeMatched { ctx ->
+            val routeRoles = ctx.routeRoles()
 
+            if (routeRoles.isEmpty()) {
+                return@beforeMatched
+            }
+
+            val method = ctx.req().method
+            if ((method == "post" || method == "put" || method == "delete") &&
+                ctx.req().getHeader("X-XSRF-TOKEN") != ctx.sessionAttribute<String>("csrf_token")
+            ) {
+                throw UnauthorizedResponse("Action is denied")
+            }
+
+            val userRole = getCurrentUserRole(ctx)
+            if (routeRoles.first() == UserRole.UNAUTHENTICATED_USER && userRole != UserRole.UNAUTHENTICATED_USER) {
+                throw UnauthorizedResponse("Access is denied")
+            }
+
+            if (authorizeCheck(userRole, routeRoles)) {
+                return@beforeMatched
+            } else if (userRole == UserRole.UNAUTHENTICATED_USER) {
+                throw UnauthorizedResponse("Access is denied")
+            } else {
+                throw UnauthorizedResponse("Access is denied")
+            }
+        }
+    }
+
+
+    private fun addRoutes(obj: Any){
         val controllerAnnotation = obj::class.java.getAnnotation(Controller::class.java)
         val pathPrefix = controllerAnnotation?.path ?: ""
 

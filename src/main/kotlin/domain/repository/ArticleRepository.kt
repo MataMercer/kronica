@@ -30,23 +30,19 @@ class ArticleRepository(
     }
 
     fun findAll(query: ArticleQuery): List<Article>{
-        var articles = emptyList<Article>()
-       transactionManager.wrap { conn ->
-           articles = articleDao.findAll(conn, query).map {
+       return transactionManager.wrap { conn ->
+           return@wrap articleDao.findAll(conn, query).map {
                aggregate(conn, it)
            }
        }
-        return articles
     }
 
     fun findByAuthorId(id: Long): List<Article>{
-        var articles = emptyList<Article>()
-        transactionManager.wrap { conn ->
-            articles = articleDao.findByAuthorId(conn, id).map {
+        return transactionManager.wrap { conn ->
+            return@wrap articleDao.findByAuthorId(conn, id).map {
                 aggregate(conn, it)
             }
         }
-        return articles
     }
 
     fun deleteById(id: Long){
@@ -56,35 +52,32 @@ class ArticleRepository(
     }
 
     fun create(article: Article, timelineId: Long?, characters: List<Long>): Article?{
-        var res: Article? = null
-        transactionManager.wrap { conn ->
+        return transactionManager.wrap { conn ->
             val newArticleId = articleDao.create(conn, article)
-
-
-            res = articleDao.findById(conn, newArticleId)
+            val res = articleDao.findById(conn, newArticleId)
 
             if (timelineId != null){
                 timelineDao.createTimelineEntry(conn, timelineId, newArticleId )
             }
 
-
             val fileModels = article.attachments.map { FileModel(
                 name = it.name,
                 author = it.author,
-                owningArticleId = newArticleId
             ) }
             fileModels.forEach{
                 fileModelDao.create(conn, it)
+            }
+            fileModels.map { it.id }.forEach{
+                if (it != null) {
+                    fileModelDao.joinArticle(conn, it, newArticleId)
+                }
             }
 
             characters.forEach{
               characterDao.joinArticle(conn, it, newArticleId)
             }
-
-
-            res = res?.let { aggregate(conn, it) }
+            return@wrap res?.let { aggregate(conn, it) }
         }
-        return res
     }
 
     private fun aggregate(conn: Connection, a: Article): Article {

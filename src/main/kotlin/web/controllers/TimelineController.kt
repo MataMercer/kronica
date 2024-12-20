@@ -49,6 +49,14 @@ class TimelineController(
         val timelineId = ctx.pathParam("id").toLong()
         val author = getCurrentUser(ctx)
         val form = ctx.bodyValidator<UpdateTimelineOrderForm>().get()
-        author.id?.let { timelineService.updateOrder(timelineId, form, it) }
+        timelineService.updateOrder(timelineId, form, author)
+    }
+
+    @Route(HandlerType.DELETE, "/{id}")
+    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    fun deleteTimeline(ctx: Context){
+        val timelineId = ctx.pathParam("id").toLong()
+        val currentUser = getCurrentUser(ctx)
+        timelineService.delete(currentUser, timelineId)
     }
 }

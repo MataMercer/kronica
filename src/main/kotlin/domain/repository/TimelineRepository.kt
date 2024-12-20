@@ -40,8 +40,11 @@ class TimelineRepository(
                 timelineDao.updateTimelineOrder(conn, id, index)
             }
         }
+    }
 
-
-
+    fun delete(id: Long){
+        transactionManager.wrap { conn ->
+            timelineDao.delete(conn, id)
+        }
     }
 }
