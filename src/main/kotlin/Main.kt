@@ -111,21 +111,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         ctx.result("Error 404: Not found")
     }
 
-    app.get("/files/serve/{id}/{filename}") { ctx ->
-        val fileId = ctx.pathParam("id").toLong()
-        val fileName = ctx.pathParam("filename")
-        val extension = FilenameUtils.getExtension(fileName)
-        if (extension.isNullOrBlank()) {
-            throw BadRequestResponse("Filename has no extension. (.png or .jpeg)")
-        }
-        val contentType = ContentType.getContentTypeByExtension(extension)
-            ?: throw BadRequestResponse("Unable to get content type from file extension")
-        val file = storageService.loadAsFile(fileId, fileName)
-        ctx.result(file.inputStream()).contentType(contentType).header(
-            "Content-Disposition",
-            "inline; filename=\"$fileName\""
-        )
-    }
+
     return app
 }
 

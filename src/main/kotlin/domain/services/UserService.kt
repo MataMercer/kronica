@@ -1,9 +1,8 @@
 package org.matamercer.domain.services
 
-import io.javalin.http.BadRequestResponse
-import io.javalin.http.ForbiddenResponse
-import io.javalin.http.NotFoundResponse
-import io.javalin.http.UnauthorizedResponse
+import io.javalin.http.*
+import org.matamercer.domain.models.FileModel
+import org.matamercer.domain.models.Profile
 import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UserDto
 import org.matamercer.domain.repository.UserRepository
@@ -15,7 +14,9 @@ import org.matamercer.web.RegisterUserForm
 import org.matamercer.web.UpdateProfileForm
 import org.matamercer.web.UpdateUserForm
 
-class UserService(val userRepository: UserRepository) {
+class UserService(
+    private val userRepository: UserRepository,
+    private val fileModelService: FileModelService) {
 
     fun toDto(user: User): UserDto {
         return UserDto(
@@ -75,7 +76,32 @@ class UserService(val userRepository: UserRepository) {
     }
 
     fun updateProfile(currentUser: User, updateProfileForm: UpdateProfileForm){
+        val profile = updateProfileForm.description?.let {
+            Profile(
+                id = currentUser.id,
+                description = it,
+                avatar = FileModel(
+                    name = updateProfileForm.avatar.filename(),
+                    author = currentUser
+                )
+            )
+        }
+        if (profile == null) {
+            throw BadRequestResponse()
+        }
+        userRepository.updateProfile(profile)
 
+        try {
+            fileModelService.uploadFiles(listOf(profile.avatar), updateProfileForm.avatar)
+        } catch (e: StorageException) {
+            rollbackProfileUpdate(profile.id)
+        }
+    }
+
+    private fun rollbackProfileUpdate(id: Long) {
+//        userRepository.deleteProfile(id)
+        //TODO wtf to do lol
+        throw InternalServerErrorResponse()
     }
 
     fun delete(currentUser: User, id: Long){

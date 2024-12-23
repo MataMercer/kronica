@@ -31,12 +31,14 @@ class UserController(
     @Route(HandlerType.PUT, "/{id}/profile")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun updateProfile(ctx: Context){
-        val updateProfileForm = ctx.bodyValidator<UpdateProfileForm>().get()
+        val updateProfileForm = UpdateProfileForm(
+            description = ctx.formParam("description"),
+            ctx.uploadedFiles().first()
+        )
         val currentUser = getCurrentUser(ctx)
-        val updatedProfile = userService.updateProfile(currentUser, updateProfileForm)
+        userService.updateProfile(currentUser, updateProfileForm)
         ctx.json("Profile updated")
     }
-
 
     @Route(HandlerType.DELETE,"/{id}")
     @RequiredRole(UserRole.ADMIN)

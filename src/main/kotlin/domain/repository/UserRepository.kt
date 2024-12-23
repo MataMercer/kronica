@@ -36,9 +36,17 @@ class UserRepository(
         }
     }
 
+
+
     fun update(user: User) {
         transactionManager.wrap { conn ->
             userDao.update(conn, user)
+        }
+    }
+
+    fun updateProfile(profile: Profile, ) {
+        transactionManager.wrap { conn ->
+            userDao.updateProfile(conn, profile)
         }
     }
 

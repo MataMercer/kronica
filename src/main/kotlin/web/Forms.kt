@@ -21,7 +21,8 @@ data class UpdateUserForm(
     val role: String,
 )
 data class UpdateProfileForm(
-    val description: String?
+    val description: String?,
+    val avatar: UploadedFile
 )
 
 data class CreateArticleForm(

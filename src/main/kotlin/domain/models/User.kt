@@ -15,12 +15,12 @@ data class User(
     val hashedPassword: String? = null,
     val role: UserRole,
     val createdAt: Date? = null,
-    val avatar: FileModel? = null
 )
 
 data class Profile(
     val id: Long? = null,
-    val description: String
+    val description: String,
+    val avatar: FileModel? = null
 )
 
 data class SocialMediaLink(

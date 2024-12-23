@@ -112,6 +112,10 @@ class FileSystemStorageService() : StorageService {
         }
     }
 
+    override fun generatePath(fileName: String): Path {
+
+    }
+
     private fun isFileEmpty(file: File): Boolean {
         require(file.exists()) { "Cannot check the file length. The file is not found: " + file.absolutePath }
         return file.length() == 0L

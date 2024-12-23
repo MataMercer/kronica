@@ -113,6 +113,21 @@ class UserDao {
         }
     }
 
+    fun updateProfile(conn: Connection, profile: Profile): Long {
+        val sql = """
+            UPDATE profiles
+            SET description = ?,
+                avatar_id = ?
+            WHERE id = ?
+        """.trimIndent()
+        return mapper.update(sql, conn){
+            var i = 0
+            it.setString(++i, profile.description)
+            profile.avatar?.id?.let { it1 -> it.setLong(++i, it1) }
+            profile.id?.let { id -> it.setLong(++i, id) }
+        }
+    }
+
     fun delete(conn: Connection, id: Long) {
         val sql = """
             DELETE FROM users
