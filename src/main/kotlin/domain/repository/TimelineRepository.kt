@@ -10,41 +10,29 @@ class TimelineRepository(
     private val dataSource: DataSource,
     private val transactionManager: TransactionManager
 ) {
-
-    fun createTimeline(timeline: Timeline): Timeline?{
-       dataSource.connection.use { conn ->
-           val id = timelineDao.create(conn, timeline)
-           val res= timelineDao.findById(conn, id)
-           return res
-       }
-
+    fun createTimeline(timeline: Timeline): Timeline? = dataSource.connection.use { conn ->
+        val id = timelineDao.create(conn, timeline)
+        val res = timelineDao.findById(conn, id)
+        return res
     }
 
-    fun findByAuthorId(id: Long): List<Timeline> {
-        dataSource.connection.use { conn->
-            val res = timelineDao.findByAuthorId(conn, id)
-            return res
+    fun findByAuthorId(id: Long): List<Timeline> = dataSource.connection.use { conn ->
+        val res = timelineDao.findByAuthorId(conn, id)
+        return res
+    }
+
+    fun findById(id: Long): Timeline? = dataSource.connection.use { conn ->
+        val res = timelineDao.findById(conn, id)
+        return res
+    }
+
+    fun updateOrder(timelineId: Long, order: Array<Long>) = transactionManager.wrap { conn ->
+        order.forEachIndexed { index, id ->
+            timelineDao.updateTimelineOrder(conn, id, index)
         }
     }
 
-    fun findById(id: Long): Timeline? {
-        dataSource.connection.use { conn->
-            val res = timelineDao.findById(conn, id)
-            return res
-        }
-    }
-
-    fun updateOrder(timelineId: Long, order: Array<Long>){
-        transactionManager.wrap { conn ->
-            order.forEachIndexed { index, id ->
-                timelineDao.updateTimelineOrder(conn, id, index)
-            }
-        }
-    }
-
-    fun delete(id: Long){
-        transactionManager.wrap { conn ->
-            timelineDao.delete(conn, id)
-        }
+    fun delete(id: Long) = transactionManager.wrap { conn ->
+        timelineDao.delete(conn, id)
     }
 }

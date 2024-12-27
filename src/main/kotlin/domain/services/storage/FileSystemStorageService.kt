@@ -13,6 +13,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.util.*
 
 class FileSystemStorageService() : StorageService {
     private val rootLocation: Path = Paths.get("./user-upload-storage")
@@ -85,8 +86,8 @@ class FileSystemStorageService() : StorageService {
         }
     }
 
-    override fun loadAsFile(id: Long, fileName: String): File {
-        val path = Paths.get("$id/$fileName")
+    override fun loadAsFile(storageId: Long, fileName: String): File {
+        val path = Paths.get("$storageId/$fileName")
         return loadAsFile(path)
     }
 
@@ -112,8 +113,9 @@ class FileSystemStorageService() : StorageService {
         }
     }
 
-    override fun generatePath(fileName: String): Path {
-
+    override fun generateStorageId(fileName: String): String {
+        val id = UUID.randomUUID()
+        return id.toString()
     }
 
     private fun isFileEmpty(file: File): Boolean {

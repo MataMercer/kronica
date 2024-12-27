@@ -11,10 +11,8 @@ class UserRepository(
     private val transactionManager: TransactionManager,
     private val dataSource: DataSource
 ) {
-    fun findAll(): List<User> {
-        dataSource.connection.use { conn ->
-            return userDao.findAll(conn)
-        }
+    fun findAll(): List<User> = dataSource.connection.use { conn ->
+        return userDao.findAll(conn)
     }
 
     fun findByEmail(email: String): User? {
@@ -29,32 +27,20 @@ class UserRepository(
         }
     }
 
-    fun create(user: User): Long {
-        return transactionManager.wrap { conn ->
-            val profileId = userDao.createProfile(conn, Profile( description = ""))
-            return@wrap userDao.create(conn, user, profileId)
-        }
+    fun create(user: User) = transactionManager.wrap { conn ->
+        val profileId = userDao.createProfile(conn, Profile(description = ""))
+        return@wrap userDao.create(conn, user, profileId)
     }
 
-
-
-    fun update(user: User) {
-        transactionManager.wrap { conn ->
-            userDao.update(conn, user)
-        }
+    fun update(user: User) = transactionManager.wrap { conn ->
+        userDao.update(conn, user)
     }
 
-    fun updateProfile(profile: Profile, ) {
-        transactionManager.wrap { conn ->
-            userDao.updateProfile(conn, profile)
-        }
+    fun updateProfile(profile: Profile) = transactionManager.wrap { conn ->
+        userDao.updateProfile(conn, profile)
     }
 
-    fun delete(id: Long) {
-        transactionManager.wrap { conn ->
-            userDao.delete(conn, id)
-        }
+    fun delete(id: Long) = transactionManager.wrap { conn ->
+        userDao.delete(conn, id)
     }
-
-
 }

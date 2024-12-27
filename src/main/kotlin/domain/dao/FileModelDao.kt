@@ -1,7 +1,6 @@
 package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.FileModel
-import org.matamercer.domain.models.User
 import java.sql.Connection
 import java.sql.Timestamp
 import java.time.LocalDateTime
@@ -12,23 +11,15 @@ class FileModelDao() {
         FileModel(
             id = rs.getLong("id"),
             name = rs.getString("name"),
-            author = User(
-                id = rs.getLong("authors_id"),
-                name = rs.getString("authors_name"),
-                role = enumValueOf(rs.getString("authors_role"))
-            )
+            storageId = rs.getString("storage_id"),
         )
     }
 
     fun findById(conn: Connection, id: Long): FileModel? {
         val sql = """
             SELECT
-                files.*,
-                users.id AS authors_id,
-                users.name AS authors_name,
-                users.role AS authors_role
+                files.*
             FROM files
-            INNER JOIN users ON files.author_id=users.id
             WHERE files.id = ?
         """.trimIndent()
         return mapper.queryForObject(sql, conn) {
@@ -39,78 +30,71 @@ class FileModelDao() {
     fun findByOwningArticleId(conn: Connection, owningArticleId: Long): List<FileModel> {
         val sql = """
             SELECT 
-                files.*,
-                users.id AS authors_id,
-                users.name AS authors_name,
-                users.role AS authors_role
+                files.*
             FROM files
-            INNER JOIN users ON files.author_id=users.id
             INNER JOIN files_to_articles ON files.id=files_to_articles.file_id
             WHERE files_to_articles.article_id = ?
+            ORDER BY files_to_articles.index
         """.trimIndent()
         return mapper.queryForObjectList(sql, conn) {
             it.setLong(1, owningArticleId)
         }
     }
 
-    fun findByOwningCharacterId(conn: Connection, id: Long): List<FileModel>{
+    fun findCharacterAttachments(conn: Connection, id: Long): List<FileModel>{
         val sql = """
             SELECT 
-                files.*,
-                users.id AS authors_id,
-                users.name AS authors_name,
-                users.role AS authors_role
+                files.*
             FROM files
-            INNER JOIN users ON files.author_id=users.id
             INNER JOIN files_to_characters ON files.id=files_to_characters.file_id
             WHERE files_to_characters.character_id = ?
+            ORDER BY files_to_characters.index
         """.trimIndent()
         return mapper.queryForObjectList(sql, conn) {
             it.setLong(1, id)
         }
     }
 
-    fun joinArticle(conn: Connection, fileId: Long, articleId: Long): Long {
+    fun findCharacterProfilePictures(conn: Connection, id: Long): List<FileModel>{
+        val sql = """
+            SELECT 
+                files.*
+            FROM files
+            INNER JOIN files_to_character_profiles ON files.id=files_to_character_profiles.file_id
+            WHERE files_to_character_profiles.character_id = ?
+            ORDER BY files_to_character_profiles.index
+        """.trimIndent()
+        return mapper.queryForObjectList(sql, conn) {
+            it.setLong(1, id)
+        }
+    }
+
+    fun joinArticle(conn: Connection, fileId: Long, articleId: Long, index: Int): Long {
         val sql = """
             INSERT INTO files_to_articles
             (
                 file_id,
-                article_id
+                article_id,
+                index
             )
-            VALUES (?, ?)
+            VALUES (?, ?, ?)
         """.trimIndent()
 
         return mapper.update(sql, conn) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, articleId)
+            it.setInt(++i, index)
         }
     }
 
-    fun joinCharacter(conn: Connection, fileId: Long, characterId: Long): Long {
+    fun joinCharacter(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
         val sql = """
             INSERT INTO files_to_characters
             (
                 file_id,
                 character_id,
-            )
-            VALUES (?, ?)
-        """.trimIndent()
-
-        return mapper.update(sql, conn) {
-            var i = 0
-            it.setLong(++i, fileId)
-            it.setLong(++i, characterId)
-        }
-    }
-
-    fun joinCharacterProfile(conn: Connection, fileId: Long, characterId: Long, caption: String): Long {
-        val sql = """
-            INSERT INTO files_to_character_profiles
-            (
-                file_id,
-                character_id,
-                caption
+                index
             )
             VALUES (?, ?, ?)
         """.trimIndent()
@@ -119,6 +103,27 @@ class FileModelDao() {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
+            it.setInt(++i, index)
+        }
+    }
+
+    fun joinCharacterProfile(conn: Connection, fileId: Long, characterId: Long, index: Int, caption: String): Long {
+        val sql = """
+            INSERT INTO files_to_character_profiles
+            (
+                file_id,
+                character_id,
+                index,
+                caption
+            )
+            VALUES (?, ?, ?, ?)
+        """.trimIndent()
+
+        return mapper.update(sql, conn) {
+            var i = 0
+            it.setLong(++i, fileId)
+            it.setLong(++i, characterId)
+            it.setInt(++i, index)
             it.setString(++i, caption)
         }
     }
@@ -129,18 +134,16 @@ class FileModelDao() {
             """
                 INSERT INTO files
                     (
-                    author_id,
                     name,
-                    created_at,
-                    updated_at
+                    storage_id,
+                    created_at
                     )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?)
             """.trimIndent(), connection
         ) {
             var i = 0
-            fileModel.author.id?.let { id -> it.setLong(++i, id) }
             it.setString(++i, fileModel.name)
-            it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
+            it.setString(++i, fileModel.storageId)
             it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
         }
     }
@@ -150,16 +153,12 @@ class FileModelDao() {
             """
                 UPDATE files
                 SET
-                    author_id = ?,
-                    name = ?,
-                    updated_at = ?              
+                    name = ?
                 WHERE files.id = ?
             """.trimIndent(), connection
         ) {
             var i = 0
-            fileModel.author.id?.let { id -> it.setLong(++i, id) }
             it.setString(++i, fileModel.name)
-            it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
             fileModel.id?.let { id -> it.setLong(++i, id) }
         }
     }

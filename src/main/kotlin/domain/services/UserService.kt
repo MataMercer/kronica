@@ -6,6 +6,7 @@ import org.matamercer.domain.models.Profile
 import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UserDto
 import org.matamercer.domain.repository.UserRepository
+import org.matamercer.domain.services.storage.exceptions.StorageException
 import org.matamercer.security.UserRole
 import org.matamercer.security.hashPassword
 import org.matamercer.security.verifyPassword
@@ -16,7 +17,8 @@ import org.matamercer.web.UpdateUserForm
 
 class UserService(
     private val userRepository: UserRepository,
-    private val fileModelService: FileModelService) {
+    private val fileModelService: FileModelService
+) {
 
     fun toDto(user: User): UserDto {
         return UserDto(
@@ -52,7 +54,7 @@ class UserService(
         if (!validateRegisterUserForm(registerUserForm)) {
             throw BadRequestResponse()
         }
-         val id = userRepository.create(
+        val id = userRepository.create(
             User(
                 name = registerUserForm.name!!,
                 email = registerUserForm.email,
@@ -63,7 +65,7 @@ class UserService(
         return getById(id)
     }
 
-    fun update(currentUser: User, updateUserForm: UpdateUserForm){
+    fun update(currentUser: User, updateUserForm: UpdateUserForm) {
         val user = User(
             id = updateUserForm.id.toLong(),
             name = updateUserForm.name!!,
@@ -75,36 +77,22 @@ class UserService(
         userRepository.update(user)
     }
 
-    fun updateProfile(currentUser: User, updateProfileForm: UpdateProfileForm){
+    fun updateProfile(currentUser: User, updateProfileForm: UpdateProfileForm) {
+        val avatar = fileModelService.uploadFiles(listOf(updateProfileForm.avatar)).first()
         val profile = updateProfileForm.description?.let {
             Profile(
                 id = currentUser.id,
                 description = it,
-                avatar = FileModel(
-                    name = updateProfileForm.avatar.filename(),
-                    author = currentUser
-                )
+                avatar = avatar
             )
         }
         if (profile == null) {
             throw BadRequestResponse()
         }
         userRepository.updateProfile(profile)
-
-        try {
-            fileModelService.uploadFiles(listOf(profile.avatar), updateProfileForm.avatar)
-        } catch (e: StorageException) {
-            rollbackProfileUpdate(profile.id)
-        }
     }
 
-    private fun rollbackProfileUpdate(id: Long) {
-//        userRepository.deleteProfile(id)
-        //TODO wtf to do lol
-        throw InternalServerErrorResponse()
-    }
-
-    fun delete(currentUser: User, id: Long){
+    fun delete(currentUser: User, id: Long) {
         authCheck(currentUser, id)
         userRepository.delete(id)
     }
@@ -112,7 +100,8 @@ class UserService(
     private fun validateRegisterUserForm(registerUserForm: RegisterUserForm): Boolean {
         return (registerUserForm.name != null && registerUserForm.email != null && registerUserForm.password != null)
     }
-    private fun authCheck(currentUser: User, userId: Long){
+
+    private fun authCheck(currentUser: User, userId: Long) {
         val user = getById(userId)
         if (currentUser.id != user.id && currentUser.role.authLevel < UserRole.ADMIN.authLevel) {
             throw ForbiddenResponse()

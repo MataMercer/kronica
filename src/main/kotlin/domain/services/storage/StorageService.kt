@@ -3,6 +3,7 @@ package org.matamercer.domain.services.storage
 import io.javalin.http.UploadedFile
 import java.io.File
 import java.nio.file.Path
+import java.util.UUID
 
 interface StorageService {
     fun init()
@@ -10,6 +11,6 @@ interface StorageService {
     fun delete(filePath: Path)
     fun deleteAll()
     fun loadAsFile(filePath: Path): File
-    fun loadAsFile(id: Long, fileName: String): File
-    fun generatePath(fileName: String):Path
+    fun loadAsFile(storageId: Long, fileName: String): File
+    fun generateStorageId(fileName: String):String
 }

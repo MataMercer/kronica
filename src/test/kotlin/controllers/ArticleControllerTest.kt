@@ -1,8 +1,5 @@
 package controllers
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import createAuthClient
 import fixtures.Fixtures
 import getHostUrl
@@ -10,32 +7,23 @@ import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
 import io.javalin.json.toJsonString
 import io.javalin.testtools.HttpClient
-import io.javalin.testtools.TestConfig
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
-import org.matamercer.domain.models.ArticleDto
 import org.matamercer.domain.models.User
-import org.matamercer.domain.models.UsersDto
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
 import org.matamercer.web.CreateArticleForm
-import org.matamercer.web.CreateCharacterForm
 import org.matamercer.web.CreateTimelineForm
 import org.matamercer.web.LoginRequestForm
 import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertFails
 import kotlin.test.assertNotNull
 
 class ArticleControllerTest {

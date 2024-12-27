@@ -28,10 +28,8 @@ data class UpdateProfileForm(
 data class CreateArticleForm(
     val title: String?,
     val body: String?,
-    val attachments: List<Long> = listOf(),
     val timelineId: Long? = null,
     val uploadedAttachments: List<UploadedFile> = listOf(),
-    val uploadedAttachmentInsertions: List<Int> = listOf(),
     val characters: List<Long> = listOf()
 )
 
@@ -52,7 +50,6 @@ data class CreateCharacterForm(
     val firstSeen: String?,
     val status: String?,
     val body: String?,
-    val attachments: List<Long> = listOf(),
     val uploadedAttachments: List<UploadedFile> = listOf(),
-    val uploadedAttachmentInsertions: List<Int> = listOf(),
+    val uploadedProfilePictures: List<UploadedFile> = listOf()
 )

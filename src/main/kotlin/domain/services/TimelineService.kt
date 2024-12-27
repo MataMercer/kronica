@@ -24,7 +24,6 @@ class TimelineService(
         )
         val res = timelineRepository.createTimeline(timeline)
         return res
-
     }
 
     fun getTimelines(authorId: Long?): List<Timeline>{
@@ -56,7 +55,6 @@ class TimelineService(
     }
 
     private fun checkAuth(currentUser: User, timelineId: Long){
-
         val t = getTimelineById(timelineId)
         if (t.author?.id != currentUser.id){
            throw UnauthorizedResponse("User is not the author of this timeline.")

@@ -15,19 +15,15 @@ class CharacterService(
 ) {
 
     fun create(form: CreateCharacterForm, author: User): Long{
-        val attachments = form.uploadedAttachments.map {
-            FileModel(
-                name = it.filename(),
-                author = author
-            )
-        }
-
+        val attachments = fileModelService.uploadFiles(form.uploadedAttachments)
+        val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures)
         val c = characterRepository.create(
             Character(
                 name = form.name!!,
                 body = form.body!!,
                 author = author,
                 attachments = attachments,
+                profilePictures = profilePictures,
                 age = form.age!!,
                 status = form.status!!,
                 birthday = form.birthday!!,
@@ -35,16 +31,7 @@ class CharacterService(
                 firstSeen = form.firstSeen!!
             )
         )
-
-        if (c?.id == null){
-            throw InternalServerErrorResponse()
-        }
-
-        try {
-           fileModelService.uploadFiles(c.attachments, form.uploadedAttachments)
-        }catch (e: StorageException){
-            rollbackCharacterCreate(c.id)
-        }
+        if (c?.id == null) throw InternalServerErrorResponse()
         return c.id
     }
 
@@ -71,12 +58,6 @@ class CharacterService(
         characterRepository.deleteById(id)
     }
 
-    private fun rollbackCharacterCreate(id: Long){
-        characterRepository.deleteById(id)
-        throw InternalServerErrorResponse()
-
-    }
-
     fun toDto(c: Character): CharacterDto{
         return CharacterDto(
             id = c.id,
@@ -93,7 +74,15 @@ class CharacterService(
             attachments = c.attachments.map{
                 FileModelDto(
                     id = it.id,
-                    name = it.name
+                    name = it.name,
+                    storageId = it.storageId
+                )
+            },
+            profilePictures = c.profilePictures.map{
+                FileModelDto(
+                    id = it.id,
+                    name = it.name,
+                    storageId = it.storageId
                 )
             },
             gender = c.gender,

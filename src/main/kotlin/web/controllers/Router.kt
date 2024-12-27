@@ -14,6 +14,7 @@ class Router(
     private val userController: UserController,
     private val authController: AuthController,
     private val characterController: CharacterController,
+    private val fileController: FileController,
     private val app: Javalin
 
 ) {
@@ -25,6 +26,7 @@ class Router(
         addRoutes(userController)
         addRoutes(authController)
         addRoutes(characterController)
+        addRoutes(fileController)
     }
 
     private fun addRouteAuthorization(){
@@ -73,7 +75,7 @@ class Router(
                     method.invoke(obj, ctx)
                 }catch (e:InvocationTargetException){
                     print("Invocation Target Exception")
-
+                    throw e.targetException
                 }
             }
             if (roleAnnotation == null){

@@ -51,11 +51,10 @@ class ArticleServiceUnitTest {
         testUser = fixtures.rootUser
         testMaliciousUser = fixtures.maliciousUser
         testArticle = fixtures.testArticle
-        testFile = fixtures.testFile
-        testArticleForm = CreateArticleForm(title = "title", body = "body", attachments = listOf(1))
+        testArticleForm = CreateArticleForm(title = "title", body = "body")
 
         //make callbacks pass through transact
-        every { transactionManager.wrap(any()) } answers { (firstArg<()->Unit>())()}
+        every { transactionManager.wrap({}) } answers { (firstArg<()->Unit>())()}
     }
 
 

@@ -39,6 +39,7 @@ class CharacterController(
     }
 
     @Route(HandlerType.DELETE, "/{id}")
+    @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun deleteCharacter(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         val articleId = ctx.pathParam("id").toLong()
@@ -51,9 +52,8 @@ class CharacterController(
         val createCharacterForm = CreateCharacterForm(
             name = ctx.formParam("name"),
             body = ctx.formParam("body"),
-            attachments = ctx.formParams("attachments").map { it.toLong() },
-            uploadedAttachments = ctx.uploadedFiles(),
-            uploadedAttachmentInsertions = ctx.formParams("uploadedAttachmentInsertions").map { it.toInt() },
+            uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
+            uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
             gender = ctx.formParam("gender"),
             age = ctx.formParam("age")?.toInt(),
             birthday = ctx.formParam("birthday"),

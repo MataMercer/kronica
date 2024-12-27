@@ -11,9 +11,9 @@ import org.matamercer.domain.services.storage.StorageService
 class FileController(
     private val storageService: StorageService
 ) {
-    @Route(HandlerType.GET, "/files/serve/{id}/{filename}")
+    @Route(HandlerType.GET, "/files/serve/{storageId}/{filename}")
     fun serveFile(ctx: Context) {
-        val fileId = ctx.pathParam("id").toLong()
+        val fileStorageId = ctx.pathParam("storageId").toLong()
         val fileName = ctx.pathParam("filename")
         val extension = FilenameUtils.getExtension(fileName)
         if (extension.isNullOrBlank()) {
@@ -21,7 +21,7 @@ class FileController(
         }
         val contentType = ContentType.getContentTypeByExtension(extension)
             ?: throw BadRequestResponse("Unable to get content type from file extension")
-        val file = storageService.loadAsFile(fileId, fileName)
+        val file = storageService.loadAsFile(fileStorageId, fileName)
         ctx.result(file.inputStream()).contentType(contentType).header(
             "Content-Disposition",
             "inline; filename=\"$fileName\""

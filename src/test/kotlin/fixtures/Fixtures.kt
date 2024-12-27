@@ -24,18 +24,18 @@ class Fixtures {
         role  = UserRole.AUTHENTICATED_USER
     )
 
-    val testFile = FileModel(
-        id = 1,
-        name = "testfile.png",
-        author = rootUser,
-    )
+//    val testFile = FileModel(
+//        id = 1,
+//        name = "testfile.png",
+//        author = rootUser,
+//    )
 
     val testArticle = Article(
         id = 1,
         title = "title",
         body = "body",
         author = rootUser,
-        attachments = listOf(testFile)
+        attachments = emptyList()
     )
 
     val testCharacter = Character(
@@ -48,7 +48,7 @@ class Fixtures {
         age = 20,
         body = "lorem ipsum",
         author = rootUser,
-        attachments = listOf(testFile),
+        attachments = emptyList(),
     )
 
     val testTimeline = Timeline(

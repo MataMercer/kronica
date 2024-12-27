@@ -4,7 +4,6 @@ import com.zaxxer.hikari.HikariDataSource
 import io.javalin.Javalin
 import io.javalin.http.*
 import io.javalin.security.RouteRole
-import org.apache.commons.io.FilenameUtils
 import org.eclipse.jetty.http.HttpCookie
 import org.eclipse.jetty.server.session.DatabaseAdaptor
 import org.eclipse.jetty.server.session.DefaultSessionCache
@@ -52,9 +51,12 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val app = createJavalinApp()
 
+    val storageService = FileSystemStorageService()
+    val fileModelService = FileModelService(storageService = storageService)
+
     val userDao = UserDao()
     val userRepository = UserRepository(userDao, transactionManager, dataSource)
-    val userService = UserService(userRepository)
+    val userService = UserService(userRepository, fileModelService)
     val seeder = Seeder(userService)
     seeder.initRootUser()
 
@@ -66,9 +68,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val timelineRepository = TimelineRepository(timelineDao, dataSource, transactionManager)
     val timelineService = TimelineService(timelineRepository)
 
-    val storageService = FileSystemStorageService()
-    val fileModelService = FileModelService(storageService = storageService)
-
     if (appMode == AppMode.TEST){
         storageService.deleteAll()
     }
@@ -77,13 +76,13 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val characterRepository = CharacterRepository(
         characterDao = characterDao,
         fileModelDao = fileModelDao,
-        transactionManager = transactionManager,
+        transact = transactionManager,
         dataSource = dataSource
     )
     val articleRepository = ArticleRepository(
         articleDao = articleDao,
         fileModelDao = fileModelDao,
-        transactionManager =  transactionManager,
+        transact =  transactionManager,
         dataSource = dataSource,
         timelineDao = timelineDao,
         characterRepository = characterRepository,
@@ -97,6 +96,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val userController = UserController(userService)
     val authController = AuthController(userService)
     val characterController = CharacterController(characterService, timelineService)
+    val fileController = FileController(storageService)
 
     val router = Router(
         articleController,
@@ -104,6 +104,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         userController,
         authController,
         characterController,
+        fileController,
         app)
     router.setupRoutes()
 

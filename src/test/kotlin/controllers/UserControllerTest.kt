@@ -110,7 +110,4 @@ class UserControllerTest {
         assertThat(currentUserRes.isSuccessful).isFalse()
     }
 
-
-
-
 }

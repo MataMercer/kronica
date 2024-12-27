@@ -1,14 +1,12 @@
 package org.matamercer.domain.services
 
-import io.javalin.http.*
+import io.javalin.http.BadRequestResponse
+import io.javalin.http.ForbiddenResponse
+import io.javalin.http.InternalServerErrorResponse
+import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
-import org.matamercer.domain.services.storage.StorageService
-import org.matamercer.domain.services.storage.exceptions.StorageException
-import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
-import java.nio.file.Path
-import java.nio.file.Paths
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
@@ -34,12 +32,7 @@ class ArticleService(
 
     fun create(createArticleForm: CreateArticleForm, author: User): Long {
         validateForm(createArticleForm)
-        val attachments = createArticleForm.uploadedAttachments.map { u ->
-            FileModel(
-                name = u.filename(),
-                author = author,
-            )
-        }
+        val attachments = fileModelService.uploadFiles(createArticleForm.uploadedAttachments)
         val article = articleRepository.create(
             Article(
                 title = createArticleForm.title!!,
@@ -51,13 +44,6 @@ class ArticleService(
             createArticleForm.characters
         )
         if (article?.id == null) throw InternalServerErrorResponse()
-
-        try {
-            fileModelService.uploadFiles(article.attachments, createArticleForm.uploadedAttachments)
-        } catch (e: StorageException) {
-            rollbackArticleCreate(article.id)
-        }
-
         return article.id
     }
 
@@ -65,11 +51,6 @@ class ArticleService(
         if (createArticleForm.title == null && createArticleForm.body == null) {
             throw BadRequestResponse()
         }
-    }
-
-    private fun rollbackArticleCreate(id: Long) {
-        articleRepository.deleteById(id)
-        throw InternalServerErrorResponse()
     }
 
     fun deleteById(currentUser: User, id: Long?) {
@@ -95,7 +76,8 @@ class ArticleService(
             attachments = article.attachments.map {
                 FileModelDto(
                     id = it.id,
-                    name = it.name
+                    name = it.name,
+                    storageId = it.storageId,
                 )
             },
             timelineIndex = article.timelineIndex,
@@ -104,15 +86,12 @@ class ArticleService(
             characters =  article.characters.map {
                 characterService.toDto(it)
             }
-
         )
     }
 
     private fun authCheck(currentUser: User, article: Article){
-        if (currentUser.id != article.author.id && currentUser.role.authLevel < UserRole.ADMIN.authLevel) {
+        if (currentUser.id != article.author.id && !currentUser.role.isAdmin()) {
             throw ForbiddenResponse()
         }
     }
-
-
 }

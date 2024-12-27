@@ -26,6 +26,7 @@ data class CharacterDto(
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
     val attachments: List<FileModelDto> = listOf(),
+    val profilePictures: List<FileModelDto> = listOf(),
     val gender: String,
     val age: Int,
     val status: String,

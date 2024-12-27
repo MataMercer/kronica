@@ -57,13 +57,10 @@ class ArticleController(
             title = ctx.formParam("title"),
             body = ctx.formParam("body"),
             timelineId = ctx.formParam("timelineId")?.toLongOrNull(),
-            attachments = ctx.formParams("attachments").map { it.toLong() },
-            uploadedAttachments = ctx.uploadedFiles(),
-            uploadedAttachmentInsertions = ctx.formParams("uploadedAttachmentInsertions").map { it.toInt() },
+            uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
             characters = ctx.formParams("characters").map { it.toLong() }
         )
         val author = getCurrentUser(ctx)
-
         val articleId = articleService.create(createArticleForm, author)
         val a = articleService.getById(articleId)
         val dto = articleService.toDto(a)
