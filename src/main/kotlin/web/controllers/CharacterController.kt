@@ -2,6 +2,7 @@ package org.matamercer.web.controllers
 
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
+import io.javalin.http.formParamAsClass
 import org.matamercer.domain.models.CharacterDto
 import org.matamercer.domain.models.CharacterQuery
 import org.matamercer.domain.services.CharacterService
@@ -10,6 +11,7 @@ import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateCharacterForm
 import org.matamercer.web.dto.Page
+import org.matamercer.web.formMapper
 
 @Controller("/api/characters")
 class CharacterController(
@@ -46,20 +48,25 @@ class CharacterController(
         characterService.deleteById(currentUser, articleId)
     }
 
+
+
     @Route(HandlerType.POST, "/")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun createCharacter(ctx: Context) {
-        val createCharacterForm = CreateCharacterForm(
-            name = ctx.formParam("name"),
-            body = ctx.formParam("body"),
-            uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
-            uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
-            gender = ctx.formParam("gender"),
-            age = ctx.formParam("age")?.toInt(),
-            birthday = ctx.formParam("birthday"),
-            firstSeen = ctx.formParam("firstSeen"),
-            status = ctx.formParam("status"),
-        )
+//        val createCharacterForm = CreateCharacterForm(
+//            name = ctx.formParam("name"),
+//            body = ctx.formParam("body"),
+//            uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
+//            uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
+//            gender = ctx.formParam("gender"),
+//            age = ctx.formParam("age")?.toInt(),
+//            birthday = ctx.formParam("birthday"),
+//            firstSeen = ctx.formParam("firstSeen"),
+//            status = ctx.formParam("status"),
+//        )
+
+        ctx.uploadedFileMap()
+        val createCharacterForm = formMapper<CreateCharacterForm>(ctx.formParamMap(), ctx.uploadedFileMap())
         val author = getCurrentUser(ctx)
         val characterId = characterService.create(createCharacterForm, author)
         val a = characterService.getById(characterId)

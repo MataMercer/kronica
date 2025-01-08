@@ -6,7 +6,6 @@ import io.javalin.http.InternalServerErrorResponse
 import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.CharacterRepository
-import org.matamercer.domain.services.storage.exceptions.StorageException
 import org.matamercer.web.CreateCharacterForm
 
 class CharacterService(
@@ -14,14 +13,14 @@ class CharacterService(
     private val fileModelService: FileModelService
 ) {
 
-    fun create(form: CreateCharacterForm, author: User): Long{
+    fun create(form: CreateCharacterForm, currentUser: CurrentUser): Long{
         val attachments = fileModelService.uploadFiles(form.uploadedAttachments)
         val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures)
         val c = characterRepository.create(
             Character(
                 name = form.name!!,
                 body = form.body!!,
-                author = author,
+                author = currentUser.toUser(),
                 attachments = attachments,
                 profilePictures = profilePictures,
                 age = form.age!!,
@@ -46,7 +45,7 @@ class CharacterService(
         return characterRepository.findAll(query).map { toDto(it) }
     }
 
-    fun deleteById(currentUser: User, id: Long?){
+    fun deleteById(currentUser: CurrentUser, id: Long?){
         if (id == null){
             throw BadRequestResponse()
         }

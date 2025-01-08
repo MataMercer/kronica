@@ -15,12 +15,12 @@ class TimelineService(
 ) {
 
 
-    fun createTimeline(timelineForm: CreateTimelineForm, author: User): Timeline? {
+    fun createTimeline(timelineForm: CreateTimelineForm, currentUser: CurrentUser): Timeline? {
         validateForm(timelineForm)
         val timeline = Timeline(
             name = timelineForm.name!!,
             description = timelineForm.description!!,
-            author = author
+            author = currentUser.toUser()
         )
         val res = timelineRepository.createTimeline(timeline)
         return res
@@ -39,7 +39,7 @@ class TimelineService(
         }
     }
 
-    fun updateOrder(timelineId: Long, updateTimelineOrderForm: UpdateTimelineOrderForm, currentUser: User){
+    fun updateOrder(timelineId: Long, updateTimelineOrderForm: UpdateTimelineOrderForm, currentUser: CurrentUser){
         checkAuth(currentUser, timelineId)
         timelineRepository.updateOrder(timelineId, updateTimelineOrderForm.order.toTypedArray())
     }
@@ -49,12 +49,12 @@ class TimelineService(
         return t
     }
 
-    fun delete(currentUser: User, timelineId: Long){
+    fun delete(currentUser: CurrentUser, timelineId: Long){
         checkAuth(currentUser, timelineId)
         timelineRepository.delete(timelineId)
     }
 
-    private fun checkAuth(currentUser: User, timelineId: Long){
+    private fun checkAuth(currentUser: CurrentUser, timelineId: Long){
         val t = getTimelineById(timelineId)
         if (t.author?.id != currentUser.id){
            throw UnauthorizedResponse("User is not the author of this timeline.")

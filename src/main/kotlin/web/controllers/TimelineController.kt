@@ -19,7 +19,7 @@ class TimelineController(
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun createTimeline(ctx: Context){
         val form = ctx.bodyValidator<CreateTimelineForm>()
-            .check({ !it.name.isNullOrBlank() }, "Name is empty")
+            .check({ it.name.isNotBlank() }, "Name is empty.")
             .get()
 
         val author = getCurrentUser(ctx)

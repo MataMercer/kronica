@@ -39,6 +39,17 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
         return obj
     }
 
+    fun queryForLong(sql: String, conn: Connection, statementSetter: (st: PreparedStatement)-> Unit): Long?{
+        val st = conn.prepareStatement(sql)
+        st.apply(statementSetter)
+        val rs = st.executeQuery()
+        val result = if(rs.next()) rs.getLong(1) else null
+        rs.close()
+        st.close()
+        return result
+    }
+
+
     fun update(sql: String, conn: Connection, statementSetter: (st: PreparedStatement) -> Unit): Long{
         val st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         st.apply(statementSetter)
@@ -60,6 +71,8 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
 fun genTimestamp(): Timestamp {
     return Timestamp.valueOf(LocalDateTime.now())
 }
+
+
 
 
 

@@ -5,28 +5,28 @@ import java.sql.Connection
 
 class CharacterDao {
 
-    private val mapper = RowMapper{ rs ->
-       Character(
-           id = rs.getLong("id"),
-           name = rs.getString("name"),
-           body = rs.getString("body"),
-           createdAt = rs.getTimestamp("created_at"),
-           updatedAt = rs.getTimestamp("updated_at"),
-           author = User(
-               id = rs.getLong("authors_id"),
-               name = rs.getString("authors_name"),
-               role = enumValueOf(rs.getString("authors_role"))
-           ),
-           birthday = rs.getString("birthday"),
-           gender = rs.getString("gender"),
-           age = rs.getInt("age"),
-           firstSeen = rs.getString("first_seen"),
-           status = rs.getString("status"),
-       )
+    private val mapper = RowMapper { rs ->
+        Character(
+            id = rs.getLong("id"),
+            name = rs.getString("name"),
+            body = rs.getString("body"),
+            createdAt = rs.getTimestamp("created_at"),
+            updatedAt = rs.getTimestamp("updated_at"),
+            author = User(
+                id = rs.getLong("authors_id"),
+                name = rs.getString("authors_name"),
+                role = enumValueOf(rs.getString("authors_role"))
+            ),
+            birthday = rs.getString("birthday"),
+            gender = rs.getString("gender"),
+            age = rs.getInt("age"),
+            firstSeen = rs.getString("first_seen"),
+            status = rs.getString("status"),
+        )
     }
 
-    fun findById(conn: Connection, id: Long): Character?{
-       val sql = """
+    fun findById(conn: Connection, id: Long): Character? {
+        val sql = """
            SELECT
                 characters.*, 
                 users.id AS authors_id,
@@ -65,8 +65,8 @@ class CharacterDao {
         }
     }
 
-    fun create(conn: Connection, character: Character): Long {
-        val sql = """
+    fun create(conn: Connection, character: Character): Long = mapper.update(
+        """
                 INSERT INTO characters
                     (name,
                     body,
@@ -80,24 +80,22 @@ class CharacterDao {
                     gender
                     )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
-
-        return mapper.update(sql, conn) {
-            var i = 0
-            it.setString(++i, character.name)
-            it.setString(++i, character.body)
-            it.setTimestamp(++i, genTimestamp())
-            it.setTimestamp(++i, genTimestamp())
-            character.author.id?.let { it1 -> it.setLong(++i, it1) }
-            it.setInt(++i, character.age)
-            it.setString(++i, character.birthday)
-            it.setString(++i, character.firstSeen)
-            it.setString(++i, character.status)
-            it.setString(++i, character.gender)
-        }
+                """.trimIndent(), conn
+    ) {
+        var i = 0
+        it.setString(++i, character.name)
+        it.setString(++i, character.body)
+        it.setTimestamp(++i, genTimestamp())
+        it.setTimestamp(++i, genTimestamp())
+        character.author.id?.let { it1 -> it.setLong(++i, it1) }
+        it.setInt(++i, character.age)
+        it.setString(++i, character.birthday)
+        it.setString(++i, character.firstSeen)
+        it.setString(++i, character.status)
+        it.setString(++i, character.gender)
     }
 
-    fun joinArticle(conn: Connection, characterId: Long, articleId: Long):Long{
+    fun joinArticle(conn: Connection, characterId: Long, articleId: Long): Long {
         val sql = """
             INSERT INTO articles_to_characters
             (
@@ -107,21 +105,29 @@ class CharacterDao {
             VALUES (?, ?)
         """.trimIndent()
 
-        return mapper.update(sql, conn){
+        return mapper.update(sql, conn) {
             var i = 0
             it.setLong(++i, articleId)
             it.setLong(++i, characterId)
         }
     }
 
-    fun deleteById(conn: Connection, id: Long){
-        val sql = """
+    fun deleteById(conn: Connection, id: Long) = mapper.update(
+        """
            DELETE FROM characters
             WHERE characters.id = ?
-        """.trimIndent()
+        """.trimIndent(), conn
+    ) {
+        it.setLong(1, id)
+    }
 
-        mapper.update(sql, conn) {
-            it.setLong(1, id)
-        }
+    fun findCharacterCountByAuthorId(conn: Connection, id: Long): Long? = mapper.queryForLong(
+        """
+            SELECT COUNT(*) AS count
+            FROM characters
+            WHERE author_id = ?
+        """.trimIndent(), conn
+    ) {
+        it.setLong(1, id)
     }
 }

@@ -71,12 +71,12 @@ class Router(
             val routeAnnotation = method.getAnnotation(Route::class.java)
             val roleAnnotation = method.getAnnotation(RequiredRole::class.java)
             val handler:(Context)->Unit = { ctx: Context ->
-                try {
+//                try {
                     method.invoke(obj, ctx)
-                }catch (e:InvocationTargetException){
-                    print("Invocation Target Exception")
-                    throw e.targetException
-                }
+//                }catch (e:InvocationTargetException){
+//                    print("Invocation Target Exception")
+//                    throw e.targetException
+//                }
             }
             if (roleAnnotation == null){
                 app.addHttpHandler(

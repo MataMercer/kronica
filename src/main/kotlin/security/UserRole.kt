@@ -11,4 +11,8 @@ enum class UserRole(val authLevel: Int): RouteRole {
     fun isAdmin(): Boolean {
         return this.authLevel >= ADMIN.authLevel
     }
+
+    fun isAuthenticated(): Boolean {
+        return this.authLevel >= AUTHENTICATED_USER.authLevel
+    }
 }

@@ -69,6 +69,42 @@ class ArticleDao {
         }
     }
 
+    fun findByFollowing(conn: Connection, userId: Long): List<Article> {
+        val sql = """
+            WITH followed_users AS (
+                SELECT 
+                    users.id 
+                FROM users
+                INNER JOIN follows
+                    ON users.id=follows.followee_id
+                    WHERE follows.follower_id = ?
+            )
+            SELECT 
+                articles.*,
+                
+                users.id AS authors_id,
+                users.name AS authors_name,
+                users.role AS authors_role,
+                
+                timeline_entries.timeline_index AS timeline_entries_timeline_index,
+                   
+                timelines.id AS timelines_id,
+                timelines.name AS timelines_name,
+                timelines.description AS timelines_description
+            FROM articles
+            INNER JOIN users 
+                ON articles.author_id=users.id
+            LEFT JOIN timeline_entries 
+                ON articles.id=timeline_entries.article_id
+            LEFT JOIN timelines
+                ON timeline_entries.timeline_id=timelines.id
+            WHERE users.id IN (SELECT * FROM followed_users)
+        """.trimIndent()
+        return mapper.queryForObjectList(sql, conn) {
+            it.setLong(1, userId)
+        }
+    }
+
     fun findById(conn: Connection, id: Long): Article? {
         val sql = """
                SELECT 
@@ -151,11 +187,21 @@ class ArticleDao {
         }
     }
 
-    fun update(article: Article): Long? {
-        TODO("Not yet implemented")
+    fun findArticleCountByAuthorId(conn: Connection, id: Long): Long? {
+        val sql = """
+            SELECT COUNT(*) AS count
+            FROM articles
+            WHERE author_id = ?
+        """.trimIndent()
+        return mapper.queryForLong(sql, conn) {
+            it.setLong(1, id)
+        }
     }
 
 
+    fun update(article: Article): Long? {
+        TODO("Not yet implemented")
+    }
 
     fun deleteById(conn: Connection, id: Long) {
         val sql = """

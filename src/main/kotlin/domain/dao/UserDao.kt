@@ -10,44 +10,47 @@ import java.time.LocalDateTime
 
 class UserDao {
 
-    private val mapper = RowMapper<User> { rs  ->
+    private val mapper = RowMapper<User> { rs ->
         User(
             id = rs.getLong("id"),
             name = rs.getString("name"),
             email = rs.getString("email"),
             hashedPassword = rs.getString("hashed_password"),
             createdAt = rs.getTimestamp("created_at"),
-            role = enumValueOf( rs.getString("role"))
+            role = enumValueOf(rs.getString("role"))
         )
     }
 
-    fun findAll(conn: Connection): List<User> {
-        return mapper.queryForObjectList("SELECT * FROM users", conn){}
-    }
+    fun findAll(conn: Connection): List<User> = mapper.queryForObjectList(
+        "SELECT * FROM users", conn
+    ) {}
 
     fun findByEmail(conn: Connection, email: String): User? {
-        return mapper.queryForObject("""
+        return mapper.queryForObject(
+            """
                 SELECT * 
                 FROM users 
                 WHERE users.email = ?
-                """.trimIndent(), conn){
+                """.trimIndent(), conn
+        ) {
             it.setString(1, email)
         }
 
     }
 
-    fun findById(conn: Connection, id: Long): User? {
-        return mapper.queryForObject("""
+    fun findById(conn: Connection, id: Long): User? = mapper.queryForObject(
+        """
             SELECT * 
             FROM users 
             WHERE users.id = ?
-            """.trimIndent(), conn){
-            it.setLong(1, id)
-        }
+            """.trimIndent(), conn
+    ) {
+        it.setLong(1, id)
     }
 
-    fun create(conn: Connection, user: User, profileId: Long): Long {
-        return mapper.update("""
+
+    fun create(conn: Connection, user: User, profileId: Long): Long = mapper.update(
+        """
                 INSERT INTO users 
                     (name,
                     email,
@@ -56,37 +59,38 @@ class UserDao {
                     created_at,
                     profile_id) 
                 VALUES (?, ?, ?, ?, ?, ?)
-                """.trimIndent(), conn){
-            var i = 0
-            it.setString(++i, user.name)
-            it.setString(++i, user.email)
-            it.setString(++i, user.hashedPassword)
-            it.setString(++i, user.role.name)
-            it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
-            it.setLong(++i, profileId)
-        }
+                """.trimIndent(), conn
+    ) {
+        var i = 0
+        it.setString(++i, user.name)
+        it.setString(++i, user.email)
+        it.setString(++i, user.hashedPassword)
+        it.setString(++i, user.role.name)
+        it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
+        it.setLong(++i, profileId)
     }
 
-    fun createProfile(conn: Connection, profile: Profile): Long{
+
+    fun createProfile(conn: Connection, profile: Profile): Long {
         val sql = """
            INSERT INTO profiles
                (description)
               VALUES (?)
         """.trimIndent()
 
-        return mapper.update(sql, conn){
+        return mapper.update(sql, conn) {
             it.setString(1, profile.description)
         }
     }
-    
-    fun createSocialMediaLink(conn: Connection, socialMediaLink: SocialMediaLink, profileId: Long ): Long{
+
+    fun createSocialMediaLink(conn: Connection, socialMediaLink: SocialMediaLink, profileId: Long): Long {
         val sql = """
            INSERT INTO social_media_links
                (url, platform, profile_id)
               VALUES (?, ?)
         """.trimIndent()
 
-        return mapper.update(sql, conn){
+        return mapper.update(sql, conn) {
             var i = 0
             it.setString(++i, socialMediaLink.url)
             it.setString(++i, socialMediaLink.platform)
@@ -103,7 +107,7 @@ class UserDao {
                 role = ?
             WHERE id = ?
         """.trimIndent()
-        return mapper.update(sql, conn){
+        return mapper.update(sql, conn) {
             var i = 0
             it.setString(++i, user.name)
             it.setString(++i, user.email)
@@ -120,7 +124,7 @@ class UserDao {
                 avatar_id = ?
             WHERE id = ?
         """.trimIndent()
-        return mapper.update(sql, conn){
+        return mapper.update(sql, conn) {
             var i = 0
             it.setString(++i, profile.description)
             profile.avatar?.id?.let { it1 -> it.setLong(++i, it1) }
@@ -133,8 +137,9 @@ class UserDao {
             DELETE FROM users
             WHERE id = ?
         """.trimIndent()
-        mapper.update(sql, conn){
+        mapper.update(sql, conn) {
             it.setLong(1, id)
         }
     }
+
 }

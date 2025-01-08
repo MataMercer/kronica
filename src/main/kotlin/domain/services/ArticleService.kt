@@ -30,14 +30,19 @@ class ArticleService(
         return articleRepository.findByAuthorId(id)
     }
 
-    fun create(createArticleForm: CreateArticleForm, author: User): Long {
+    fun getByFollowing(userId: Long?): List<Article> {
+        if (userId == null) throw BadRequestResponse()
+        return articleRepository.findByFollowing(userId)
+    }
+
+    fun create(createArticleForm: CreateArticleForm, currentUser: CurrentUser): Long {
         validateForm(createArticleForm)
         val attachments = fileModelService.uploadFiles(createArticleForm.uploadedAttachments)
         val article = articleRepository.create(
             Article(
                 title = createArticleForm.title!!,
                 body = createArticleForm.body!!,
-                author = author,
+                author = currentUser.toUser(),
                 attachments = attachments,
             ),
             createArticleForm.timelineId,
@@ -53,7 +58,7 @@ class ArticleService(
         }
     }
 
-    fun deleteById(currentUser: User, id: Long?) {
+    fun deleteById(currentUser: CurrentUser, id: Long?) {
         if (id == null) throw BadRequestResponse()
         val article = articleRepository.findById(id) ?: throw NotFoundResponse()
         authCheck(currentUser, article)
@@ -89,7 +94,7 @@ class ArticleService(
         )
     }
 
-    private fun authCheck(currentUser: User, article: Article){
+    private fun authCheck(currentUser: CurrentUser, article: Article){
         if (currentUser.id != article.author.id && !currentUser.role.isAdmin()) {
             throw ForbiddenResponse()
         }

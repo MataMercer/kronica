@@ -23,6 +23,7 @@ import org.matamercer.setupApp
 import org.matamercer.web.CreateArticleForm
 import org.matamercer.web.CreateTimelineForm
 import org.matamercer.web.LoginRequestForm
+import org.matamercer.web.RegisterUserForm
 import java.io.File
 import kotlin.test.assertNotNull
 
@@ -30,9 +31,12 @@ class ArticleControllerTest {
     private lateinit var app: Javalin
     private lateinit var authClient: HttpClient
     private lateinit var unauthClient: HttpClient
+    private lateinit var userAClient: HttpClient
+    private lateinit var userBClient: HttpClient
+    private var userAId: Long = 0
+    private var userBId: Long = 0
 
     private val testUser = User(
-        id = 1,
         name = "Root",
         email = "example@gmail.com",
         role = UserRole.ROOT
@@ -52,6 +56,19 @@ class ArticleControllerTest {
         authClient = createAuthClient(app, loginRequestForm)
         unauthClient = HttpClient(app, OkHttpClient())
         jsonUtils = JsonUtils()
+
+        val userARegisterForm = RegisterUserForm(
+            name = "UserA",
+            email = "a@gmail.com",
+            password = "password")
+        val userBRegisterForm = RegisterUserForm(
+            name = "UserB",
+            email = "b@gmail.com",
+            password = "password")
+        userAClient = createTestUser(userARegisterForm)
+        userBClient = createTestUser(userBRegisterForm)
+        userAId = getUserId(userAClient)
+        userBId = getUserId(userBClient)
     }
 
     @AfterEach
@@ -59,6 +76,26 @@ class ArticleControllerTest {
         app.stop()
     }
 
+
+    private fun createTestUser(form: RegisterUserForm): HttpClient {
+        val userClient = HttpClient(app, OkHttpClient())
+        val requestBody = JavalinJackson().toJsonString(form).toRequestBody()
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/auth/register")
+            .post(requestBody).build()
+        val res = userClient.okHttp.newCall(request).execute()
+        assertThat(res.code == 200).isTrue()
+        return createAuthClient(app, LoginRequestForm(form.email, form.password))
+    }
+
+    private fun getUserId(client: HttpClient): Long {
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/auth/currentuser")
+            .get()
+            .build()
+        val res = client.okHttp.newCall(request).execute()
+        return jsonUtils.getIdFromResponse(res)
+    }
 
     @Test
     fun `when Create Article returns ok`(){
@@ -179,7 +216,6 @@ class ArticleControllerTest {
 
     @Test
     fun `when create articles with characters return good response`(){
-
         val characterId = createCharacter()
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -198,10 +234,71 @@ class ArticleControllerTest {
         assertThat(json["characters"]).isNotNull()
     }
 
-    fun `when get article by id return ok response`(){
+    private fun createTestArticle(client: HttpClient):Long{
+        val uploadFile = File("resources/test/polarbear.jpg")
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("title", fixtures.testArticle.title)
+            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .build()
 
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles")
+            .post(requestBody).build()
+
+        val res = client.okHttp.newCall(request).execute()
+        return jsonUtils.getIdFromResponse(res)
     }
 
+    private fun followUser(client: HttpClient, id: Long){
+        val res = client.post("/api/users/${id}/follow")
+        assertThat(res.isSuccessful).isTrue()
+    }
+
+    private fun unfollowUser(client: HttpClient, id: Long){
+        val res = client.delete("/api/users/${id}/unfollow")
+        assertThat(res.isSuccessful).isTrue()
+    }
+
+    @Test
+    fun `when get article by id return ok response`(){
+        val articleId = createTestArticle(authClient)
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles/id/${articleId}")
+            .get()
+            .build()
+        val res = unauthClient.okHttp.newCall(request).execute()
+        assertThat(res.code == 200).isTrue()
+    }
+
+    @Test
+    fun `when A follows B or A unfollows B, return the correct articles when queried by following`(){
+        val testArticleId = createTestArticle(userBClient)
+        createTestArticle(userAClient)
+        followUser(userAClient, userBId)
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles/following")
+            .get()
+            .build()
+        val res = userAClient.okHttp.newCall(request).execute()
+        assertThat(res.code == 200).isTrue()
+        val articlesRes = jsonUtils.getJsonFromResponse(res)["content"]
+        val firstArticle = articlesRes[0]
+        assertThat(firstArticle["id"].toString() == testArticleId.toString()).isTrue()
+        assertThat(articlesRes.size()).isEqualTo(1)
+
+       unfollowUser(userAClient, userBId)
+        val requestAfterUnfollow = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles/following")
+            .get()
+            .build()
+        val resAfterUnfollow = userAClient.okHttp.newCall(requestAfterUnfollow).execute()
+        assertThat(resAfterUnfollow.code == 200).isTrue()
+        val articlesResAfter = jsonUtils.getJsonFromResponse(resAfterUnfollow)["content"]
+        assertThat(articlesResAfter.size()).isEqualTo(0)
+    }
 
 
 }

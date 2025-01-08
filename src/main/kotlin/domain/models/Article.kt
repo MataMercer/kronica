@@ -31,5 +31,5 @@ data class ArticleDto(
 
 data class ArticleQuery(
     val authorId: Long? = null,
-    val timelineId: Long? = null
+    val timelineId: Long? = null,
 )

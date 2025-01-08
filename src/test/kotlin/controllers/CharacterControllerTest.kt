@@ -74,6 +74,8 @@ class CharacterControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
+        val body = res.body?.string()
+        print(body)
         assertThat(res.isSuccessful).isTrue()
     }
 

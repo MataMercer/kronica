@@ -47,4 +47,36 @@ class UserController(
         val currentUser = getCurrentUser(ctx)
         userService.delete(currentUser, id)
     }
+
+    @Route(HandlerType.POST,"/{id}/follow")
+    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    fun followUser(ctx: Context){
+        val currentUser = getCurrentUser(ctx)
+        val id = ctx.pathParam("id").toLong()
+        userService.follow(currentUser, id)
+        ctx.json("User followed")
+    }
+
+    @Route(HandlerType.DELETE,"/{id}/unfollow")
+    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    fun unfollowUser(ctx: Context){
+        val currentUser = getCurrentUser(ctx)
+        val id = ctx.pathParam("id").toLong()
+        userService.unfollow(currentUser, id)
+        ctx.json("User unfollowed")
+    }
+
+    @Route(HandlerType.GET,"/{id}/followers")
+    fun getUserFollowers(ctx: Context){
+        val id = ctx.pathParam("id").toLong()
+        val followers = userService.getFollowers(id)
+        ctx.json(followers)
+    }
+
+    @Route(HandlerType.GET,"/{id}/followings")
+    fun getUserFollowings(ctx: Context){
+        val id = ctx.pathParam("id").toLong()
+        val following = userService.getFollowings(id)
+        ctx.json(following)
+    }
 }

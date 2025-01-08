@@ -34,6 +34,12 @@ class ArticleRepository(
         }
     }
 
+    fun findByFollowing(userId: Long) = transact.wrap { conn ->
+        return@wrap articleDao.findByFollowing(conn, userId).map {
+            aggregate(conn, it)
+        }
+    }
+
     fun deleteById(id: Long) = dataSource.connection.use { conn ->
         articleDao.deleteById(conn, id)
     }
@@ -53,7 +59,6 @@ class ArticleRepository(
         }
         return@wrap res?.let { aggregate(conn, it) }
     }
-
 
     private fun aggregate(conn: Connection, a: Article): Article {
         val files = a.id?.let { fileModelDao.findByOwningArticleId(conn, it) }

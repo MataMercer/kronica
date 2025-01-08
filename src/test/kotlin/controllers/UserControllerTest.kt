@@ -2,13 +2,9 @@ package controllers
 
 import createAuthClient
 import io.javalin.Javalin
-import io.javalin.json.JavalinJackson
-import io.javalin.json.toJsonString
 import io.javalin.testtools.HttpClient
-import io.javalin.testtools.JavalinTest
 import io.javalin.testtools.TestConfig
-import okhttp3.*
-import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -42,6 +38,7 @@ class UserControllerTest {
     private val testConfig = TestConfig(
         clearCookies = true
     )
+    private val jsonUtils = JsonUtils()
 
     @BeforeEach
     fun beforeEachTest() {
@@ -93,6 +90,8 @@ class UserControllerTest {
     @Test
     fun `When logged in getCurrentuser returns ok response`() {
         val res = authClient.get("/api/auth/currentuser")
+        val id = jsonUtils.getIdFromResponse(res)
+        assertThat(id).isEqualTo(2)
         assertThat(res.isSuccessful).isTrue()
     }
 
@@ -108,6 +107,35 @@ class UserControllerTest {
         val currentUserRes = authClient.post("/api/auth/currentuser")
        assertThat(logoutRes.isSuccessful).isTrue()
         assertThat(currentUserRes.isSuccessful).isFalse()
+    }
+
+    @Test
+    fun `Following another user returns ok response`(){
+        val res = authClient.post("/api/users/${testUser.id}/follow")
+        print(res.code)
+        assertThat(res.isSuccessful).isTrue()
+    }
+
+
+    @Test
+    fun `Unfollowing another user returns ok response`(){
+        val followRes = authClient.post("/api/users/${testUser.id}/follow")
+        val unfollowRes = authClient.delete("/api/users/${testUser.id}/unfollow")
+        assertThat(unfollowRes.isSuccessful).isTrue()
+    }
+
+    @Test
+    fun `Following another user that is already followed returns bad response`(){
+        val followRes = authClient.post("/api/users/${testUser.id}/follow")
+        val followRes2 = authClient.post("/api/users/${testUser.id}/follow")
+        assertThat(followRes2.isSuccessful).isFalse()
+    }
+
+    @Test
+    fun `Following yourself returns bad response`(){
+        val clientUserId = 2
+        val followRes = authClient.post("/api/users/${clientUserId}/follow")
+        assertThat(followRes.isSuccessful).isFalse()
     }
 
 }

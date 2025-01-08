@@ -20,6 +20,4 @@ class JsonUtils {
         assertNotNull(body)
         return mapper.readTree(body)
     }
-
-
 }

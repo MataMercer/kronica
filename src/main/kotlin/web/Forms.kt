@@ -34,7 +34,7 @@ data class CreateArticleForm(
 )
 
 data class CreateTimelineForm(
-    val name: String?,
+    val name: String,
     val description: String?
 )
 
@@ -43,13 +43,13 @@ data class UpdateTimelineOrderForm(
 )
 
 data class CreateCharacterForm(
-    val name: String?,
-    val gender: String?,
-    val age: Int?,
-    val birthday: String?,
-    val firstSeen: String?,
-    val status: String?,
-    val body: String?,
+    val name: String? = null,
+    val gender: String? = null,
+    val age: Int? = null,
+    val birthday: String? = null,
+    val firstSeen: String? = null,
+    val status: String? = null,
+    val body: String? = null,
     val uploadedAttachments: List<UploadedFile> = listOf(),
     val uploadedProfilePictures: List<UploadedFile> = listOf()
 )

@@ -18,7 +18,7 @@ class ArticleController(
     private val timelineService: TimelineService
 ) {
 
-    @Route(HandlerType.GET, "/{id}")
+    @Route(HandlerType.GET, "/id/{id}")
     fun getArticle(ctx: Context) {
         val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
         ctx.json(foundArticle)
@@ -39,7 +39,7 @@ class ArticleController(
         ctx.json(pagedArticles)
     }
 
-    @Route(HandlerType.DELETE, "/{id}")
+    @Route(HandlerType.DELETE, "/id/{id}")
     fun deleteArticle(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         val articleId = ctx.pathParam("id").toLong()
@@ -65,6 +65,17 @@ class ArticleController(
         val a = articleService.getById(articleId)
         val dto = articleService.toDto(a)
         ctx.json(dto)
+    }
+
+    @Route(HandlerType.GET, "/following")
+    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    fun getByFollowing(ctx: Context) {
+        val currentUser = getCurrentUser(ctx)
+        val foundArticles = articleService.getByFollowing(currentUser.id)
+        val pagedArticles = Page(
+            content = foundArticles.map { articleService.toDto(it) }
+        )
+        ctx.json(pagedArticles)
     }
 
 

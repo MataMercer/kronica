@@ -11,6 +11,7 @@ import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.Seeder
 import org.matamercer.domain.dao.*
+import org.matamercer.domain.models.CurrentUser
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.repository.CharacterRepository
@@ -55,7 +56,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val fileModelService = FileModelService(storageService = storageService)
 
     val userDao = UserDao()
-    val userRepository = UserRepository(userDao, transactionManager, dataSource)
+    val followDao = FollowDao()
+    val userRepository = UserRepository(userDao, followDao, transactionManager, dataSource)
     val userService = UserService(userRepository, fileModelService)
     val seeder = Seeder(userService)
     seeder.initRootUser()
@@ -125,14 +127,14 @@ fun loginUserToSession(ctx: Context, user: User) {
 }
 
 
-fun getCurrentUser(ctx: Context): User {
+fun getCurrentUser(ctx: Context): CurrentUser {
     val id = ctx.sessionAttribute<String>("current_user_id")
     val role = ctx.sessionAttribute<String>("current_user_role")
     val name = ctx.sessionAttribute<String>("current_user_name")
     if (id.isNullOrBlank() || role.isNullOrBlank() || name.isNullOrBlank()) {
         throw InternalServerErrorResponse("Could not find user")
     }
-    return User(id = id.toLong(), role = enumValueOf(role), name = name)
+    return CurrentUser(id = id.toLong(), role = enumValueOf(role), name = name)
 }
 
 fun getCurrentUserRole(ctx: Context): UserRole {
