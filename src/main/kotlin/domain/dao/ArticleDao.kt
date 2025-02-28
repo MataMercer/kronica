@@ -198,6 +198,23 @@ class ArticleDao {
         }
     }
 
+    fun findLikedArticledByUserId(conn: Connection, id: Long): List<Article> {
+        val sql = """
+            SELECT 
+                articles.*, 
+                users.id AS authors_id, 
+                users.name AS authors_name, 
+                users.role AS authors_role
+            FROM articles
+            INNER JOIN users ON articles.author_id=users.id 
+            INNER JOIN article_likes ON articles.id=article_likes.article_id
+            WHERE article_likes.author_id = ? 
+          """.trimIndent()
+        return mapper.queryForObjectList(sql, conn) {
+            it.setLong(1, id)
+        }
+    }
+
 
     fun update(article: Article): Long? {
         TODO("Not yet implemented")

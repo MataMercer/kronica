@@ -48,6 +48,16 @@ class UserDao {
         it.setLong(1, id)
     }
 
+    fun findByName(conn: Connection, name: String): User? = mapper.queryForObject(
+        """
+            SELECT * 
+            FROM users 
+            WHERE users.name = ?
+            """.trimIndent(), conn
+    ) {
+        it.setString(1, name)
+    }
+
 
     fun create(conn: Connection, user: User, profileId: Long): Long = mapper.update(
         """

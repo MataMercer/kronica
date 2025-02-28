@@ -11,8 +11,8 @@ class ArticleRepository(
     private val articleDao: ArticleDao,
     private val fileModelDao: FileModelDao,
     private val timelineDao: TimelineDao,
-    private val characterRepository: CharacterRepository,
     private val characterDao: CharacterDao,
+    private val likeDao: LikeDao,
     private val transact: TransactionManager,
     private val dataSource: DataSource
 ) {
@@ -60,18 +60,34 @@ class ArticleRepository(
         return@wrap res?.let { aggregate(conn, it) }
     }
 
+    fun likeArticle(articleId: Long, userId: Long) = transact.wrap { conn ->
+        likeDao.likeArticle(conn, articleId, userId)
+    }
+
+    fun unlikeArticle(articleId: Long, userId: Long) = transact.wrap { conn ->
+        likeDao.unlikeArticle(conn, articleId, userId)
+    }
+
+    fun checkIfLiked(articleId: Long, userId: Long) = transact.wrap { conn ->
+        return@wrap likeDao.checkIfArticleIsLiked(conn, articleId) != null
+    }
+
     private fun aggregate(conn: Connection, a: Article): Article {
         val files = a.id?.let { fileModelDao.findByOwningArticleId(conn, it) }
         val characters = a.id?.let {
-            characterRepository.findAll(
+            characterDao.findAll(
+                conn,
                 CharacterQuery(
                     articleId = a.id
                 )
             )
         }
+        val likeCount = a.id?.let { likeDao.countArticleLikes(conn, it) }
+
         if (files != null && characters != null) {
             a.attachments = files
             a.characters = characters
+            a.likeCount = likeCount
         }
         return a
     }

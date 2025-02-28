@@ -13,7 +13,8 @@ import org.matamercer.web.UpdateUserForm
 
 class UserService(
     private val userRepository: UserRepository,
-    private val fileModelService: FileModelService
+    private val fileModelService: FileModelService,
+    private val notificationService: NotificationService
 ) {
 
     fun toDto(user: User, currentUser: CurrentUser? = null): UserDto {
@@ -114,7 +115,14 @@ class UserService(
         if (follow != null) {
             throw BadRequestResponse()
         }
+
         userRepository.follow(currentUser.id, id)
+        notificationService.send(Notification(
+            recipientId = id,
+            notificationType = NotificationType.FOLLOWED,
+            subjectId = currentUser.id,
+            objectId = 0
+        ))
     }
 
     fun unfollow(currentUser: CurrentUser, id: Long) {

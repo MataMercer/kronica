@@ -39,6 +39,7 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
         return obj
     }
 
+
     fun queryForLong(sql: String, conn: Connection, statementSetter: (st: PreparedStatement)-> Unit): Long?{
         val st = conn.prepareStatement(sql)
         st.apply(statementSetter)
@@ -47,6 +48,20 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
         rs.close()
         st.close()
         return result
+    }
+
+    fun queryForLongList(sql: String, conn: Connection,  statementSetter: (st: PreparedStatement)-> Unit): MutableList<Long> {
+        val st = conn.prepareStatement(sql)
+        st.apply(statementSetter)
+        val rs = st.executeQuery()
+        val list = emptyList<Long>().toMutableList()
+        while(rs.next()){
+            val rowObj = rs.getLong(1)
+            list.add(rowObj)
+        }
+        rs.close()
+        st.close()
+        return list
     }
 
 

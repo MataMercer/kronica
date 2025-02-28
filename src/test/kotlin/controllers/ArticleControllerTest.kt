@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
+import org.matamercer.domain.models.Notification
 import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
@@ -298,6 +299,18 @@ class ArticleControllerTest {
         assertThat(resAfterUnfollow.code == 200).isTrue()
         val articlesResAfter = jsonUtils.getJsonFromResponse(resAfterUnfollow)["content"]
         assertThat(articlesResAfter.size()).isEqualTo(0)
+
+        val requestBody = JavalinJackson().toJsonString("").toRequestBody()
+        val requestForNotifications = Request.Builder()
+            .url("${getHostUrl(app)}/api/notifications/read")
+            .put(requestBody).build()
+        val notificationsRes = userBClient.okHttp.newCall(
+            requestForNotifications
+        ).execute()
+        assertThat(notificationsRes.isSuccessful).isTrue()
+        val notificationsJsonRes = jsonUtils.getJsonFromResponse(notificationsRes)
+        print(notificationsJsonRes.toString())
+
     }
 
 

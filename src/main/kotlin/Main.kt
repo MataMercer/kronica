@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource
 import io.javalin.Javalin
 import io.javalin.http.*
 import io.javalin.security.RouteRole
+import io.javalin.websocket.WsConnectContext
 import org.eclipse.jetty.http.HttpCookie
 import org.eclipse.jetty.server.session.DatabaseAdaptor
 import org.eclipse.jetty.server.session.DefaultSessionCache
@@ -13,10 +14,7 @@ import org.matamercer.config.Seeder
 import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.CurrentUser
 import org.matamercer.domain.models.User
-import org.matamercer.domain.repository.ArticleRepository
-import org.matamercer.domain.repository.CharacterRepository
-import org.matamercer.domain.repository.TimelineRepository
-import org.matamercer.domain.repository.UserRepository
+import org.matamercer.domain.repository.*
 import org.matamercer.domain.services.*
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.security.UserRole
@@ -29,22 +27,22 @@ fun main(args: Array<String>) {
         .start(7070)
 }
 
-enum class AppMode{
+enum class AppMode {
     DEV,
     PROD,
     TEST
 }
 
 fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
-    val dataSource: HikariDataSource = if (appMode == AppMode.TEST){
+    val dataSource: HikariDataSource = if (appMode == AppMode.TEST) {
         initTestDataSource()
-    }else{
+    } else {
         initDataSource()
     }
 
-    if (appMode == AppMode.TEST){
+    if (appMode == AppMode.TEST) {
         migrate(dataSource, appMode)
-    }else{
+    } else {
         migrate(dataSource)
     }
 
@@ -57,20 +55,29 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val userDao = UserDao()
     val followDao = FollowDao()
+    val notificationDao = NotificationDao()
+    val notificationRepository = NotificationRepository(
+        notificationDao = notificationDao,
+        userDao = userDao,
+        dataSource = dataSource,
+        transact = transactionManager
+    )
+    val notificationService = NotificationService(notificationRepository)
     val userRepository = UserRepository(userDao, followDao, transactionManager, dataSource)
-    val userService = UserService(userRepository, fileModelService)
+    val userService = UserService(userRepository, fileModelService, notificationService)
     val seeder = Seeder(userService)
     seeder.initRootUser()
 
     val articleDao = ArticleDao()
     val characterDao = CharacterDao()
     val fileModelDao = FileModelDao()
+    val likeDao = LikeDao()
 
     val timelineDao = TimelineDao()
     val timelineRepository = TimelineRepository(timelineDao, dataSource, transactionManager)
     val timelineService = TimelineService(timelineRepository)
 
-    if (appMode == AppMode.TEST){
+    if (appMode == AppMode.TEST) {
         storageService.deleteAll()
     }
     storageService.init()
@@ -84,13 +91,14 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val articleRepository = ArticleRepository(
         articleDao = articleDao,
         fileModelDao = fileModelDao,
-        transact =  transactionManager,
+        transact = transactionManager,
         dataSource = dataSource,
         timelineDao = timelineDao,
-        characterRepository = characterRepository,
-        characterDao = characterDao)
+        characterDao = characterDao,
+        likeDao = likeDao
+    )
     val characterService = CharacterService(characterRepository, fileModelService)
-    val articleService = ArticleService(articleRepository, fileModelService, characterService)
+    val articleService = ArticleService(articleRepository, fileModelService, characterService, userRepository, notificationService)
 
 
     val articleController = ArticleController(articleService, timelineService)
@@ -99,6 +107,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val authController = AuthController(userService)
     val characterController = CharacterController(characterService, timelineService)
     val fileController = FileController(storageService)
+    val notificationController = NotificationController(notificationService)
 
     val router = Router(
         articleController,
@@ -107,7 +116,9 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         authController,
         characterController,
         fileController,
-        app)
+        notificationController,
+        app
+    )
     router.setupRoutes()
 
     app.error(404) { ctx ->
@@ -136,6 +147,17 @@ fun getCurrentUser(ctx: Context): CurrentUser {
     }
     return CurrentUser(id = id.toLong(), role = enumValueOf(role), name = name)
 }
+
+fun getCurrentUser(ctx: WsConnectContext): CurrentUser {
+    val id = ctx.sessionAttribute<String>("current_user_id")
+    val role = ctx.sessionAttribute<String>("current_user_role")
+    val name = ctx.sessionAttribute<String>("current_user_name")
+    if (id.isNullOrBlank() || role.isNullOrBlank() || name.isNullOrBlank()) {
+        throw InternalServerErrorResponse("Could not find user")
+    }
+    return CurrentUser(id = id.toLong(), role = enumValueOf(role), name = name)
+}
+
 
 fun getCurrentUserRole(ctx: Context): UserRole {
     val roleString = ctx.sessionAttribute<String>("current_user_role")

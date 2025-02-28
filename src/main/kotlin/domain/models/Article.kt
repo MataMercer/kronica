@@ -12,7 +12,8 @@ data class Article(
     var attachments: List<FileModel> = listOf(),
     var timeline: Timeline? = null,
     var timelineIndex: Long? = null,
-    var characters: List<Character> = listOf()
+    var characters: List<Character> = listOf(),
+    var likeCount : Long? = null,
 )
 
 data class ArticleDto(
@@ -26,7 +27,9 @@ data class ArticleDto(
     val timelineIndex: Long? = null,
     val timelineId: Long? = null,
     val timelineName: String? = null,
-    val characters: List<CharacterDto> = listOf()
+    val characters: List<CharacterDto> = listOf(),
+    val likeCount: Long? = null,
+    val youLiked: Boolean? = null,
 )
 
 data class ArticleQuery(

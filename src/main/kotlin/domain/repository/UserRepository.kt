@@ -26,6 +26,11 @@ class UserRepository(
             return userDao.findById(conn, id)
         }
 
+
+    fun findByName(name: String): User? = dataSource.connection.use { conn ->
+        return userDao.findByName(conn, name)
+    }
+
     fun create(user: User) = transactionManager.wrap { conn ->
         val profileId = userDao.createProfile(conn, Profile(description = ""))
         return@wrap userDao.create(conn, user, profileId)

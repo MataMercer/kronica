@@ -3,6 +3,9 @@ package org.matamercer.web.controllers
 import io.javalin.Javalin
 import io.javalin.http.Context
 import io.javalin.http.UnauthorizedResponse
+import io.javalin.http.sse.SseClient
+import io.javalin.websocket.WsConfig
+import io.javalin.websocket.WsHandlerType
 import org.matamercer.authorizeCheck
 import org.matamercer.getCurrentUserRole
 import org.matamercer.security.UserRole
@@ -15,6 +18,7 @@ class Router(
     private val authController: AuthController,
     private val characterController: CharacterController,
     private val fileController: FileController,
+    private val notificationController: NotificationController,
     private val app: Javalin
 
 ) {
@@ -27,6 +31,7 @@ class Router(
         addRoutes(authController)
         addRoutes(characterController)
         addRoutes(fileController)
+        addRoutes(notificationController)
     }
 
     private fun addRouteAuthorization(){
@@ -78,6 +83,7 @@ class Router(
 //                    throw e.targetException
 //                }
             }
+
             if (roleAnnotation == null){
                 app.addHttpHandler(
                     routeAnnotation.type,
@@ -87,6 +93,31 @@ class Router(
             }else{
                 app.addHttpHandler(
                     routeAnnotation.type,
+                    pathPrefix + routeAnnotation.path,
+                    handler,
+                    roleAnnotation.role
+                )
+            }
+        }
+
+        methods.filter {
+            it.isAnnotationPresent(SseRoute::class.java)
+        }.forEach{ method ->
+            val routeAnnotation = method.getAnnotation(SseRoute::class.java)
+            val roleAnnotation = method.getAnnotation(RequiredRole::class.java)
+            val handler:(SseClient)->Unit = { client: SseClient ->
+                method.invoke(obj, client)
+
+            }
+
+
+            if (roleAnnotation == null){
+                app.sse(
+                    pathPrefix + routeAnnotation.path,
+                    handler
+                )
+            }else{
+                app.sse(
                     pathPrefix + routeAnnotation.path,
                     handler,
                     roleAnnotation.role
