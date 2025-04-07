@@ -15,6 +15,15 @@ class Notification(
     val createdAt: Date? = null,
 )
 
+data class NotificationDto(
+    val id: Long? = null,
+    val notificationType: NotificationType,
+    val message: String? = null,
+    val isRead: Boolean = false,
+    val createdAt: Date? = null,
+    val subject: UserDto?,
+)
+
 
 enum class NotificationType {
     TAGGED,
@@ -25,5 +34,6 @@ enum class NotificationType {
     REPLIED,
     SHARED,
     SYSTEM,
+    INFO,
     UNKNOWN
 }

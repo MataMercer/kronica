@@ -56,7 +56,7 @@ class ArticleDao {
                 ON articles.author_id=users.id
             LEFT JOIN timeline_entries 
                 ON articles.id=timeline_entries.article_id
-            INNER JOIN timelines
+            LEFT JOIN timelines
                 ON timeline_entries.timeline_id=timelines.id
             WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
             AND ${if (query?.timelineId != null) "timelines.id = ?" else "TRUE"} 

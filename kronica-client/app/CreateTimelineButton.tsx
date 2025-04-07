@@ -31,7 +31,7 @@ export default function CreateTimeline() {
         control,
     } = useForm<Inputs>({
         defaultValues: {
-            name: "Example Name",
+            name: "Example Timeline",
             description: "Example Description",
         },
     });

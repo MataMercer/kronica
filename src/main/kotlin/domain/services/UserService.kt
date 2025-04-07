@@ -72,6 +72,14 @@ class UserService(
                 role = userRole
             )
         )
+
+        notificationService.send(Notification(
+            recipientId = id,
+            notificationType = NotificationType.INFO,
+            subjectId = id,
+            objectId = 0,
+            message = "Welcome to Kronika!"
+        ))
         return getById(id)
     }
 

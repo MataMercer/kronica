@@ -50,14 +50,15 @@ export async function fetchAllArticles(authorId?: number, timelineId?: number) {
 }
 
 export async function fetchArticle(id: string) {
-  const url = `http://localhost:7070/api/articles/${id}`;
+  const url = `http://localhost:7070/api/articles/id/${id}`;
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
     headers: { Cookie: cookies().toString() },
   });
   if (!res.ok) {
-    const error = new Error("Failed to get an article");
+    console.log(url)
+    const error = new Error("Failed to get an article. HTTP Error:" + res.status);
     throw error
   }
 

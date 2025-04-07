@@ -67,6 +67,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val userService = UserService(userRepository, fileModelService, notificationService)
     val seeder = Seeder(userService)
     seeder.initRootUser()
+    seeder.initTestUser()
 
     val articleDao = ArticleDao()
     val characterDao = CharacterDao()
@@ -123,6 +124,12 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     app.error(404) { ctx ->
         ctx.result("Error 404: Not found")
+    }
+
+    app.sse("/sse") { client ->
+        client.sendEvent("connected", "Hello, SSE")
+        client.onClose { println("Client disconnected") }
+        client.close() // close the client
     }
 
 

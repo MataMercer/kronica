@@ -141,22 +141,24 @@ export default function CreateArticleButton() {
                                     ))}
                             </select>
                         </label>
-                        <label className="flex flex-col" htmlFor="name">
-                            Starring Characters (Optional, hold ctrl for
-                            multiple)
-                            <select
-                                {...register("characters")}
-                                disabled={!!!timelines}
-                                multiple
-                            >
-                                {characters &&
-                                    characters.map((it) => (
+                        {characters && characters.length > 0 && (
+                            <label className="flex flex-col" htmlFor="name">
+                                Starring Characters (Optional, hold ctrl for
+                                multiple)
+                                <select
+                                    {...register("characters")}
+                                    disabled={!!!timelines}
+                                    multiple
+                                >
+                                    {characters.map((it) => (
                                         <option key={it.id} value={it.id}>
                                             {it.name}
                                         </option>
                                     ))}
-                            </select>
-                        </label>
+                                </select>
+                            </label>
+                        )}
+
                         <label className="flex flex-col" htmlFor="body">
                             Body
                             {/* <textarea

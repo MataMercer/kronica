@@ -12,4 +12,9 @@ class Seeder(private val userService: UserService){
             userService.registerUser(RegisterUserForm("example@gmail.com", "Root", "password"), UserRole.ROOT)
         }
     }
+
+    fun initTestUser(){
+        val testUser = userService.getByEmail("test@gmail.com")
+        if (testUser==null) userService.registerUser(RegisterUserForm("test@gmail.com", "TestUser", "password"), UserRole.AUTHENTICATED_USER)
+    }
 }

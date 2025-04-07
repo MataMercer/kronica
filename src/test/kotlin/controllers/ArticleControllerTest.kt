@@ -235,6 +235,19 @@ class ArticleControllerTest {
         assertThat(json["characters"]).isNotNull()
     }
 
+    @Test
+    fun `when filtering articles by timeline, return the correct ones`(){
+
+        createTestArticle(authClient)
+        val getAllArticlesRequest = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles")
+            .get().build()
+        val getAllArticlesResponse = unauthClient.okHttp.newCall(getAllArticlesRequest).execute()
+        print(jsonUtils.getJsonFromResponse(getAllArticlesResponse))
+
+
+    }
+
     private fun createTestArticle(client: HttpClient):Long{
         val uploadFile = File("resources/test/polarbear.jpg")
         val requestBody = MultipartBody.Builder()
@@ -252,6 +265,7 @@ class ArticleControllerTest {
         val res = client.okHttp.newCall(request).execute()
         return jsonUtils.getIdFromResponse(res)
     }
+
 
     private fun followUser(client: HttpClient, id: Long){
         val res = client.post("/api/users/${id}/follow")

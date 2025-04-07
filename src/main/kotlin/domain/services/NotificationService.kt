@@ -1,9 +1,7 @@
 package org.matamercer.domain.services
 
 import io.javalin.http.sse.SseClient
-import org.matamercer.domain.models.CurrentUser
-import org.matamercer.domain.models.Notification
-import org.matamercer.domain.models.NotificationType
+import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.NotificationRepository
 import java.util.concurrent.ConcurrentHashMap
 
@@ -22,7 +20,31 @@ class NotificationService(
 
     }
 
-    fun readAndMark(currentUser: CurrentUser): List<Notification> {
-        return notificationRepository.readAndMark(currentUser.id)
+    fun readAndMark(currentUser: CurrentUser): List<NotificationDto> {
+        val notifications =  notificationRepository.readAndMark(currentUser.id)
+        return notifications.map { toDto(it) }
+    }
+
+    fun getUnreadCount(currentUser: CurrentUser): Long? {
+        return notificationRepository.getUnreadCount(currentUser.id)
+    }
+
+    fun toDto(notification: Notification): NotificationDto {
+        return NotificationDto(
+            id = notification.id,
+            subject = notification.subject?.let {
+                UserDto(
+                    id = notification.subject?.id,
+                    name = it.name,
+                    role = notification.subject!!.role,
+                    createdAt = notification.createdAt
+                )
+            },
+            notificationType = notification.notificationType,
+            message = notification.message,
+            isRead = notification.isRead,
+            createdAt = notification.createdAt
+
+        )
     }
 }

@@ -3,10 +3,10 @@ import { Timeline } from "../fetch/timelines";
 import { Article, Page } from "../fetch/articles";
 
 
-export async function fetchAllArticles(authorId: string, timelineId: string) {
+export async function fetchAllArticles(authorId?: string, timelineId?: string) {
   const urlSearchParams = new URLSearchParams({
-    'author_id': authorId,
-    'timeline_id': timelineId
+    'author_id': authorId || "",
+    // 'timeline_id': timelineId || ""
   })
   const url = `http://localhost:7070/api/articles?${urlSearchParams}`;
   const res = await fetch(url, {
@@ -36,5 +36,4 @@ export default function useArticles(authorId?: string, timelineId?: string) {
     articles: data?.content,
     mutate
   };
-
 }

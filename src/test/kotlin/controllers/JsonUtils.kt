@@ -20,4 +20,16 @@ class JsonUtils {
         assertNotNull(body)
         return mapper.readTree(body)
     }
+
+    fun checkJsonContainsIds(json: JsonNode, ids: List<Long>){
+        val list = if (json["content"]!=null) json["content"].toList() else json.toList()
+        var check = true
+        ids.forEach {
+            list.contains()
+        }
+
+
+    }
+
+
 }
