@@ -14,6 +14,7 @@ class CharacterService(
 ) {
 
     fun create(form: CreateCharacterForm, currentUser: CurrentUser): Long{
+
         val attachments = fileModelService.uploadFiles(form.uploadedAttachments)
         val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures)
         val c = characterRepository.create(

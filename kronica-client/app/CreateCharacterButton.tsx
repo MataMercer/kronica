@@ -17,6 +17,7 @@ import UploadInput, { FileInput } from "./components/inputs/UploadInput";
 import useTimelines from "./hooks/useTimelines";
 import useCurrentUser from "./hooks/useCurrentUser";
 import useCharacters from "./hooks/useCharacters";
+import { useToast } from "@/components/hooks/use-toast";
 
 type Inputs = {
     name: string;
@@ -57,6 +58,8 @@ export default function CreateCharacterButton() {
     } = useCurrentUser();
     const userId = user && user.id;
 
+    const { toast } = useToast();
+
     const [showArticleForm, setShowCharacterForm] = useState(false);
     const ref = React.useRef();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -82,6 +85,10 @@ export default function CreateCharacterButton() {
         });
 
         if (response.ok) {
+            toast({
+                title: "Character Successfully Created",
+                description: data.name,
+            });
             refreshArticles();
             ref.current?.click();
             reset();

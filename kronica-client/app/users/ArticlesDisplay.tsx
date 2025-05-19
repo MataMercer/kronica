@@ -17,7 +17,7 @@ export default async function ArticleDisplay({
         <div className="grow">
             {timeline && (
                 <>
-                    <h1 className="m-2 p-2 text-center font-extrabold text-4xl border-black border-[1px]">
+                    <h1 className="m-2 p-2 text-center font-extrabold text-4xl ">
                         {timeline.name}
                     </h1>
                     <p>{timeline.description}</p>
@@ -30,7 +30,7 @@ export default async function ArticleDisplay({
                 <div className="text-3xl">Articles</div>
                 <KronologizeButton timelineId={timelineId} />
             </div>
-            <div className="grid sm:grid-cols-5 gap-1">
+            <div className="grid sm:grid-cols-5 gap-0">
                 {articles && articles.length > 0 ? (
                     articles.map((article) => (
                         <ArticleThumb key={article.id} article={article} />

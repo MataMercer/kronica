@@ -14,6 +14,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
 import React from "react";
 import UploadInput, { FileInput } from "./components/inputs/UploadInput";
+import { useToast } from "@/components/hooks/use-toast";
 
 type Inputs = {
     name: string;
@@ -36,6 +37,8 @@ export default function CreateTimeline() {
         },
     });
 
+    const { toast } = useToast();
+
     const [showTimelineForm, setShowTimelineForm] = useState(false);
     const ref = React.useRef();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -45,10 +48,17 @@ export default function CreateTimeline() {
             body: JSON.stringify(data),
         });
 
-        refreshArticles();
-        // setShowArticleForm(false);
-        ref.current?.click();
-        reset();
+        if (response.ok) {
+            toast({
+                title: "Timeline Successfully Created",
+                description: data.name,
+            });
+
+            refreshArticles();
+            // setShowArticleForm(false);
+            ref.current?.click();
+            reset();
+        }
     };
 
     return (
