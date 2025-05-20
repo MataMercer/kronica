@@ -53,20 +53,23 @@ class CharacterController(
     @Route(HandlerType.POST, "/")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun createCharacter(ctx: Context) {
-//        val createCharacterForm = CreateCharacterForm(
-//            name = ctx.formParam("name"),
-//            body = ctx.formParam("body"),
-//            uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
-//            uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
-//            gender = ctx.formParam("gender"),
-//            age = ctx.formParam("age")?.toInt(),
-//            birthday = ctx.formParam("birthday"),
-//            firstSeen = ctx.formParam("firstSeen"),
-//            status = ctx.formParam("status"),
-//        )
 
-        ctx.uploadedFileMap()
-        val createCharacterForm = formMapper<CreateCharacterForm>(ctx.formParamMap(), ctx.uploadedFileMap())
+        val createCharacterForm = CreateCharacterForm(
+            name = ctx.formParam("name"),
+            body = ctx.formParam("body"),
+            uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
+            uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
+            gender = ctx.formParam("gender"),
+            age = ctx.formParam("age")?.toInt(),
+            birthday = ctx.formParam("birthday"),
+            firstSeen = ctx.formParam("firstSeen"),
+            status = ctx.formParam("status"),
+            traits = ctx.formParam("traits")?.split(",") ?: emptyList()
+
+        )
+
+//        ctx.uploadedFileMap()
+//        val createCharacterForm = formMapper<CreateCharacterForm>(ctx.formParamMap(), ctx.uploadedFileMap())
         val author = getCurrentUser(ctx)
         val characterId = characterService.create(createCharacterForm, author)
         val a = characterService.getById(characterId)

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { FileModel } from "./articles";
 import { User } from "./users";
 
+
 export type Character = {
   id: number;
   age: number;
@@ -13,6 +14,7 @@ export type Character = {
   body: string;
   author: User;
   attachments: FileModel[];
+  traits: {};
 }
 
 export async function fetchCharacter(id: string) {

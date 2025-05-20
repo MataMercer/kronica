@@ -19,6 +19,11 @@ import useCurrentUser from "./hooks/useCurrentUser";
 import useCharacters from "./hooks/useCharacters";
 import { useToast } from "@/components/hooks/use-toast";
 
+type Trait = {
+    name: string;
+    value: string;
+};
+
 type Inputs = {
     name: string;
     gender: string;
@@ -26,6 +31,7 @@ type Inputs = {
     birthday: string;
     firstSeen: string;
     status: string;
+    traits: Trait[];
 
     body: string;
     attachments: string[];
@@ -47,6 +53,7 @@ export default function CreateCharacterButton() {
             body: "ExampleBody",
             attachments: [],
             uploadedAttachments: [],
+            traits: [],
         },
     });
 
@@ -71,6 +78,14 @@ export default function CreateCharacterButton() {
         formData.append("firstSeen", data.firstSeen);
         formData.append("status", data.status);
         formData.append("body", data.body);
+
+        let traitsData = data.traits[0].name + ":" + data.traits[0].value;
+        data.traits.forEach((it, index) => {
+            if (index != 0) {
+                traitsData = traitsData + "," + it.name + ":" + it.value;
+            }
+        });
+        formData.append("traits", traitsData);
 
         data.uploadedAttachments
             .filter((it) => it.data)
@@ -165,6 +180,86 @@ export default function CreateCharacterButton() {
                                 {...register("status", { required: true })}
                                 id="Status"
                                 defaultValue="Alive"
+                            />
+                        </label>
+
+                        <label className="flex flex-col">
+                            Custom Traits
+                            <Controller
+                                name="traits"
+                                control={control}
+                                render={({ field }) => (
+                                    <div>
+                                        {field.value.map((it, index) => (
+                                            <div
+                                                className="flex flex-row space-x-2"
+                                                key={index}
+                                            >
+                                                <span>Name </span>{" "}
+                                                <input
+                                                    value={
+                                                        field.value[index].name
+                                                    }
+                                                    onChange={(e) => {
+                                                        const newFieldVal =
+                                                            field.value;
+                                                        field.value[
+                                                            index
+                                                        ].name = e.target.value;
+                                                        setValue(
+                                                            "traits",
+                                                            newFieldVal
+                                                        );
+                                                    }}
+                                                />
+                                                <span>Value</span>{" "}
+                                                <input
+                                                    value={
+                                                        field.value[index].value
+                                                    }
+                                                    onChange={(e) => {
+                                                        const newFieldVal =
+                                                            field.value;
+                                                        field.value[
+                                                            index
+                                                        ].value =
+                                                            e.target.value;
+                                                        setValue(
+                                                            "traits",
+                                                            newFieldVal
+                                                        );
+                                                    }}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setValue(
+                                                            "traits",
+                                                            field.value.toSpliced(
+                                                                index,
+                                                                1
+                                                            )
+                                                        );
+                                                    }}
+                                                >
+                                                    - Remove
+                                                </button>
+                                            </div>
+                                        ))}
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setValue("traits", [
+                                                    ...field.value,
+                                                    { name: "", value: "" },
+                                                ]);
+                                            }}
+                                        >
+                                            + Additional Trait
+                                        </button>
+                                    </div>
+                                )}
                             />
                         </label>
 

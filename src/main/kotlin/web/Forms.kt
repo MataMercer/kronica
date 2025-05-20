@@ -50,6 +50,7 @@ data class CreateCharacterForm(
     val firstSeen: String? = null,
     val status: String? = null,
     val body: String? = null,
+    val traits: List<String> = listOf(),
     val uploadedAttachments: List<UploadedFile> = listOf(),
     val uploadedProfilePictures: List<UploadedFile> = listOf()
 )

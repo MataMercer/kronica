@@ -49,6 +49,7 @@ class Fixtures {
         body = "lorem ipsum",
         author = rootUser,
         attachments = emptyList(),
+        traits = mapOf("mobile suit" to "gundam", "allegiance" to "londo bell")
     )
 
     val testTimeline = Timeline(

@@ -67,6 +67,7 @@ class CharacterControllerTest {
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedProfilePictures", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("traits", "mobile suit:gundam, allegiance:londo bell")
             .build()
 
         val request = Request.Builder()

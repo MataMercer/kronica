@@ -74,6 +74,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val fileModelDao = FileModelDao()
     val likeDao = LikeDao()
 
+    val traitDao = TraitDao()
+
     val timelineDao = TimelineDao()
     val timelineRepository = TimelineRepository(timelineDao, dataSource, transactionManager)
     val timelineService = TimelineService(timelineRepository)
@@ -87,7 +89,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         characterDao = characterDao,
         fileModelDao = fileModelDao,
         transact = transactionManager,
-        dataSource = dataSource
+        dataSource = dataSource,
+        traitDao = traitDao
     )
     val articleRepository = ArticleRepository(
         articleDao = articleDao,

@@ -2,6 +2,7 @@ package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.CharacterDao
 import org.matamercer.domain.dao.FileModelDao
+import org.matamercer.domain.dao.TraitDao
 import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.models.Character
 import org.matamercer.domain.models.CharacterQuery
@@ -11,6 +12,7 @@ import javax.sql.DataSource
 class CharacterRepository(
     private val characterDao: CharacterDao,
     private val fileModelDao: FileModelDao,
+    private val traitDao: TraitDao,
     private val transact: TransactionManager,
     private val dataSource: DataSource
 ) {
@@ -37,6 +39,9 @@ class CharacterRepository(
             val id = fileModelDao.create(conn, it)
             if (id != null) fileModelDao.joinCharacterProfile(conn, id, newCharacterId, index, "test caption")
         }
+        character.traits.forEach{ (name, value) ->
+            val id = traitDao.createTrait(conn, name, value, newCharacterId )
+        }
         return@wrap c?.let { aggregate(conn, it) }
     }
 
@@ -45,10 +50,10 @@ class CharacterRepository(
     }
 
     private fun aggregate(conn: Connection, c: Character): org.matamercer.domain.models.Character {
-        val attachments = c.id?.let { fileModelDao.findCharacterAttachments(conn, it) }
-        if (attachments != null) c.attachments = attachments
-        val profilePictures = c.id?.let { fileModelDao.findCharacterProfilePictures(conn, it) }
-        if (profilePictures != null) c.profilePictures = profilePictures
+        if (c.id == null) return c
+        c.attachments = fileModelDao.findCharacterAttachments(conn, c.id)
+        c.profilePictures = fileModelDao.findCharacterProfilePictures(conn, c.id)
+        c.traits = traitDao.findTraitsByCharacter(conn, c.id).associate { it.name to it.value }
         return c
     }
 }

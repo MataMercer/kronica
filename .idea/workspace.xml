@@ -5,13 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="Added follows and wip likes.">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TraitDao.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-upload-storage/ab0cb7f9-571f-47c0-b1aa-b41cdb904cf2/polarbear.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-upload-storage/d5e3aa58-0858-4903-9640-13caff574125/polarbear.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-upload-storage/d8665f3c-a213-457b-81dd-7ad856cb29fd/polarbear.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateCharacterButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/CreateCharacterButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateTimelineButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/CreateTimelineButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/ArticlesDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/ArticlesDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Character.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Character.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/FormMapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/FormMapper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/JsonUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/JsonUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-upload-storage/addc9bd7-c2d3-48c5-afbd-a9a5f146395a/polarbear.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-upload-storage/e868a652-19fd-4944-a5a4-24dfa46bd50a/polarbear.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +121,7 @@
     "JUnit.ArticleServiceUnitTest.whenDeleteById_delete.executor": "Run",
     "JUnit.ArticleServiceUnitTest.whenFindById_returnArticle.executor": "Run",
     "JUnit.CharacterControllerTest.executor": "Run",
-    "JUnit.CharacterControllerTest.when Create character returns ok.executor": "Debug",
+    "JUnit.CharacterControllerTest.when Create character returns ok.executor": "Run",
     "JUnit.CharacterControllerTest.when fetch characters by user returns ok.executor": "Run",
     "JUnit.TimelineControllerTest.executor": "Run",
     "JUnit.TimelineControllerTest.when Create Timeline returns ok.executor": "Run",
@@ -218,22 +231,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ArticleControllerTest.when Create Article returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
-      <option name="METHOD_NAME" value="when Create Article returns ok" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ArticleControllerTest.when create articles with characters return good response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
@@ -266,6 +263,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CharacterControllerTest.when Create character returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.CharacterControllerTest" />
+      <option name="METHOD_NAME" value="when Create character returns ok" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.matamercer.MainKt" />
       <module name="WikiApi" />
@@ -286,8 +299,8 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.CharacterControllerTest.when Create character returns ok" />
       <item itemvalue="JUnit.ArticleControllerTest" />
-      <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
       <item itemvalue="JUnit.ArticleControllerTest.when create articles with characters return good response" />
       <item itemvalue="JUnit.ArticleControllerTest.when filtering articles by timeline, return the correct ones" />
       <item itemvalue="Kotlin.MainKt" />
@@ -295,10 +308,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Kotlin.MainKt" />
+        <item itemvalue="JUnit.CharacterControllerTest.when Create character returns ok" />
         <item itemvalue="JUnit.ArticleControllerTest.when filtering articles by timeline, return the correct ones" />
         <item itemvalue="JUnit.ArticleControllerTest" />
         <item itemvalue="JUnit.ArticleControllerTest.when create articles with characters return good response" />
-        <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
       </list>
     </recent_temporary>
   </component>
@@ -443,6 +456,18 @@
     <option name="LAST_COMMIT_MESSAGE" value="Added follows and wip likes." />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt</url>
+          <line>22</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="okhttp3.internal.http.RealResponseBody" memberName="source" />

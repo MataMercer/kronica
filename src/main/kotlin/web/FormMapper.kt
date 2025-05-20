@@ -41,12 +41,17 @@ inline fun<reified T> formMapper(paramMap: Map<String, List<String>>,  uploadMap
                 }
                 List::class.java ->{
                     //hack because I have no idea how to get parameterized types lmao
+                    //only for upload file fields.
                     if (field.genericType.typeName.contains(UploadedFile::class.java.typeName) ){
                         val uploadValue = uploadMap[name]
                         if (uploadValue!=null){
                             field.set(obj, uploadValue)
                         }
                     }
+                    else{
+                        field.set(obj, value)
+                    }
+
                 }
         }
     }

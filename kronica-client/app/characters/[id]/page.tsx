@@ -7,6 +7,7 @@ export default async function CharacterPage({
 }) {
     const id = params.id;
     const character = id && (await fetchCharacter(id));
+    console.log(character);
 
     return (
         character && (
@@ -40,6 +41,16 @@ export default async function CharacterPage({
                             infoKey="First Seen"
                             infoValue={character.firstSeen}
                         />
+                        {character.traits &&
+                            Object.entries(character.traits).map(
+                                (it, index) => (
+                                    <DataRow
+                                        key={index}
+                                        infoKey={it[0]}
+                                        infoValue={it[1] as string}
+                                    />
+                                )
+                            )}
                     </div>
                 </div>
                 <div className="m-2">{character.body}</div>

@@ -17,6 +17,11 @@ class CharacterService(
 
         val attachments = fileModelService.uploadFiles(form.uploadedAttachments)
         val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures)
+
+        val traits = form.traits.map {
+            it.split(":", ignoreCase = false, limit = 2)
+        }.associate { it[0] to it[1] }
+
         val c = characterRepository.create(
             Character(
                 name = form.name!!,
@@ -28,7 +33,8 @@ class CharacterService(
                 status = form.status!!,
                 birthday = form.birthday!!,
                 gender = form.gender!!,
-                firstSeen = form.firstSeen!!
+                firstSeen = form.firstSeen!!,
+                traits = traits
             )
         )
         if (c?.id == null) throw InternalServerErrorResponse()
@@ -89,7 +95,8 @@ class CharacterService(
             age = c.age,
             status = c.status,
             birthday = c.birthday,
-            firstSeen = c.firstSeen
+            firstSeen = c.firstSeen,
+            traits = c.traits
         )
     }
 }

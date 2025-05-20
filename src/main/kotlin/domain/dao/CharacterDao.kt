@@ -130,4 +130,6 @@ class CharacterDao {
     ) {
         it.setLong(1, id)
     }
+
+
 }

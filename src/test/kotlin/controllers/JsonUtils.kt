@@ -25,7 +25,7 @@ class JsonUtils {
         val list = if (json["content"]!=null) json["content"].toList() else json.toList()
         var check = true
         ids.forEach {
-            list.contains()
+            //list.contains()
         }
 
 
