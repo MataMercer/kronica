@@ -4,56 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="Added follows and wip likes.">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/CharacterForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/characters/create/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/login/oauth/callback/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Comment.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/CommentService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/OAuthController.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-upload-storage/16fd4bb9-eb0f-4e92-8e7c-ecae24c93bf1/polarbear.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-upload-storage/842b7561-c63f-4cfc-9831-84df90a33715/Illustratiffon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-upload-storage/b4ba499a-c4e2-4dda-a726-0015d854d837/polarbear.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-upload-storage/c377cc21-81c8-4eb3-bd9c-ca5f277ac3a5/polarbear.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-upload-storage/d13be737-bc6d-4a35-a5ca-8f84e0bdd626/Screenshot 2024-11-05 22371gfgf3.png" afterDir="false" />
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="wip oauth">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateCharacterButton.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/characters/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/characters/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/components/inputs/Dnd/SortableItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/Dnd/SortableItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/components/inputs/SortableInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/SortableInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/components/inputs/UploadInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/UploadInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/characters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/characters.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/next.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/AppConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/AppConfig.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileModelDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileModelDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/UserDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/UserDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/FileModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/UserRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileModelService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileModelService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/FileController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/FileController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/Router.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/Router.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-upload-storage/ab0cb7f9-571f-47c0-b1aa-b41cdb904cf2/polarbear.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-upload-storage/d5e3aa58-0858-4903-9640-13caff574125/polarbear.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-upload-storage/d8665f3c-a213-457b-81dd-7ad856cb29fd/polarbear.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -455,7 +407,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736331950246</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="wip oauth">
+      <option name="closed" value="true" />
+      <created>1748832393377</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1748832393377</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -482,7 +442,8 @@
     <MESSAGE value="added node and build git ignores" />
     <MESSAGE value="git ignore generated kte folder" />
     <MESSAGE value="Added follows and wip likes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added follows and wip likes." />
+    <MESSAGE value="wip oauth" />
+    <option name="LAST_COMMIT_MESSAGE" value="wip oauth" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
