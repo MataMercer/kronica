@@ -3,6 +3,7 @@ package org.matamercer.domain.repository
 import org.matamercer.domain.dao.FollowDao
 import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.dao.UserDao
+import org.matamercer.domain.models.AuthProvider
 import org.matamercer.domain.models.Follow
 import org.matamercer.domain.models.Profile
 import org.matamercer.domain.models.User
@@ -25,6 +26,10 @@ class UserRepository(
     fun findById(id: Long): User? = dataSource.connection.use { conn ->
             return userDao.findById(conn, id)
         }
+
+    fun findByOAuthIdAndProvider(oAuthId: Long, oAuthProvider: AuthProvider): User? = dataSource.connection.use { conn->
+        return userDao.findByOAuthIdAndAuthProvider(conn, oAuthId, oAuthProvider)
+    }
 
 
     fun findByName(name: String): User? = dataSource.connection.use { conn ->

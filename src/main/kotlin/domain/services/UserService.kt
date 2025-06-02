@@ -1,6 +1,12 @@
 package org.matamercer.domain.services
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.javalin.http.*
+import io.javalin.json.JavalinJackson
+import io.javalin.json.toJsonString
+import okhttp3.*
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.matamercer.config.AppConfig
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.UserRepository
 import org.matamercer.security.UserRole
@@ -14,7 +20,8 @@ import org.matamercer.web.UpdateUserForm
 class UserService(
     private val userRepository: UserRepository,
     private val fileModelService: FileModelService,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
+    private val httpClient: OkHttpClient
 ) {
 
     fun toDto(user: User, currentUser: CurrentUser? = null): UserDto {
@@ -60,7 +67,84 @@ class UserService(
         return foundUser
     }
 
-    fun registerUser(registerUserForm: RegisterUserForm, userRole: UserRole = UserRole.AUTHENTICATED_USER): User {
+    private fun getDiscordOAuthAccessToken(code: String): String{
+
+        val clientId = "1377453225275555963"
+        val clientSecret = ""
+        val redirectUri = ""
+        val url = HttpUrl.Builder().scheme("https")
+            .host("discord.com")
+            .addPathSegment("api")
+            .addPathSegment("v10")
+            .addPathSegment("oauth2")
+            .addPathSegment("token")
+            .addQueryParameter("client_id", AppConfig.discordOAuthClientId)
+            .addQueryParameter("client_secret", AppConfig.discordOAuthClientSecret)
+            .addQueryParameter("code", code)
+            .build()
+
+        val body = JavalinJackson().toJsonString(object{
+            val code = code
+            val grant_type = "authorization_code"
+            val redirect_uri = redirectUri
+        }).toRequestBody()
+        val credentials = Credentials.basic(clientId, clientSecret)
+        val request = Request.Builder()
+            .url(url)
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .header("Authorization", credentials)
+            .post(body).build()
+        val response = httpClient.newCall(request).execute()
+        if (response.isSuccessful){
+            val mapper = ObjectMapper()
+            val responseBody = response.body?.string()
+            val responseMap = mapper.readTree(responseBody)
+            return responseMap["access_token"].toString()
+        }else{
+            throw BadGatewayResponse("Server failed to get authorization from Discord.")
+        }
+    }
+
+    private fun getDiscordUser(accessToken: String): OAuthUserInfo{
+        val url = HttpUrl.Builder().scheme("https")
+            .host("discord.com")
+            .addPathSegment("api")
+            .addPathSegment("v10")
+            .addPathSegment("users")
+            .addPathSegment("@me")
+            .build()
+        val request = Request.Builder()
+            .url(url)
+            .header("Authorization", "Bearer $accessToken")
+            .get().build()
+        val response = httpClient.newCall(request).execute()
+            if (response.isSuccessful){
+                val mapper = ObjectMapper()
+                val responseBody = response.body?.string()
+                val responseMap = mapper.readTree(responseBody)
+                return OAuthUserInfo(
+                    id = responseMap["id"].asLong(),
+                    email = responseMap["email"].toString(),
+                    name = responseMap["name"].toString()
+                )
+            }else{
+                throw BadGatewayResponse("Server failed to get authorization from Discord.")
+            }
+    }
+
+    fun authenticateUserWithDiscordOAuth(code: String): User{
+        val accessToken = getDiscordOAuthAccessToken(code)
+        val discordUserInfo = getDiscordUser(accessToken)
+       val foundUser = userRepository.findByOAuthIdAndProvider(discordUserInfo.id, AuthProvider.DISCORD)
+        return foundUser
+            ?: registerUser(
+                RegisterUserForm(
+                    email = discordUserInfo.email,
+                    name=discordUserInfo.name,
+                    password = ""), UserRole.AUTHENTICATED_USER, AuthProvider.DISCORD)
+    }
+
+    fun registerUser(registerUserForm: RegisterUserForm, userRole: UserRole = UserRole.AUTHENTICATED_USER, authProvider: AuthProvider = AuthProvider.LOCAL): User {
         if (!validateRegisterUserForm(registerUserForm)) {
             throw BadRequestResponse()
         }
@@ -82,6 +166,7 @@ class UserService(
         ))
         return getById(id)
     }
+
 
     fun update(currentUser: CurrentUser, updateUserForm: UpdateUserForm) {
         val user = User(

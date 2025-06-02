@@ -2,7 +2,6 @@ package org.matamercer.web.controllers
 
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
-import io.javalin.http.bodyValidator
 import org.matamercer.domain.models.ArticleDto
 import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.services.ArticleService
@@ -10,6 +9,7 @@ import org.matamercer.domain.services.TimelineService
 import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateArticleForm
+import org.matamercer.web.FileMetadataForm
 import org.matamercer.web.dto.Page
 
 @Controller("/api/articles")
@@ -58,7 +58,8 @@ class ArticleController(
             body = ctx.formParam("body"),
             timelineId = ctx.formParam("timelineId")?.toLongOrNull(),
             uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
-            characters = ctx.formParams("characters").map { it.toLong() }
+            characters = ctx.formParams("characters").map { it.toLong() } ,
+            uploadedAttachmentsMetadata = ctx.formParamsAsClass("uploadedAttachmentsMetadata", FileMetadataForm::class.java).get(),
         )
         val author = getCurrentUser(ctx)
         val articleId = articleService.create(createArticleForm, author)

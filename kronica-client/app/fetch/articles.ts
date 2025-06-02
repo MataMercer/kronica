@@ -19,6 +19,8 @@ export type Article = {
 export type FileModel = {
   id: number;
   name: string;
+  caption: string;
+  storageId: string;
 }
 
 export async function fetchAllArticles(authorId?: number, timelineId?: number) {

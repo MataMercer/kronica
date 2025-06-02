@@ -8,13 +8,27 @@ data class UsersDto(
     val count: Int
 )
 
+enum class AuthProvider{
+    LOCAL,
+    DISCORD
+}
+
 data class User(
     val id: Long? = null,
     val name: String,
     val email: String? = null,
     val hashedPassword: String? = null,
     val role: UserRole,
+    val authProvider: AuthProvider = AuthProvider.LOCAL,
+    val oAuthId: Long? = null,
     val createdAt: Date? = null,
+)
+
+data class OAuthUserInfo(
+    val id: Long,
+    val name: String,
+    val email: String,
+    
 )
 
 data class Profile(

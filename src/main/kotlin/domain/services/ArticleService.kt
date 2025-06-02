@@ -6,7 +6,6 @@ import io.javalin.http.InternalServerErrorResponse
 import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
-import org.matamercer.domain.repository.NotificationRepository
 import org.matamercer.domain.repository.UserRepository
 import org.matamercer.web.CreateArticleForm
 
@@ -39,18 +38,20 @@ class ArticleService(
         return articleRepository.findByFollowing(userId)
     }
 
-    fun create(createArticleForm: CreateArticleForm, currentUser: CurrentUser): Long {
-        validateForm(createArticleForm)
-        val attachments = fileModelService.uploadFiles(createArticleForm.uploadedAttachments)
+    fun create(form: CreateArticleForm, currentUser: CurrentUser): Long {
+        validateForm(form)
+
+        val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
+        val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions )
         val article = articleRepository.create(
             Article(
-                title = createArticleForm.title!!,
-                body = createArticleForm.body!!,
+                title = form.title!!,
+                body = form.body!!,
                 author = currentUser.toUser(),
                 attachments = attachments,
             ),
-            createArticleForm.timelineId,
-            createArticleForm.characters
+            form.timelineId,
+            form.characters
         )
 
         if (article?.id == null) throw InternalServerErrorResponse()

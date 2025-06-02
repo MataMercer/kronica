@@ -6,7 +6,9 @@ import AuthProtectionSSR from "./AuthProtectionSSR";
 import SortableInput from "./components/inputs/SortableInput";
 import CreateTimelineButton from "./CreateTimelineButton";
 import { fetchAllTimelines } from "./fetch/timelines";
-import CreateCharacterButton from "./CreateCharacterButton";
+import CreateCharacterButton from "./CharacterForm";
+import { PersonStanding } from "lucide-react";
+import Link from "next/link";
 
 export default async function Home() {
     const articles = (await fetchAllArticles())?.content;
@@ -24,7 +26,13 @@ export default async function Home() {
                         <CreateTimelineButton />
                     </div>
                     <div className="m-2 ">
-                        <CreateCharacterButton />
+                        <Link
+                            href="/characters/create"
+                            className="flex content-center"
+                        >
+                            <PersonStanding />
+                            Character
+                        </Link>
                     </div>
                 </div>
             </AuthProtectionSSR>

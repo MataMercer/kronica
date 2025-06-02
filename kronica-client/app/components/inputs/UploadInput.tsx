@@ -2,6 +2,8 @@ import { MouseEvent, useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { DndContext, UniqueIdentifier } from "@dnd-kit/core";
 import SortableInput from "./SortableInput";
+import { FilePlus } from "lucide-react";
+import { metadata } from "@/app/layout";
 
 export type FileInput = {
     //null if this file is already on the server, non null if this file is going to be uploaded.
@@ -12,7 +14,17 @@ export type FileInput = {
 
     //assigned based on order its added. Has NO relation to real id of data on the server.
     //used for SortableContext to identify items.
+    //can't change name due to library issues.
     id: string;
+
+    metadata: FileMetadataForm;
+};
+
+export type FileMetadataForm = {
+    id?: number;
+    uploadIndex?: number;
+    delete?: boolean;
+    caption?: string;
 };
 
 type UploadInputProps = {
@@ -23,18 +35,46 @@ type UploadInputProps = {
 };
 
 type UploadThumbProps = {
-    url?: string;
-    index: number;
+    item: FileInput;
+    setList: (arg0: FileInput[]) => void;
+    list: FileInput[];
 };
 
-function UploadThumb({ data, url }: FileInput) {
+function UploadThumb({ item, list, setList }: UploadThumbProps) {
+    const { data, url, metadata, id } = item;
     return (
-        <div className="p-2 flex flex-col">
+        <div className="p-2 flex">
             {" "}
             <img className="w-10" src={url} alt="uploaded" />
-            {data && <div>New File Attachment</div>}
-            <div>File Name: {data?.name}</div>
-            <div>File Size: {Math.round(data?.size / 1000)} KB</div>
+            <div className="flex-col">
+                {data ? (
+                    <div className="flex">
+                        <FilePlus />
+                        New file
+                    </div>
+                ) : (
+                    <div className="flex">Existing file</div>
+                )}
+                <div>File Name: {data?.name}</div>
+                <div>File Size: {data && Math.round(data.size / 1000)} KB</div>
+                <label>
+                    Caption:{" "}
+                    <input
+                        value={metadata.caption}
+                        onChange={(e) => {
+                            const newCaption = e.target.value;
+
+                            const l = list;
+                            l.forEach((it) => {
+                                if (it.id === id) {
+                                    it.metadata.caption = newCaption;
+                                }
+                            });
+                            setList(l);
+                        }}
+                    />
+                </label>
+            </div>
         </div>
     );
 }
@@ -53,6 +93,7 @@ function UploadInput({
 
     const [increm, setIncrem] = useState(0);
 
+    console.log(fileInputs);
     const processFile = (file: File) => {
         const reader = new FileReader();
 
@@ -84,6 +125,7 @@ function UploadInput({
                     data: acceptedFile,
                     url: processedFiles[index] as string,
                     id: `${tempIncrem}`,
+                    metadata: {},
                 };
                 tempIncrem++;
                 return res;

@@ -14,6 +14,7 @@ export type Character = {
   body: string;
   author: User;
   attachments: FileModel[];
+  profilePictures: FileModel[];
   traits: {};
 }
 

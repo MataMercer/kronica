@@ -1,5 +1,6 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.models.AuthProvider
 import org.matamercer.domain.models.Profile
 import org.matamercer.domain.models.SocialMediaLink
 import org.matamercer.domain.models.User
@@ -46,6 +47,18 @@ class UserDao {
             """.trimIndent(), conn
     ) {
         it.setLong(1, id)
+    }
+
+    fun findByOAuthIdAndAuthProvider(conn: Connection, oauthId: Long, authProvider: AuthProvider) = mapper.queryForObject(
+        """
+            SELECT * 
+            FROM users 
+            WHERE users.oauth_id = ? AND users.oauth_provider = ?     
+        """.trimIndent(), conn
+    ){
+        var i = 0
+        it.setLong(++i, oauthId)
+        it.setString(++i, authProvider.name)
     }
 
     fun findByName(conn: Connection, name: String): User? = mapper.queryForObject(

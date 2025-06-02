@@ -6,6 +6,7 @@ import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.FileModelDto
 import org.matamercer.domain.services.storage.StorageService
 import org.matamercer.domain.services.storage.exceptions.StorageException
+import org.matamercer.web.FileMetadataForm
 import java.nio.file.Path
 import java.nio.file.Paths
 
@@ -13,13 +14,15 @@ class FileModelService(
     private val storageService: StorageService
 ) {
 
-    fun uploadFiles(uploadedFiles: List<UploadedFile>): List<FileModel>{
+
+    fun uploadFiles(uploadedFiles: List<UploadedFile>, captions: List<String?>? = null): List<FileModel>{
+        val captionedUploadedFiles= uploadedFiles.mapIndexed { i, it -> Pair(it, captions?.get(i)) }
         val map = mutableMapOf<Path, UploadedFile>()
         val storageIds = mutableListOf<String>()
-        uploadedFiles.forEach { upload ->
-            val storageId = storageService.generateStorageId(upload.filename())
+        captionedUploadedFiles.forEach { upload ->
+            val storageId = storageService.generateStorageId()
             val path = Paths.get(storageId)
-            map[path] = upload
+            map[path] = upload.first
             storageIds.add(storageId)
         }
 
@@ -32,12 +35,14 @@ class FileModelService(
 
         val fileModels = storageIds.mapIndexed { index, storageId ->
             FileModel(
-                name = uploadedFiles[index].filename(),
+                name = captionedUploadedFiles[index].first.filename(),
                 storageId = storageId,
+                caption = captionedUploadedFiles[index].second
             )
         }
         return fileModels
     }
+
 
     fun toDto(fileModel: FileModel): FileModelDto {
         return FileModelDto(

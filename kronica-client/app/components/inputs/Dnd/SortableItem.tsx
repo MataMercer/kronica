@@ -20,7 +20,7 @@ export default function SortableItem({
 
     return (
         <div
-            className="flex justify-between  border-black border-2 bg-white"
+            className="self-center flex justify-between  border-black border-2 bg-white"
             ref={setNodeRef}
             style={style}
             {...attributes}

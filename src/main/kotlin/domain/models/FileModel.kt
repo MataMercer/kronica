@@ -6,12 +6,14 @@ class FileModel(
     val id: Long? = null,
     val createdAt: Date? = null,
     val name: String,
+    val caption: String? = null,
     val storageId:String,
 )
 
 data class FileModelDto(
     val id: Long? = null,
     val name: String,
+    val caption: String? = null,
     val storageId: String? = null,
 )
 

@@ -30,6 +30,7 @@ data class CreateArticleForm(
     val body: String?,
     val timelineId: Long? = null,
     val uploadedAttachments: List<UploadedFile> = listOf(),
+    val uploadedAttachmentsMetadata: List<FileMetadataForm> = listOf(),
     val characters: List<Long> = listOf()
 )
 
@@ -52,5 +53,19 @@ data class CreateCharacterForm(
     val body: String? = null,
     val traits: List<String> = listOf(),
     val uploadedAttachments: List<UploadedFile> = listOf(),
-    val uploadedProfilePictures: List<UploadedFile> = listOf()
+    val uploadedAttachmentsMetadata: List<FileMetadataForm> = listOf(),
+    val uploadedProfilePictures: List<UploadedFile> = listOf(),
+    val profilePicturesMetaData: List<FileMetadataForm> = listOf(),
 )
+
+data class FileMetadataForm(
+    val id: Long? = null,
+    val uploadIndex: Int? = null,
+    val delete: Boolean? = null,
+    val caption: String? = null,
+){
+    fun isExistingFile():Boolean{
+       return id != null
+    }
+}
+

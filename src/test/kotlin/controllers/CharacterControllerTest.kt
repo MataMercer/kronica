@@ -1,5 +1,6 @@
 package controllers
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import createAuthClient
 import fixtures.Fixtures
 import getHostUrl
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
 import org.matamercer.domain.models.User
 import org.matamercer.setupApp
-import org.matamercer.web.CreateCharacterForm
+import org.matamercer.web.FileMetadataForm
 import org.matamercer.web.LoginRequestForm
 import java.io.File
 
@@ -55,6 +56,7 @@ class CharacterControllerTest {
     fun `when Create character returns ok`(){
         val testCharacter = fixtures.testCharacter
         val uploadFile = File("resources/test/polarbear.jpg")
+        val mapper = jacksonObjectMapper()
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("name", testCharacter.name)
@@ -67,6 +69,9 @@ class CharacterControllerTest {
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedProfilePictures", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #1")))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 1, caption = "attach #2")))
+            .addFormDataPart("uploadedProfilePicturesMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "Normal")))
             .addFormDataPart("traits", "mobile suit:gundam, allegiance:londo bell")
             .build()
 

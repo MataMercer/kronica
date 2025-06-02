@@ -16,6 +16,7 @@ class Router(
     private val timelineController: TimelineController,
     private val userController: UserController,
     private val authController: AuthController,
+    private val oAuthController: OAuthController,
     private val characterController: CharacterController,
     private val fileController: FileController,
     private val notificationController: NotificationController,
@@ -32,6 +33,7 @@ class Router(
         addRoutes(characterController)
         addRoutes(fileController)
         addRoutes(notificationController)
+        addRoutes(oAuthController)
     }
 
     private fun addRouteAuthorization(){
@@ -79,8 +81,7 @@ class Router(
 //                try {
                     method.invoke(obj, ctx)
 //                }catch (e:InvocationTargetException){
-//                    print("Invocation Target Exception")
-//                    throw e.targetException
+//                    print("InvocationException")
 //                }
             }
 

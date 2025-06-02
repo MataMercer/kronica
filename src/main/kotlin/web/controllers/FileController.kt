@@ -11,9 +11,9 @@ import org.matamercer.domain.services.storage.StorageService
 class FileController(
     private val storageService: StorageService
 ) {
-    @Route(HandlerType.GET, "/files/serve/{storageId}/{filename}")
+    @Route(HandlerType.GET, "/serve/{storageId}/{filename}")
     fun serveFile(ctx: Context) {
-        val fileStorageId = ctx.pathParam("storageId").toLong()
+        val fileStorageId = ctx.pathParam("storageId")
         val fileName = ctx.pathParam("filename")
         val extension = FilenameUtils.getExtension(fileName)
         if (extension.isNullOrBlank()) {
@@ -27,4 +27,5 @@ class FileController(
             "inline; filename=\"$fileName\""
         )
     }
+
 }

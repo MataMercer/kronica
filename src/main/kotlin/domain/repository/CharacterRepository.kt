@@ -32,12 +32,12 @@ class CharacterRepository(
         val c = characterDao.findById(conn, newCharacterId)
         character.attachments.forEachIndexed { index, it ->
             val id = fileModelDao.create(conn, it)
-            if (id != null) fileModelDao.joinCharacter(conn, id, newCharacterId, index)
+            fileModelDao.joinCharacter(conn, id, newCharacterId, index)
 
         }
         character.profilePictures.forEachIndexed { index, it ->
             val id = fileModelDao.create(conn, it)
-            if (id != null) fileModelDao.joinCharacterProfile(conn, id, newCharacterId, index, "test caption")
+            fileModelDao.joinCharacterProfile(conn, id, newCharacterId, index)
         }
         character.traits.forEach{ (name, value) ->
             val id = traitDao.createTrait(conn, name, value, newCharacterId )

@@ -86,7 +86,7 @@ class FileSystemStorageService() : StorageService {
         }
     }
 
-    override fun loadAsFile(storageId: Long, fileName: String): File {
+    override fun loadAsFile(storageId: String, fileName: String): File {
         val path = Paths.get("$storageId/$fileName")
         return loadAsFile(path)
     }
@@ -113,7 +113,7 @@ class FileSystemStorageService() : StorageService {
         }
     }
 
-    override fun generateStorageId(fileName: String): String {
+    override fun generateStorageId(): String {
         val id = UUID.randomUUID()
         return id.toString()
     }

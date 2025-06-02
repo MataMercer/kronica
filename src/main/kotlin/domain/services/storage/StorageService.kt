@@ -11,6 +11,6 @@ interface StorageService {
     fun delete(filePath: Path)
     fun deleteAll()
     fun loadAsFile(filePath: Path): File
-    fun loadAsFile(storageId: Long, fileName: String): File
-    fun generateStorageId(fileName: String):String
+    fun loadAsFile(storageId: String, fileName: String): File
+    fun generateStorageId():String
 }

@@ -11,6 +11,7 @@ class FileModelDao() {
         FileModel(
             id = rs.getLong("id"),
             name = rs.getString("name"),
+            caption = rs.getString("caption"),
             storageId = rs.getString("storage_id"),
         )
     }
@@ -107,16 +108,15 @@ class FileModelDao() {
         }
     }
 
-    fun joinCharacterProfile(conn: Connection, fileId: Long, characterId: Long, index: Int, caption: String): Long {
+    fun joinCharacterProfile(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
         val sql = """
             INSERT INTO files_to_character_profiles
             (
                 file_id,
                 character_id,
-                index,
-                caption
+                index
             )
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?)
         """.trimIndent()
 
         return mapper.update(sql, conn) {
@@ -124,31 +124,32 @@ class FileModelDao() {
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
             it.setInt(++i, index)
-            it.setString(++i, caption)
         }
     }
 
 
-    fun create(connection: Connection, fileModel: FileModel): Long? {
+    fun create(connection: Connection, fileModel: FileModel): Long {
         return mapper.update(
             """
                 INSERT INTO files
                     (
                     name,
                     storage_id,
-                    created_at
+                    created_at,
+                    caption
                     )
-                VALUES (?, ?, ?)
+                VALUES (?, ?, ?, ?)
             """.trimIndent(), connection
         ) {
             var i = 0
             it.setString(++i, fileModel.name)
             it.setString(++i, fileModel.storageId)
             it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
+            it.setString(++i, fileModel.caption)
         }
     }
 
-    fun update(connection: Connection, fileModel: FileModel): Long? {
+    fun update(connection: Connection, fileModel: FileModel): Long {
         return mapper.update(
             """
                 UPDATE files

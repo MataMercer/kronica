@@ -2,9 +2,12 @@ package org.matamercer
 
 import com.zaxxer.hikari.HikariDataSource
 import io.javalin.Javalin
-import io.javalin.http.*
+import io.javalin.http.Context
+import io.javalin.http.InternalServerErrorResponse
+import io.javalin.json.JavalinJackson
 import io.javalin.security.RouteRole
 import io.javalin.websocket.WsConnectContext
+import okhttp3.OkHttpClient
 import org.eclipse.jetty.http.HttpCookie
 import org.eclipse.jetty.server.session.DatabaseAdaptor
 import org.eclipse.jetty.server.session.DefaultSessionCache
@@ -19,6 +22,7 @@ import org.matamercer.domain.services.*
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.security.UserRole
 import org.matamercer.security.generateCsrfToken
+import org.matamercer.web.FileMetadataForm
 import org.matamercer.web.controllers.*
 
 
@@ -63,11 +67,14 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         transact = transactionManager
     )
     val notificationService = NotificationService(notificationRepository)
+
+    val httpClient = OkHttpClient()
     val userRepository = UserRepository(userDao, followDao, transactionManager, dataSource)
-    val userService = UserService(userRepository, fileModelService, notificationService)
+    val userService = UserService(userRepository, fileModelService, notificationService, httpClient)
     val seeder = Seeder(userService)
     seeder.initRootUser()
     seeder.initTestUser()
+
 
     val articleDao = ArticleDao()
     val characterDao = CharacterDao()
@@ -112,12 +119,14 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
     val characterController = CharacterController(characterService, timelineService)
     val fileController = FileController(storageService)
     val notificationController = NotificationController(notificationService)
+    val oAuthController = OAuthController(userService)
 
     val router = Router(
         articleController,
         timelineController,
         userController,
         authController,
+        oAuthController,
         characterController,
         fileController,
         notificationController,
@@ -197,6 +206,11 @@ fun createJavalinApp(): Javalin {
                 it.allowHost("http://localhost:3000")
                 it.allowCredentials = true;
             }
+        }
+
+        val objectMapper = JavalinJackson()
+        config.validation.register(FileMetadataForm::class.java){
+            return@register objectMapper.fromJsonString(it, FileMetadataForm::class.java)
         }
     }
     return app

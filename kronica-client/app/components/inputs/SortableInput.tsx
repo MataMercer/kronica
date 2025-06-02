@@ -21,6 +21,7 @@ import { ReactElement, useEffect, useState } from "react";
 import Draggable from "./Dnd/Draggable";
 import SortableItem from "./Dnd/SortableItem";
 import Droppable from "./Dnd/Droppable";
+import { Grip, Trash } from "lucide-react";
 
 interface InputTypeInterface {
     id: UniqueIdentifier;
@@ -34,7 +35,11 @@ type ListMutation = {
 interface Props<T> {
     list: T[];
     setList: (arg0: T[]) => void;
-    cardComponent: React.ComponentType<T>;
+    cardComponent: React.ComponentType<{
+        item: T;
+        list: T[];
+        setList: (arg0: T[]) => void;
+    }>;
 }
 
 export default function SortableInput<T extends InputTypeInterface>({
@@ -98,21 +103,28 @@ export default function SortableInput<T extends InputTypeInterface>({
         setList(list.toSpliced(index, 1));
     }
 
-    const CardComponent = cardComponent as any;
+    const CardComponent = cardComponent;
     return (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <SortableContext items={list} strategy={rectSortingStrategy}>
                 <Droppable>
                     {list.map((item, index) => (
                         <SortableItem key={item.id} id={item.id}>
-                            <CardComponent {...item} />
+                            <div className="content-center p-10">
+                                <Grip />
+                            </div>
+                            <CardComponent
+                                item={item}
+                                setList={setList}
+                                list={list}
+                            />
                             <button
                                 className="p-10 bg-black text-white"
                                 onClick={handleRemoveClick}
                                 type="button"
                                 value={index}
                             >
-                                X
+                                <Trash />
                             </button>
                         </SortableItem>
                     ))}

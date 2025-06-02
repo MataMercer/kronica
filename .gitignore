@@ -40,3 +40,5 @@ build/
 /src/main/jte/public/build/
 /jte-classes/
 /src/main/jte/public/build/
+
+.env

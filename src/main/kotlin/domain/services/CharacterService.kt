@@ -13,10 +13,11 @@ class CharacterService(
     private val fileModelService: FileModelService
 ) {
 
-    fun create(form: CreateCharacterForm, currentUser: CurrentUser): Long{
-
-        val attachments = fileModelService.uploadFiles(form.uploadedAttachments)
-        val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures)
+    fun create(form: CreateCharacterForm, currentUser: CurrentUser): Long {
+        val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
+        val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions)
+        val profilePicturesCaptions = form.profilePicturesMetaData.filter { !it.isExistingFile() }.map { it.caption }
+        val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures, profilePicturesCaptions)
 
         val traits = form.traits.map {
             it.split(":", ignoreCase = false, limit = 2)
@@ -41,30 +42,30 @@ class CharacterService(
         return c.id
     }
 
-    fun getById(id: Long?): Character{
-       if (id == null) throw BadRequestResponse()
+    fun getById(id: Long?): Character {
+        if (id == null) throw BadRequestResponse()
         val c = characterRepository.findById(id)
         c ?: throw NotFoundResponse()
         return c
     }
 
-    fun getAll(query: CharacterQuery): List<CharacterDto>{
+    fun getAll(query: CharacterQuery): List<CharacterDto> {
         return characterRepository.findAll(query).map { toDto(it) }
     }
 
-    fun deleteById(currentUser: CurrentUser, id: Long?){
-        if (id == null){
+    fun deleteById(currentUser: CurrentUser, id: Long?) {
+        if (id == null) {
             throw BadRequestResponse()
         }
         val c = characterRepository.findById(id)
 
-        if (currentUser.id != c?.author?.id){
+        if (currentUser.id != c?.author?.id) {
             throw ForbiddenResponse()
         }
         characterRepository.deleteById(id)
     }
 
-    fun toDto(c: Character): CharacterDto{
+    fun toDto(c: Character): CharacterDto {
         return CharacterDto(
             id = c.id,
             name = c.name,
@@ -76,19 +77,21 @@ class CharacterService(
                 createdAt = c.author.createdAt
             ),
             createdAt = c.createdAt,
-            updatedAt =  c.updatedAt,
-            attachments = c.attachments.map{
+            updatedAt = c.updatedAt,
+            attachments = c.attachments.map {
                 FileModelDto(
                     id = it.id,
                     name = it.name,
-                    storageId = it.storageId
+                    storageId = it.storageId,
+                    caption = it.caption
                 )
             },
-            profilePictures = c.profilePictures.map{
+            profilePictures = c.profilePictures.map {
                 FileModelDto(
                     id = it.id,
                     name = it.name,
-                    storageId = it.storageId
+                    storageId = it.storageId,
+                    caption = it.caption
                 )
             },
             gender = c.gender,
