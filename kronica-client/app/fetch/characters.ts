@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { FileModel } from "./articles";
-import { User } from "./users";
+import { User } from "../Types/Models";
 
 
 export type Character = {
@@ -23,7 +23,7 @@ export async function fetchCharacter(id: string) {
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
-    headers: { Cookie: cookies().toString() },
+    headers: { Cookie: (await cookies()).toString() },
   });
   if (!res.ok) {
     const error = new Error("Failed to get an character");

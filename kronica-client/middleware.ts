@@ -6,7 +6,6 @@ export function middleware(request: NextRequest) {
   // if (request.nextUrl.pathname.startsWith('/login')) {
   //   // const isLoggedIn = request.cookies.has("JSESSIONID")
   //   // // const fuck = 'fuck'
-  //   // // console.log(fuck)
   //   // // return NextResponse.redirect(new URL('/', request.url))
   //   // // return NextResponse.next()
   //   // if (isLoggedIn) {

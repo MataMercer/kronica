@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { refreshCurrentUser } from "../actions";
+import Link from "next/link";
 type Inputs = {
     email: string;
     password: string;
@@ -30,7 +31,7 @@ export default function LoginPage() {
         console.log(response);
     };
     return (
-        <main className="flex flex-col items-center justify-between p-24">
+        <main className="flex flex-col items-center justify-between p-24 space-y-2">
             <h1 className="text-2xl">LOGIN</h1>
             <form
                 className="flex flex-col items-center space-y-4"
@@ -54,7 +55,14 @@ export default function LoginPage() {
                 <button type="submit" className="button">
                     SUBMIT
                 </button>
+                <div className="m-5 border-black border-b-2 w-[100%] text-center">
+                    OR
+                </div>
             </form>
+
+            <Link href="http://localhost:7070/api/oauth/discord/login">
+                <button className="button">LOGIN WITH DISCORD</button>
+            </Link>
         </main>
     );
 }

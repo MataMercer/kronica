@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./navbar";
 import Footer from "./Footer";
 import { Toaster } from "@/components/ui/toaster";
+import Alert from "@/components/CustomUi/Alert";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className="lg:w-[70vw] mx-auto">
                 <Navbar />
-                <div className="min-h-[60px] bg-blue-500"></div>
-                <main className="flex min-h-screen flex-col m-3 ">
+
+                <div className="min-h-[60px] "></div>
+
+                {/* <Alert message="ds" /> */}
+                <main className="flex min-h-screen flex-col m-3 lg:w-[70vw] mx-auto p-2">
                     {children}
                 </main>
                 <Footer />

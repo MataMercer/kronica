@@ -35,7 +35,7 @@ function Core() {
             <Bell />
             <div
                 className={`text-center ${
-                    parseInt(count) > 0 ? "text-purple-500" : "text-gray-400"
+                    parseInt(count) > 0 ? "text-purple-500" : "text-black"
                 } text-lg `}
             >
                 {count}

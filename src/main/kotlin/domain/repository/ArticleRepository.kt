@@ -2,8 +2,10 @@ package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.Article
-import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.models.CharacterQuery
+import org.matamercer.web.ArticleQuery
+import org.matamercer.web.PageQuery
+import org.matamercer.web.dto.Page
 import java.sql.Connection
 import javax.sql.DataSource
 
@@ -22,20 +24,22 @@ class ArticleRepository(
         return@wrap a?.let { aggregate(conn, it) }
     }
 
-    fun findAll(query: ArticleQuery) = transact.wrap { conn ->
-        return@wrap articleDao.findAll(conn, query).map {
+    fun findAll(query: ArticleQuery, pageQuery: PageQuery) = transact.wrap { conn ->
+        val page = articleDao.findAll(conn, query,pageQuery)
+        page.content = page.content.map {
             aggregate(conn, it)
         }
+        return@wrap page
     }
+//
+//    fun findByAuthorId(id: Long) = transact.wrap { conn ->
+//        return@wrap articleDao.findByAuthorId(conn, id).map {
+//            aggregate(conn, it)
+//        }
+//    }
 
-    fun findByAuthorId(id: Long) = transact.wrap { conn ->
-        return@wrap articleDao.findByAuthorId(conn, id).map {
-            aggregate(conn, it)
-        }
-    }
-
-    fun findByFollowing(userId: Long) = transact.wrap { conn ->
-        return@wrap articleDao.findByFollowing(conn, userId).map {
+    fun findByFollowing(userId: Long, pageQuery: PageQuery) = transact.wrap { conn ->
+        return@wrap articleDao.findByFollowing(conn, userId, pageQuery).content.map {
             aggregate(conn, it)
         }
     }
@@ -50,9 +54,7 @@ class ArticleRepository(
         if (timelineId != null) timelineDao.createTimelineEntry(conn, timelineId, newArticleId)
         article.attachments.forEachIndexed{ index, it ->
             val id = fileModelDao.create(conn, it)
-            if (id != null) {
-                fileModelDao.joinArticle(conn, id, newArticleId, index)
-            }
+            fileModelDao.joinArticle(conn, id, newArticleId, index)
         }
         characters.forEach {
             characterDao.joinArticle(conn, it, newArticleId)
@@ -69,7 +71,7 @@ class ArticleRepository(
     }
 
     fun checkIfLiked(articleId: Long, userId: Long) = transact.wrap { conn ->
-        return@wrap likeDao.checkIfArticleIsLiked(conn, articleId) != null
+        return@wrap likeDao.checkIfArticleIsLiked(conn, articleId, userId) != null
     }
 
     private fun aggregate(conn: Connection, a: Article): Article {
@@ -80,7 +82,7 @@ class ArticleRepository(
                 CharacterQuery(
                     articleId = a.id
                 )
-            )
+            ).content
         }
         val likeCount = a.id?.let { likeDao.countArticleLikes(conn, it) }
 

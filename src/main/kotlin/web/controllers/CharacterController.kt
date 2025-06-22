@@ -32,15 +32,13 @@ class CharacterController(
             authorId = authorId,
             timelineId = timelineId
         )
-        val foundCharacters = characterService.getAll(characterQuery)
-        val pagedCharacters = Page<CharacterDto>(
-            content = foundCharacters
-        )
-        ctx.json(pagedCharacters)
+        val characterPage = characterService.getAll(characterQuery)
+
+        ctx.json(characterPage)
     }
 
     @Route(HandlerType.DELETE, "/{id}")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @RequiredRole(UserRole.CONTRIBUTOR_USER)
     fun deleteCharacter(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         val articleId = ctx.pathParam("id").toLong()
@@ -50,7 +48,7 @@ class CharacterController(
 
 
     @Route(HandlerType.POST, "/")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @RequiredRole(UserRole.CONTRIBUTOR_USER)
     fun createCharacter(ctx: Context) {
         val createCharacterForm = CreateCharacterForm(
             name = ctx.formParam("name"),

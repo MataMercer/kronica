@@ -89,15 +89,18 @@ class LikeDao {
         it.setArray(2, conn.createArrayOf("BIGINT", articleIdsToCheck.toTypedArray()))
     }
 
-    fun checkIfArticleIsLiked(conn: Connection, articleId: Long): Long? =  mapper.queryForLong(
+    fun checkIfArticleIsLiked(conn: Connection, articleId: Long, userId: Long): Long? =  mapper.queryForLong(
         """
             SELECT
                 article_likes.article_id
             FROM article_likes
-            AND article_likes.article_id = ?
+            WHERE article_likes.article_id = ?
+            AND article_likes.author_id = ?
         """.trimIndent(), conn
     ) {
-        it.setLong(1, articleId)
+        var i = 0
+        it.setLong(++i, articleId)
+        it.setLong(++i, userId)
     }
 
     fun countArticleLikes(conn: Connection, articleId: Long): Long? = mapper.queryForLong(

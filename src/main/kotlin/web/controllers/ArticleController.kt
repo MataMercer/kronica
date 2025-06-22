@@ -2,14 +2,15 @@ package org.matamercer.web.controllers
 
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
-import org.matamercer.domain.models.ArticleDto
-import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.services.ArticleService
 import org.matamercer.domain.services.TimelineService
 import org.matamercer.getCurrentUser
+import org.matamercer.getCurrentUserRole
 import org.matamercer.security.UserRole
+import org.matamercer.web.ArticleQuery
 import org.matamercer.web.CreateArticleForm
 import org.matamercer.web.FileMetadataForm
+import org.matamercer.web.PageQuery
 import org.matamercer.web.dto.Page
 
 @Controller("/api/articles")
@@ -32,14 +33,19 @@ class ArticleController(
             authorId = authorId,
             timelineId = timelineId
         )
-        val foundArticles = articleService.getAll(articleQuery)
-        val pagedArticles = Page<ArticleDto>(
-            content = foundArticles
+        val pageQuery = PageQuery(
+            number = ctx.queryParam("page")?.toIntOrNull() ?: 0,
+            size = ctx.queryParam("size")?.toIntOrNull() ?: 10
         )
-        ctx.json(pagedArticles)
+
+        val currentUser =if (getCurrentUserRole(ctx)!= UserRole.UNAUTHENTICATED_USER) getCurrentUser(ctx) else null
+
+        val foundArticles = articleService.getAll(articleQuery, pageQuery, currentUser)
+        ctx.json(foundArticles)
     }
 
     @Route(HandlerType.DELETE, "/id/{id}")
+    @RequiredRole(UserRole.CONTRIBUTOR_USER)
     fun deleteArticle(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         val articleId = ctx.pathParam("id").toLong()
@@ -47,7 +53,7 @@ class ArticleController(
     }
 
     @Route(HandlerType.POST, "/")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @RequiredRole(UserRole.CONTRIBUTOR_USER)
     fun createArticle(ctx: Context) {
 //        val createArticleForm = ctx.bodyValidator<CreateArticleForm>()
 //            .check({ !it.title.isNullOrBlank() }, "Title is empty")
@@ -72,9 +78,16 @@ class ArticleController(
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun getByFollowing(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
-        val foundArticles = articleService.getByFollowing(currentUser.id)
+        val pageQuery = PageQuery(
+            number = ctx.queryParam("page")?.toIntOrNull() ?: 0,
+            size = ctx.queryParam("size")?.toIntOrNull() ?: 10
+        )
+        val foundArticles = articleService.getByFollowing(currentUser.id, pageQuery)
         val pagedArticles = Page(
-            content = foundArticles.map { articleService.toDto(it) }
+            content = foundArticles.map { articleService.toDto(it) },
+            number = pageQuery.number,
+            size = pageQuery.size,
+            pages = 69
         )
         ctx.json(pagedArticles)
     }

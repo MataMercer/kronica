@@ -7,6 +7,7 @@ import io.javalin.http.sse.SseClient
 import io.javalin.websocket.WsConfig
 import io.javalin.websocket.WsHandlerType
 import org.matamercer.authorizeCheck
+import org.matamercer.getCurrentUser
 import org.matamercer.getCurrentUserRole
 import org.matamercer.security.UserRole
 import java.lang.reflect.InvocationTargetException

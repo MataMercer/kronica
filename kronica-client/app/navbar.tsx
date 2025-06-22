@@ -11,6 +11,8 @@ import {
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import NotificationIndicator from "./NotificationIndicator";
 import useNotifications from "./hooks/useNotifications";
+import { Search } from "lucide-react";
+import Alert from "@/components/CustomUi/Alert";
 
 export default function Navbar() {
     const {
@@ -23,7 +25,7 @@ export default function Navbar() {
     const { notifications, mutate: mutateNotifications } = useNotifications();
 
     return (
-        <nav className="fixed w-[100%] flex text-2xl min-h-[60px] bg-black text-white">
+        <nav className="fixed w-[70vw] flex text-2xl min-h-[60px] justify-between bg-white border-b-[1px] border-black ">
             <Link className="ml-10" href="/">
                 <Image
                     alt="website logo"
@@ -32,6 +34,13 @@ export default function Navbar() {
                     height={75}
                 />
             </Link>
+            <div>
+                <input className="bg-white m-2" />
+                <button>
+                    <Search />
+                </button>
+            </div>
+
             <ul className="flex justify-end space-x-5 pt-3 ml-10">
                 {currentUser && currentUser.id ? (
                     <>
@@ -58,11 +67,11 @@ export default function Navbar() {
                                 @{currentUser.name.toUpperCase()}
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem className="">
-                                    <Link href={`/users/${currentUser.id}`}>
+                                <Link href={`/users/${currentUser.id}`}>
+                                    <DropdownMenuItem className="">
                                         PROFILE
-                                    </Link>
-                                </DropdownMenuItem>
+                                    </DropdownMenuItem>
+                                </Link>
                                 <DropdownMenuItem>
                                     <LogoutButton />
                                 </DropdownMenuItem>

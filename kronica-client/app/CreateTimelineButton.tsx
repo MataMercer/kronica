@@ -40,7 +40,7 @@ export default function CreateTimeline() {
     const { toast } = useToast();
 
     const [showTimelineForm, setShowTimelineForm] = useState(false);
-    const ref = React.useRef();
+    const ref = React.useRef(undefined);
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const response = await fetch("http://localhost:7070/api/timelines", {
             method: "POST",

@@ -19,15 +19,6 @@ class UserController(
         ctx.json(userService.toDto(foundUser))
     }
 
-    @Route(HandlerType.PUT,"/{id}")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
-    fun updateUser(ctx: Context){
-        val updateUserForm = ctx.bodyValidator<UpdateUserForm>().get()
-        val currentUser = getCurrentUser(ctx)
-        val updatedUser = userService.update(currentUser, updateUserForm)
-        ctx.json("User updated")
-    }
-
     @Route(HandlerType.PUT, "/{id}/profile")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun updateProfile(ctx: Context){

@@ -17,7 +17,7 @@ import KronologizeInput, {
 import useCurrentUser from "../hooks/useCurrentUser";
 import { refreshArticles } from "../actions";
 import { fetchAllArticles } from "../fetch/articles";
-import useArticles from "../hooks/useArticles";
+import { useArticles } from "../hooks/useArticles";
 
 type Inputs = {
     order: OrderInput[];
@@ -56,7 +56,7 @@ export default function KronologizeButton({
     });
 
     const [showArticleForm, setShowArticleForm] = useState(false);
-    const ref = React.useRef();
+    const ref = React.useRef(undefined);
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const formattedData = {
             order: data.order.map((it) => parseInt(it.id)),
@@ -85,9 +85,16 @@ export default function KronologizeButton({
                         onClick={() => {
                             setShowArticleForm(true);
                             mutateArticles();
+                            setValue(
+                                "order",
+                                articles?.map((it) => ({
+                                    id: it.id.toString(),
+                                    title: it.title,
+                                })) || []
+                            );
                         }}
                     >
-                        EDIT TIMELINE
+                        REORDER TIMELINE
                     </button>
                 )}
             </DialogTrigger>

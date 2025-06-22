@@ -3,5 +3,5 @@ type Props = {
 };
 
 export default function Alert({ message }: Props) {
-    return <div>{message}</div>;
+    return <div className="bg-red-500">{message}fsdfsdkj</div>;
 }

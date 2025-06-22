@@ -18,7 +18,7 @@ export default async function TimelineSideBar({
                     href={`/users/${authorId}`}
                     key={0}
                     className={`p-2 border-2 m-1 border-black text-xl border-b-4 
-                ${!!!activeTimelineId && "bg-blue-400 text-white font-bold"}
+                ${!!!activeTimelineId && "bg-[#8a2be2] text-white font-bold"}
                 `}
                 >
                     ALL
@@ -51,7 +51,7 @@ function TimelineButton({ timeline, authorId, active }: TimelineButtonProps) {
             href={`/users/${authorId}/${timeline.id}`}
             key={timeline.id}
             className={`p-2 border-2 m-1 border-black text-xl border-b-4 
-                ${active && "bg-blue-400 text-white  font-bold"}
+                ${active && "bg-[#8a2be2] text-white  font-bold"}
                 `}
         >
             {timeline.name.toUpperCase()}

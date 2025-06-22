@@ -1,6 +1,7 @@
 package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.Notification
+import org.matamercer.web.PageQuery
 import java.sql.Connection
 
 class NotificationDao {
@@ -38,15 +39,21 @@ class NotificationDao {
         it.setTimestamp(++i, genTimestamp())
     }
 
-    fun findByRecipient(conn: Connection, userId: Long) = mapper.queryForObjectList(
+    fun findByRecipient(conn: Connection, userId: Long, pageQuery: PageQuery?) = mapper.queryForObjectPage(
         """
-        SELECT * 
+        SELECT *,
+        count(*) OVER() AS total_count
         FROM notifications
         WHERE notifications.recipient_id=?
-    """.trimIndent(), conn
+        ${if (pageQuery != null)  "LIMIT ? OFFSET ?" else ""}
+    """.trimIndent(), conn, pageQuery
     ) {
         var i = 0
         it.setLong(++i, userId)
+        if (pageQuery != null) {
+            it.setInt(++i, pageQuery.size)
+            it.setInt(++i, pageQuery.number * pageQuery.size)
+        }
     }
 
     fun markRead(conn: Connection, notificationId: Long) = mapper.update("""

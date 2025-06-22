@@ -1,6 +1,6 @@
 
 import { cookies } from "next/headers";
-import { User } from "./users";
+import { User } from "../Types/Models";
 
 export type Timeline = {
   id: number;
@@ -17,7 +17,7 @@ export async function fetchAllTimelines(authorId: number) {
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
-    headers: { Cookie: cookies().toString() },
+    headers: { Cookie: (await cookies()).toString() },
     next: { tags: ['timelines'] }
   });
   if (!res.ok) {
@@ -38,7 +38,7 @@ export async function fetchTimeline(id: string) {
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
-    headers: { Cookie: cookies().toString() },
+    headers: { Cookie: (await cookies()).toString() },
   });
   if (!res.ok) {
     const error = new Error("Failed to get a timeline");

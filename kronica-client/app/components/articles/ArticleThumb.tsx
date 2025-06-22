@@ -1,8 +1,19 @@
 "use client";
 
 import { refreshArticles } from "@/app/actions";
+import AuthProtection from "@/app/auth/AuthProtection";
 import { Article } from "@/app/fetch/articles";
+import { UserRole } from "@/app/Types/Models";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import MDEditor from "@uiw/react-md-editor";
+import { EllipsisVertical, Flag, Heart, PencilIcon, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,10 +33,10 @@ type Props = {
 export default function ArticleThumb({ article }: Props) {
     return (
         <div
-            className="flex flex-row justify-center border-black border-[1px] border-b-[5px] mt-1 mb-1 p-2"
+            className="flex flex-row justify-between border-black border-[1px] border-b-[5px] mt-1 mb-1 p-1"
             key={article.id}
         >
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-between">
                 <h3 className="text-xl font-bold capitalize">
                     <Link href={`/articles/${article.id}`}>
                         {article.title}
@@ -47,23 +58,49 @@ export default function ArticleThumb({ article }: Props) {
                         <div>{article.attachments.length} Images</div>
                         <div>BY: {article.author.name}</div>
                     </div>
-                    <button
-                        className="button"
-                        onClick={() => {
-                            onDelete(article.id);
-                        }}
-                    >
-                        x
-                    </button>
                 </div>
-                <div>
-                    Starring:{" "}
-                    {article.characters.map((c) => (
-                        <Link key={c.id} href={`/characters/${c.id}`}>
-                            {c.name}
-                        </Link>
-                    ))}
-                </div>
+                {article.characters.length > 0 && (
+                    <div>
+                        Starring:{" "}
+                        {article.characters.map((c) => (
+                            <Link key={c.id} href={`/characters/${c.id}`}>
+                                {c.name}
+                            </Link>
+                        ))}
+                    </div>
+                )}
+                <AuthProtection requiredRole={"AUTHENTICATED_USER"}>
+                    <div className="flex justify-between space-x-1">
+                        <div className="flex space-x-1">
+                            <button className="text-purple-500 hover:text-red-700">
+                                <Heart
+                                    fill={article.youLiked ? "red" : "white"}
+                                />
+                            </button>
+                            <div>{article.likeCount} Likes</div>
+                        </div>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger className="p-1">
+                                <EllipsisVertical />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    <PencilIcon />
+                                    EDIT
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Trash />
+                                    DELETE
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Flag />
+                                    REPORT
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </AuthProtection>
             </div>
         </div>
     );

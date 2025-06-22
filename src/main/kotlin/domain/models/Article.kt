@@ -32,7 +32,4 @@ data class ArticleDto(
     val youLiked: Boolean? = null,
 )
 
-data class ArticleQuery(
-    val authorId: Long? = null,
-    val timelineId: Long? = null,
-)
+

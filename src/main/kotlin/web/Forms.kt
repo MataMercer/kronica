@@ -1,5 +1,6 @@
 package org.matamercer.web
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.javalin.http.UploadedFile
 
 data class LoginRequestForm(
@@ -64,8 +65,19 @@ data class FileMetadataForm(
     val delete: Boolean? = null,
     val caption: String? = null,
 ){
+    @JsonIgnore
     fun isExistingFile():Boolean{
        return id != null
     }
 }
+
+data class ArticleQuery(
+    val authorId: Long? = null,
+    val timelineId: Long? = null,
+)
+
+data class PageQuery(
+    val number: Int,
+    val size: Int,
+)
 

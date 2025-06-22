@@ -12,7 +12,7 @@ export async function fetchCurrentUser() {
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
-    headers: { Cookie: cookies().toString() },
+    headers: { Cookie: (await cookies()).toString() },
     next: { tags: ['currentuser'] }
   });
   if (!res.ok) {

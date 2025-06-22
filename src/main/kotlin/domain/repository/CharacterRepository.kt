@@ -22,9 +22,11 @@ class CharacterRepository(
     }
 
     fun findAll(query: CharacterQuery) = transact.wrap { conn ->
-        return@wrap characterDao.findAll(conn, query).map {
+        val page = characterDao.findAll(conn, query)
+        page.content.map {
             aggregate(conn, it)
         }
+        return@wrap page
     }
 
     fun create(character: Character) = transact.wrap { conn ->

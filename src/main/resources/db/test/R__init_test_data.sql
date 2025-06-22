@@ -11,7 +11,8 @@ INSERT INTO users (
     role,
     hashed_password,
     created_at,
-    profile_id
+    profile_id,
+    auth_provider
     )
     VALUES (
         'testuser',
@@ -19,6 +20,7 @@ INSERT INTO users (
         'ROOT',
         'password',
          CURRENT_TIMESTAMP,
-         (SELECT id FROM inserted_profile_id)
+         (SELECT id FROM inserted_profile_id),
+        'LOCAL'
          );
 

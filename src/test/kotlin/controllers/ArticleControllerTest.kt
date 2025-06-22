@@ -1,5 +1,6 @@
 package controllers
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import createAuthClient
 import fixtures.Fixtures
 import getHostUrl
@@ -21,10 +22,7 @@ import org.matamercer.domain.models.Notification
 import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
-import org.matamercer.web.CreateArticleForm
-import org.matamercer.web.CreateTimelineForm
-import org.matamercer.web.LoginRequestForm
-import org.matamercer.web.RegisterUserForm
+import org.matamercer.web.*
 import java.io.File
 import kotlin.test.assertNotNull
 
@@ -101,12 +99,15 @@ class ArticleControllerTest {
     @Test
     fun `when Create Article returns ok`(){
         val uploadFile = File("resources/test/polarbear.jpg")
+        val mapper = jacksonObjectMapper()
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("title", fixtures.testArticle.title)
             .addFormDataPart("body", fixtures.testArticle.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #1")))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 1, caption = "attach #2")))
             .build()
 
         val request = Request.Builder()
@@ -115,8 +116,9 @@ class ArticleControllerTest {
 
         val res = authClient.okHttp.newCall(request).execute()
         val body = res.body?.string()
-        print(body)
-        assertThat(res.code == 200).isTrue()
+        print(res.code)
+        assertThat(res.isSuccessful).isTrue()
+
     }
 
 

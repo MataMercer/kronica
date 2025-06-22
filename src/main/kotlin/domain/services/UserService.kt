@@ -5,7 +5,6 @@ import io.javalin.http.*
 import io.javalin.json.JavalinJackson
 import io.javalin.json.toJsonString
 import okhttp3.*
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.matamercer.config.AppConfig
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.UserRepository
@@ -68,39 +67,43 @@ class UserService(
     }
 
     private fun getDiscordOAuthAccessToken(code: String): String{
-
-        val clientId = "1377453225275555963"
-        val clientSecret = ""
-        val redirectUri = ""
+        val redirectUri = "http://localhost:3000/oauth/callback"
         val url = HttpUrl.Builder().scheme("https")
             .host("discord.com")
             .addPathSegment("api")
             .addPathSegment("v10")
             .addPathSegment("oauth2")
             .addPathSegment("token")
-            .addQueryParameter("client_id", AppConfig.discordOAuthClientId)
-            .addQueryParameter("client_secret", AppConfig.discordOAuthClientSecret)
-            .addQueryParameter("code", code)
             .build()
 
         val body = JavalinJackson().toJsonString(object{
             val code = code
             val grant_type = "authorization_code"
             val redirect_uri = redirectUri
-        }).toRequestBody()
-        val credentials = Credentials.basic(clientId, clientSecret)
+            val client_id = AppConfig.discordOAuthClientId
+            val client_secret = AppConfig.discordOAuthClientSecret
+        })
+        val formBody = FormBody.Builder()
+            .add("grant_type", "authorization_code")
+            .add("code", code)
+            .add("redirect_uri", redirectUri)
+            .build()
+        val credentials = Credentials.basic(AppConfig.discordOAuthClientId, AppConfig.discordOAuthClientSecret)
         val request = Request.Builder()
             .url(url)
             .header("Content-Type", "application/x-www-form-urlencoded")
             .header("Authorization", credentials)
-            .post(body).build()
+            .post(formBody)
+            .build()
         val response = httpClient.newCall(request).execute()
         if (response.isSuccessful){
             val mapper = ObjectMapper()
             val responseBody = response.body?.string()
             val responseMap = mapper.readTree(responseBody)
-            return responseMap["access_token"].toString()
+            response.close()
+            return responseMap["access_token"].toString().trim('"')
         }else{
+            response.close()
             throw BadGatewayResponse("Server failed to get authorization from Discord.")
         }
     }
@@ -122,13 +125,21 @@ class UserService(
                 val mapper = ObjectMapper()
                 val responseBody = response.body?.string()
                 val responseMap = mapper.readTree(responseBody)
+                val id = responseMap["id"]
+                val email = responseMap["email"]
+                val name = responseMap["username"]
+                if (id == null || email == null || name == null){
+                    response.close()
+                   throw BadGatewayResponse("Server failed to fetch all the user's info from Discord.")
+                }
                 return OAuthUserInfo(
-                    id = responseMap["id"].asLong(),
-                    email = responseMap["email"].toString(),
-                    name = responseMap["name"].toString()
+                    id = id.asLong(),
+                    email = email.asText(),
+                    name = name.asText()
                 )
             }else{
-                throw BadGatewayResponse("Server failed to get authorization from Discord.")
+                response.close()
+                throw BadGatewayResponse("Server failed to fetch user from Discord.")
             }
     }
 
@@ -141,19 +152,38 @@ class UserService(
                 RegisterUserForm(
                     email = discordUserInfo.email,
                     name=discordUserInfo.name,
-                    password = ""), UserRole.AUTHENTICATED_USER, AuthProvider.DISCORD)
+                    password = ""),
+                UserRole.AUTHENTICATED_USER,
+                AuthProvider.DISCORD,
+                discordUserInfo.id
+            )
     }
 
-    fun registerUser(registerUserForm: RegisterUserForm, userRole: UserRole = UserRole.AUTHENTICATED_USER, authProvider: AuthProvider = AuthProvider.LOCAL): User {
-        if (!validateRegisterUserForm(registerUserForm)) {
-            throw BadRequestResponse()
+    fun registerUser(form: RegisterUserForm, userRole: UserRole = UserRole.CONTRIBUTOR_USER, authProvider: AuthProvider = AuthProvider.LOCAL, oAuthId: Long? = null): User {
+        if ( form.email ==null
+            || form.name == null
+            || (authProvider == AuthProvider.LOCAL && form.password == null)
+            || (authProvider != AuthProvider.LOCAL && oAuthId == null)
+            ) {
+            throw BadRequestResponse("Form is incomplete.")
         }
+
+        if (checkUserExistsByName(form.name)){
+            throw ConflictResponse("User with that name already exists.")
+        }
+
+        if (checkUserExistsByEmail(form.email)){
+            throw ConflictResponse("User with that email already exists.")
+        }
+
         val id = userRepository.create(
             User(
-                name = registerUserForm.name!!,
-                email = registerUserForm.email,
-                hashedPassword = hashPassword(registerUserForm.password!!),
-                role = userRole
+                name = form.name,
+                email = form.email,
+                hashedPassword = hashPassword(form.password!!),
+                role = userRole,
+                authProvider = authProvider,
+                oAuthId = oAuthId
             )
         )
 
@@ -162,7 +192,7 @@ class UserService(
             notificationType = NotificationType.INFO,
             subjectId = id,
             objectId = 0,
-            message = "Welcome to Kronika!"
+            message = "Welcome to Kronikart!"
         ))
         return getById(id)
     }
@@ -226,31 +256,21 @@ class UserService(
         userRepository.unfollow(currentUser.id, id)
     }
 
-    fun getFollowers(id: Long): List<Follow> {
-        return userRepository.findFollowers(id)
-    }
+    fun getFollowers(id: Long): List<Follow> = userRepository.findFollowers(id)
+    fun getFollowings(id: Long): List<Follow> = userRepository.findFollowings(id)
 
-    fun getFollowings(id: Long): List<Follow> {
-        return userRepository.findFollowings(id)
-    }
-
-    fun isFollowing(userIdA: Long, userIdB: Long): Boolean {
-        return userRepository.findFollow(userIdA, userIdB) != null
-    }
-
-    private fun validateRegisterUserForm(registerUserForm: RegisterUserForm): Boolean {
-        return (registerUserForm.name != null && registerUserForm.email != null && registerUserForm.password != null)
-    }
+    private fun isFollowing(userIdA: Long, userIdB: Long): Boolean = userRepository.findFollow(userIdA, userIdB) != null
+    private fun checkUserExistsByEmail(email: String): Boolean = userRepository.findByEmail(email) != null
+    private fun checkUserExistsByName(name: String): Boolean = userRepository.findByName(name) != null
 
     private fun authCheck(currentUser: CurrentUser, userId: Long) {
         val user = getById(userId)
-        if (currentUser.id != user.id && currentUser.role.authLevel < UserRole.ADMIN.authLevel) {
+        if (currentUser.id != user.id
+            && currentUser.role.authLevel < UserRole.ADMIN.authLevel) {
             throw ForbiddenResponse()
         }
         if (currentUser.role.authLevel <= user.role.authLevel) {
             throw ForbiddenResponse()
         }
     }
-
-
 }

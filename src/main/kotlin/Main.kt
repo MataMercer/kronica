@@ -1,5 +1,6 @@
 package org.matamercer
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.zaxxer.hikari.HikariDataSource
 import io.javalin.Javalin
 import io.javalin.http.Context
@@ -13,6 +14,7 @@ import org.eclipse.jetty.server.session.DatabaseAdaptor
 import org.eclipse.jetty.server.session.DefaultSessionCache
 import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
+import org.matamercer.config.AppConfig
 import org.matamercer.config.Seeder
 import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.CurrentUser
@@ -143,8 +145,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         client.onClose { println("Client disconnected") }
         client.close() // close the client
     }
-
-
     return app
 }
 
@@ -212,6 +212,9 @@ fun createJavalinApp(): Javalin {
         config.validation.register(FileMetadataForm::class.java){
             return@register objectMapper.fromJsonString(it, FileMetadataForm::class.java)
         }
+        config.jsonMapper(JavalinJackson().updateMapper { mapper ->
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        })
     }
     return app
 }

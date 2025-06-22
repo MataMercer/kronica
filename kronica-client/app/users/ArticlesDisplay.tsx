@@ -5,11 +5,13 @@ import { fetchTimeline } from "../fetch/timelines";
 
 type ArticleDisplayProps = {
     timelineId: number;
+    authorId: number;
 };
 export default async function ArticleDisplay({
     timelineId,
+    authorId,
 }: ArticleDisplayProps) {
-    const articles = (await fetchAllArticles(undefined, timelineId))?.content;
+    const articles = (await fetchAllArticles(authorId, timelineId))?.content;
     const timeline = timelineId
         ? await fetchTimeline(timelineId.toString())
         : undefined;

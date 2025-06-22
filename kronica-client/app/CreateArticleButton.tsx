@@ -57,7 +57,7 @@ export default function CreateArticleButton() {
 
     const [showArticleForm, setShowArticleForm] = useState(false);
     const { characters, mutate: mutateCharacters } = useCharacters(userId);
-    const ref = React.useRef();
+    const ref = React.useRef(undefined);
     const { toast } = useToast();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const formData = new FormData();

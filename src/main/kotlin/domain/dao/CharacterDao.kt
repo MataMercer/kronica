@@ -1,6 +1,8 @@
 package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.*
+import org.matamercer.web.PageQuery
+import org.matamercer.web.dto.Page
 import java.sql.Connection
 
 class CharacterDao {
@@ -41,15 +43,16 @@ class CharacterDao {
         }
     }
 
-    fun findAll(conn: Connection, query: CharacterQuery?): List<Character> {
+    fun findAll(conn: Connection, query: CharacterQuery?, pageQuery: PageQuery? = null): Page<Character> {
         val sql = """
             SELECT
                 characters.*,
                 
                 users.id AS authors_id,
                 users.name AS authors_name,
-                users.role AS authors_role
+                users.role AS authors_role,
                 
+                count(*) OVER() AS total_count
             FROM characters
             INNER JOIN users 
                 ON characters.author_id=users.id
@@ -58,7 +61,7 @@ class CharacterDao {
             WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
             AND ${if (query?.articleId != null) "articles_to_characters.article_id = ?" else "TRUE"} 
             """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        return mapper.queryForObjectPage(sql, conn, pageQuery) {
             var i = 0
             query?.authorId?.let { it1 -> it.setLong(++i, it1) }
             query?.articleId?.let { it1 -> it.setLong(++i, it1) }

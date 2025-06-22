@@ -4,8 +4,10 @@ import io.javalin.http.BadRequestResponse
 import io.javalin.http.HandlerType
 import io.javalin.http.Context
 import okhttp3.HttpUrl
+import org.matamercer.config.AppConfig
 import org.matamercer.domain.services.UserService
 import org.matamercer.loginUserToSession
+import org.matamercer.security.UserRole
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -15,22 +17,23 @@ class OAuthController(
 ) {
 
     @Route(HandlerType.GET, "/discord/login")
+    @RequiredRole(UserRole.UNAUTHENTICATED_USER)
     fun redirectToDiscordLogin(ctx: Context){
-        val clientId = "1377453225275555963"
-        val callbackUri = "http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fcallback"
+        val callbackUri = "http://localhost:3000/oauth/callback"
         val url = HttpUrl.Builder().scheme("https")
             .host("discord.com")
             .addPathSegment("oauth2")
             .addPathSegment("authorize")
-            .addQueryParameter("client_id", clientId)
+            .addQueryParameter("client_id", AppConfig.discordOAuthClientId)
             .addQueryParameter("response_type", "code")
             .addQueryParameter("redirect_uri", callbackUri )
-            .addQueryParameter("scope", "openid")
+            .addQueryParameter("scope", listOf("identify", "email", "openid").joinToString(" "))
             .build()
         ctx.redirect(url.toString())
     }
 
-    @Route(HandlerType.GET, "/discord")
+    @Route(HandlerType.POST, "/discord")
+    @RequiredRole(UserRole.UNAUTHENTICATED_USER)
     fun discordAuthCodeLogin(ctx: Context){
         val code = ctx.queryParam("code")
         if (code != null) {

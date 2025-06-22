@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { User } from "./users";
+import { User } from "../Types/Models";
 import { Character } from "./characters";
 import { Timeline } from "./timelines";
 
@@ -15,6 +15,8 @@ export type Article = {
   attachments: FileModel[];
   characters: Character[];
   timeline: Timeline;
+  youLiked: boolean;
+  likeCount: number;
 }
 export type FileModel = {
   id: number;
@@ -36,7 +38,7 @@ export async function fetchAllArticles(authorId?: number, timelineId?: number) {
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
-    headers: { Cookie: cookies().toString() },
+    headers: { Cookie: (await cookies()).toString() },
     next: { tags: ['articles'] }
   });
   if (!res.ok) {
@@ -56,10 +58,9 @@ export async function fetchArticle(id: string) {
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
-    headers: { Cookie: cookies().toString() },
+    headers: { Cookie: (await cookies()).toString() },
   });
   if (!res.ok) {
-    console.log(url)
     const error = new Error("Failed to get an article. HTTP Error:" + res.status);
     throw error
   }

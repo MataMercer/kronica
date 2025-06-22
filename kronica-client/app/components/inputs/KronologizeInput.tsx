@@ -14,7 +14,13 @@ type KronologizeInputProps = {
     setOrder: (arg0: OrderInput[]) => void;
 };
 
-function ArticleThumb({ id, title }: OrderInput) {
+type ArticleThumbProps = {
+    item: OrderInput;
+    setList: (arg0: OrderInput[]) => void;
+    list: OrderInput[];
+};
+function ArticleThumb({ item }: ArticleThumbProps) {
+    const { title, id } = item;
     return <div className="p-2 flex flex-col">{title}</div>;
 }
 

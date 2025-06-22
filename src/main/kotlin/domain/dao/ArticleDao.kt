@@ -1,9 +1,11 @@
 package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.Article
-import org.matamercer.domain.models.ArticleQuery
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
+import org.matamercer.web.ArticleQuery
+import org.matamercer.web.PageQuery
+import org.matamercer.web.dto.Page
 import java.sql.Connection
 import java.sql.Types
 
@@ -37,7 +39,7 @@ class ArticleDao {
         )
     }
 
-    fun findAll(conn: Connection, query: ArticleQuery?): List<Article> {
+    fun findAll(conn: Connection, query: ArticleQuery?, pageQuery: PageQuery? = null): Page<Article> {
         val sql = """
             SELECT
                 articles.*,
@@ -50,7 +52,9 @@ class ArticleDao {
                    
                 timelines.id AS timelines_id,
                 timelines.name AS timelines_name,
-                timelines.description AS timelines_description
+                timelines.description AS timelines_description,
+                
+                count(*) OVER() AS total_count
             FROM articles
             INNER JOIN users 
                 ON articles.author_id=users.id
@@ -61,15 +65,21 @@ class ArticleDao {
             WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
             AND ${if (query?.timelineId != null) "timelines.id = ?" else "TRUE"} 
             ${if (query?.timelineId != null) "ORDER BY timeline_entries_timeline_index ASC" else "" }
+            ${if (pageQuery != null)  "LIMIT ? OFFSET ?" else ""}
             """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        return mapper.queryForObjectPage(sql, conn, pageQuery) {
             var i = 0
             query?.authorId?.let { it1 -> it.setLong(++i, it1) }
             query?.timelineId?.let { it1 -> it.setLong(++i, it1) }
+            if (pageQuery != null) {
+                it.setInt(++i, pageQuery.size)
+                it.setInt(++i, pageQuery.number * pageQuery.size)
+            }
+
         }
     }
 
-    fun findByFollowing(conn: Connection, userId: Long): List<Article> {
+    fun findByFollowing(conn: Connection, userId: Long, pageQuery: PageQuery?): Page<Article> {
         val sql = """
             WITH followed_users AS (
                 SELECT 
@@ -90,7 +100,9 @@ class ArticleDao {
                    
                 timelines.id AS timelines_id,
                 timelines.name AS timelines_name,
-                timelines.description AS timelines_description
+                timelines.description AS timelines_description,
+                
+                count(*) OVER() AS total_count
             FROM articles
             INNER JOIN users 
                 ON articles.author_id=users.id
@@ -99,9 +111,15 @@ class ArticleDao {
             LEFT JOIN timelines
                 ON timeline_entries.timeline_id=timelines.id
             WHERE users.id IN (SELECT * FROM followed_users)
+            ${if (pageQuery != null)  "LIMIT ? OFFSET ?" else ""}
         """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
-            it.setLong(1, userId)
+        return mapper.queryForObjectPage(sql, conn, pageQuery) {
+            var i = 0
+            it.setLong(++i, userId)
+            if (pageQuery != null) {
+                it.setInt(++i, pageQuery.size)
+                it.setInt(++i, pageQuery.number * pageQuery.size)
+            }
         }
     }
 
@@ -134,36 +152,38 @@ class ArticleDao {
         }
     }
 
-    fun findByAuthorId(conn: Connection, id: Long): List<Article> {
-        val sql = """
-            SELECT 
-                articles.*, users.id AS authors_id, 
-                users.name AS authors_name, 
-                users.role AS authors_role
-            FROM articles
-            INNER JOIN users ON articles.author_id=users.id 
-            WHERE users.id = ? 
-          """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
-            it.setLong(1, id)
-        }
-    }
-
-    fun findByTimelineId(conn: Connection, id: Long): List<Article> {
-        val sql = """
-            SELECT 
-                articles.*, users.id AS authors_id, 
-                users.name AS authors_name, 
-                users.role AS authors_role
-            FROM articles
-            INNER JOIN users ON articles.author_id=users.id 
-            INNER JOIN timelines ON articles.timeline_id=timelines.id
-            WHERE timelines.id = ? 
-          """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
-            it.setLong(1, id)
-        }
-    }
+//    fun findByAuthorId(conn: Connection, id: Long, pageQuery: PageQuery): Page<Article> {
+//        val sql = """
+//            SELECT
+//                articles.*, users.id AS authors_id,
+//                users.name AS authors_name,
+//                users.role AS authors_role
+//            FROM articles
+//            INNER JOIN users ON articles.author_id=users.id
+//            WHERE users.id = ?
+//            LIMIT ?
+//            OFFSET ?
+//          """.trimIndent()
+//        return mapper.queryForObjectPage(sql, conn, pageQuery) {
+//            it.setLong(1, id)
+//        }
+//    }
+//
+//    fun findByTimelineId(conn: Connection, id: Long): List<Article> {
+//        val sql = """
+//            SELECT
+//                articles.*, users.id AS authors_id,
+//                users.name AS authors_name,
+//                users.role AS authors_role
+//            FROM articles
+//            INNER JOIN users ON articles.author_id=users.id
+//            INNER JOIN timelines ON articles.timeline_id=timelines.id
+//            WHERE timelines.id = ?
+//          """.trimIndent()
+//        return mapper.queryForObjectList(sql, conn) {
+//            it.setLong(1, id)
+//        }
+//    }
 
     fun create(conn: Connection, article: Article): Long {
         val sql = """
@@ -186,38 +206,54 @@ class ArticleDao {
             article.author.id?.let { it1 -> it.setLong(++i, it1) }
         }
     }
+//
+//    fun countAll(conn: Connection, query: ArticleQuery?): Long {
+//        val sql = """
+//            SELECT COUNT(*) AS count
+//            FROM articles
+//            INNER JOIN users ON articles.author_id=users.id
+//            WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
+//        """.trimIndent()
+//        return mapper.queryForLong(sql, conn) {
+//            if (query?.authorId != null) {
+//                it.setLong(1, query.authorId)
+//            }
+//        } ?: 0L
+//    }
 
-    fun findArticleCountByAuthorId(conn: Connection, id: Long): Long? {
-        val sql = """
-            SELECT COUNT(*) AS count
-            FROM articles
-            WHERE author_id = ?
-        """.trimIndent()
-        return mapper.queryForLong(sql, conn) {
-            it.setLong(1, id)
-        }
-    }
+//    fun findArticleCountByAuthorId(conn: Connection, id: Long): Long? {
+//        val sql = """
+//            SELECT COUNT(*) AS count
+//            FROM articles
+//            WHERE author_id = ?
+//        """.trimIndent()
+//        return mapper.queryForLong(sql, conn) {
+//            it.setLong(1, id)
+//        }
+//    }
 
-    fun findLikedArticledByUserId(conn: Connection, id: Long): List<Article> {
+    fun findLikedArticledByUserId(conn: Connection, id: Long, pageQuery: PageQuery): Page<Article> {
         val sql = """
             SELECT 
                 articles.*, 
                 users.id AS authors_id, 
                 users.name AS authors_name, 
                 users.role AS authors_role
+                
+                count(*) OVER() AS total_count
             FROM articles
             INNER JOIN users ON articles.author_id=users.id 
             INNER JOIN article_likes ON articles.id=article_likes.article_id
             WHERE article_likes.author_id = ? 
           """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        return mapper.queryForObjectPage(sql, conn, pageQuery ) {
             it.setLong(1, id)
         }
     }
 
 
     fun update(article: Article): Long? {
-        TODO("Not yet implemented")
+        TODO("shietttttttt xd")
     }
 
     fun deleteById(conn: Connection, id: Long) {

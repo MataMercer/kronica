@@ -7,6 +7,7 @@ import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.CharacterRepository
 import org.matamercer.web.CreateCharacterForm
+import org.matamercer.web.dto.Page
 
 class CharacterService(
     private val characterRepository: CharacterRepository,
@@ -49,8 +50,9 @@ class CharacterService(
         return c
     }
 
-    fun getAll(query: CharacterQuery): List<CharacterDto> {
-        return characterRepository.findAll(query).map { toDto(it) }
+    fun getAll(query: CharacterQuery): Page<CharacterDto> {
+        val page = characterRepository.findAll(query)
+        return page.convert { toDto(it) }
     }
 
     fun deleteById(currentUser: CurrentUser, id: Long?) {

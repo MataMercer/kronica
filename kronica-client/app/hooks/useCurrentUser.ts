@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import { User } from "../Types/Models";
 
 export async function fetchCurrentUser() {
   const url = "http://localhost:7070/api/auth/currentuser";
@@ -10,7 +11,7 @@ export async function fetchCurrentUser() {
 
   if (res.ok) {
     const data = res.json();
-    return data;
+    return data as Promise<User>;
   }
 }
 

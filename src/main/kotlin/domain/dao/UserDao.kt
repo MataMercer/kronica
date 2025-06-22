@@ -53,7 +53,7 @@ class UserDao {
         """
             SELECT * 
             FROM users 
-            WHERE users.oauth_id = ? AND users.oauth_provider = ?     
+            WHERE users.oauth_id = ? AND users.auth_provider = ?     
         """.trimIndent(), conn
     ){
         var i = 0
@@ -80,8 +80,11 @@ class UserDao {
                     hashed_password,
                     role,
                     created_at,
-                    profile_id) 
-                VALUES (?, ?, ?, ?, ?, ?)
+                    profile_id,
+                    auth_provider,
+                    oauth_id
+                    ) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """.trimIndent(), conn
     ) {
         var i = 0
@@ -91,6 +94,12 @@ class UserDao {
         it.setString(++i, user.role.name)
         it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
         it.setLong(++i, profileId)
+        it.setString(++i, user.authProvider.name)
+        if (user.oAuthId == null){
+            it.setNull(++i, java.sql.Types.NULL)
+        }else{
+            it.setLong(++i, user.oAuthId)
+        }
     }
 
 

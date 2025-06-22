@@ -13,10 +13,8 @@ import java.nio.file.Paths
 class FileModelService(
     private val storageService: StorageService
 ) {
-
-
     fun uploadFiles(uploadedFiles: List<UploadedFile>, captions: List<String?>? = null): List<FileModel>{
-        val captionedUploadedFiles= uploadedFiles.mapIndexed { i, it -> Pair(it, captions?.get(i)) }
+        val captionedUploadedFiles= uploadedFiles.mapIndexed { i, it -> Pair(it, if (captions!= null && i < captions.size) captions[i] else "") }
         val map = mutableMapOf<Path, UploadedFile>()
         val storageIds = mutableListOf<String>()
         captionedUploadedFiles.forEach { upload ->
@@ -25,7 +23,6 @@ class FileModelService(
             map[path] = upload.first
             storageIds.add(storageId)
         }
-
         try {
             storageService.storeFiles(map)
         }

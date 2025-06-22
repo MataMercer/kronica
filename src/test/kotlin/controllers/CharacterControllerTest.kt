@@ -88,6 +88,7 @@ class CharacterControllerTest {
     private fun createCharacter(): Long {
         val testCharacter = fixtures.testCharacter
         val uploadFile = File("resources/test/polarbear.jpg")
+        val mapper = jacksonObjectMapper()
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("name", testCharacter.name)
@@ -99,6 +100,8 @@ class CharacterControllerTest {
             .addFormDataPart("body", testCharacter.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #1")))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 1, caption = "attach #2")))
             .build()
 
         val request = Request.Builder()

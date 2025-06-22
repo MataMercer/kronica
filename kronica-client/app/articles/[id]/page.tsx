@@ -1,11 +1,12 @@
 import { fetchArticle } from "@/app/fetch/articles";
 import Image from "next/image";
 
-export default async function ArticlePage({
-    params,
-}: {
-    params: { id: string };
-}) {
+export default async function ArticlePage(
+    props: {
+        params: Promise<{ id: string }>;
+    }
+) {
+    const params = await props.params;
     const id = params.id;
     const article = id && (await fetchArticle(id));
 
@@ -29,6 +30,8 @@ export default async function ArticlePage({
                         />
                     ))}
                     <p>{article && article.body}</p>
+
+                    <h1 className="text-2xl">Comments</h1>
                 </div>
             )}
         </div>

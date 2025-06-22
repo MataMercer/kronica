@@ -7,7 +7,10 @@ import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.repository.UserRepository
+import org.matamercer.web.ArticleQuery
 import org.matamercer.web.CreateArticleForm
+import org.matamercer.web.PageQuery
+import org.matamercer.web.dto.Page
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
@@ -24,18 +27,15 @@ class ArticleService(
         return article
     }
 
-    fun getAll(query: ArticleQuery): List<ArticleDto> {
-        return articleRepository.findAll(query).map { toDto(it) }
+    fun getAll(query: ArticleQuery, pageQuery: PageQuery, currentUser: CurrentUser?): Page<ArticleDto> {
+        val page =  articleRepository.findAll(query, pageQuery)
+        return page.convert{toDto(it, currentUser)}
     }
 
-    fun getByAuthorId(id: Long?): List<Article> {
-        if (id == null) throw BadRequestResponse()
-        return articleRepository.findByAuthorId(id)
-    }
 
-    fun getByFollowing(userId: Long?): List<Article> {
+    fun getByFollowing(userId: Long?, pageQuery: PageQuery): List<Article> {
         if (userId == null) throw BadRequestResponse()
-        return articleRepository.findByFollowing(userId)
+        return articleRepository.findByFollowing(userId, pageQuery)
     }
 
     fun create(form: CreateArticleForm, currentUser: CurrentUser): Long {
@@ -58,7 +58,7 @@ class ArticleService(
         val mentionedUsers = getMentionedUsers(article.body)
         mentionedUsers.forEach {
             if (it.id==null) return@forEach
-            Notification(
+            val n = Notification(
                 subject = currentUser.toUser(),
                 subjectId = currentUser.id,
                 notificationType = NotificationType.MENTIONED,
@@ -66,7 +66,9 @@ class ArticleService(
                 objectId = article.id,
                 recipientId = it.id
             )
+            notificationService.send(n)
         }
+
         return article.id
     }
 
@@ -74,6 +76,9 @@ class ArticleService(
         if (createArticleForm.title == null && createArticleForm.body == null) {
             throw BadRequestResponse()
         }
+//        if (createArticleForm.uploadedAttachments.size > createArticleForm.uploadedAttachmentsMetadata.size){
+//            throw BadRequestResponse("Each uploaded attachment must have a corresponding metadata entry.")
+//        }
     }
 
     private fun getMentionedUsers(input: String): List<User> {
@@ -90,6 +95,7 @@ class ArticleService(
         authCheck(currentUser, article)
         articleRepository.deleteById(id)
     }
+
 
     fun toDto(article: Article, user: CurrentUser? = null): ArticleDto {
 

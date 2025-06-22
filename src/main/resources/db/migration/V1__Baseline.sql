@@ -32,11 +32,11 @@ CREATE TABLE users
     created_at TIMESTAMP with time zone NOT NULL,
     profile_id BIGINT NOT NULL,
     oauth_id BIGINT,
-    oauth_provider VARCHAR(8),
+    auth_provider VARCHAR(8) NOT NULL,
 
     CONSTRAINT pk_users PRIMARY KEY (id),
     CONSTRAINT fk_profile_id FOREIGN KEY (profile_id) REFERENCES profiles (id) ON DELETE CASCADE,
-    CONSTRAINT uc_oauth_id_oauth_provider UNIQUE (oauth_id, oauth_provider)
+    CONSTRAINT uc_oauth_id_auth_provider UNIQUE (oauth_id, auth_provider)
 );
 
 create TABLE follows

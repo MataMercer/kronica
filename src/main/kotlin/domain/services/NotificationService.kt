@@ -3,6 +3,8 @@ package org.matamercer.domain.services
 import io.javalin.http.sse.SseClient
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.NotificationRepository
+import org.matamercer.web.PageQuery
+import org.matamercer.web.dto.Page
 import java.util.concurrent.ConcurrentHashMap
 
 class NotificationService(
@@ -20,9 +22,9 @@ class NotificationService(
 
     }
 
-    fun readAndMark(currentUser: CurrentUser): List<NotificationDto> {
-        val notifications =  notificationRepository.readAndMark(currentUser.id)
-        return notifications.map { toDto(it) }
+    fun readAndMark(currentUser: CurrentUser, pageQuery: PageQuery): Page<NotificationDto> {
+        val page =  notificationRepository.readAndMark(currentUser.id, pageQuery)
+        return page.convert { toDto(it) }
     }
 
     fun getUnreadCount(currentUser: CurrentUser): Long? {

@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { Page } from "../fetch/articles";
-import { User } from "../fetch/users";
+import { User } from "../Types/Models";
 
 
 enum NotificationType {

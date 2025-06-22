@@ -8,6 +8,7 @@ import org.matamercer.domain.models.NotificationDto
 import org.matamercer.domain.services.NotificationService
 import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
+import org.matamercer.web.PageQuery
 import org.matamercer.web.dto.Page
 import java.util.concurrent.ConcurrentHashMap
 
@@ -49,10 +50,11 @@ class NotificationController(
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun readAndMarkNotifications(ctx: Context){
         val currentUser = getCurrentUser(ctx)
-        val notifications = notificationService.readAndMark(currentUser)
-        val pagedNotifications = Page<NotificationDto>(
-            content = notifications
+        val pageQuery = PageQuery(
+            number = ctx.queryParam("page")?.toIntOrNull() ?: 0,
+            size = ctx.queryParam("size")?.toIntOrNull() ?: 10
         )
-        ctx.json(pagedNotifications)
+        val notifications = notificationService.readAndMark(currentUser, pageQuery)
+        ctx.json(notifications)
     }
 }

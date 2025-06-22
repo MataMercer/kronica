@@ -9,6 +9,7 @@ import useTimelines from "./hooks/useTimelines";
 import useCurrentUser from "./hooks/useCurrentUser";
 import useCharacters from "./hooks/useCharacters";
 import { useToast } from "@/components/hooks/use-toast";
+import { CircleMinus, CirclePlus } from "lucide-react";
 
 type Trait = {
     name: string;
@@ -25,7 +26,6 @@ type Inputs = {
     traits: Trait[];
 
     body: string;
-    attachments: string[];
     uploadedAttachments: FileInput[];
     uploadedProfilePictures: FileInput[];
 };
@@ -43,7 +43,6 @@ export default function CharacterForm() {
         defaultValues: {
             name: "ExampleName",
             body: "ExampleBody",
-            attachments: [],
             uploadedAttachments: [],
             uploadedProfilePictures: [],
             traits: [],
@@ -60,7 +59,7 @@ export default function CharacterForm() {
 
     const { toast } = useToast();
 
-    const ref = React.useRef();
+    const ref = React.useRef(undefined);
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const formData = new FormData();
         formData.append("name", data.name);
@@ -232,6 +231,7 @@ export default function CharacterForm() {
                                         />
                                         <button
                                             type="button"
+                                            className="flex"
                                             onClick={() => {
                                                 setValue(
                                                     "traits",
@@ -242,13 +242,14 @@ export default function CharacterForm() {
                                                 );
                                             }}
                                         >
-                                            - Remove
+                                            <CircleMinus /> <div>Remove</div>
                                         </button>
                                     </div>
                                 ))}
 
                                 <button
                                     type="button"
+                                    className="flex"
                                     onClick={() => {
                                         setValue("traits", [
                                             ...field.value,
@@ -256,7 +257,7 @@ export default function CharacterForm() {
                                         ]);
                                     }}
                                 >
-                                    + Additional Trait
+                                    <CirclePlus /> <div>Additional Trait</div>
                                 </button>
                             </div>
                         )}

@@ -1,4 +1,7 @@
-import { fetchUser, User } from "@/app/fetch/users";
+import { fetchUser } from "@/app/fetch/users";
+import { User } from "../Types/Models";
+import Badge from "@/components/CustomUi/Badge";
+import { BellPlus, UserPlus } from "lucide-react";
 
 type UserProfileSectionProps = {
     userId: Number;
@@ -8,8 +11,30 @@ export default async function UserProfileSection({
 }: UserProfileSectionProps) {
     const user = await fetchUser(userId.toString());
     return (
-        <div className="  ">
-            {user && <div className="text-3xl">@{user.name}</div>}
+        <div className="flex flex-col  ">
+            {user && (
+                <div className="text-3xl flex justify-between">
+                    <div className="flex space-x-2 ">
+                        <span>@{user.name}</span>
+                        <Badge>
+                            <span className="capitalize">
+                                {user.role.toLowerCase().split("_").join(" ")}
+                            </span>
+                        </Badge>
+                    </div>
+                    <div className="space-x-2 flex">
+                        <button className="button text-xl flex space-x-2">
+                            <BellPlus />
+                            <span>NOTIFICATIONS</span>
+                        </button>
+                        <button className="button text-xl flex space-x-2">
+                            {" "}
+                            <UserPlus />
+                            <span>FOLLOW</span>
+                        </button>
+                    </div>
+                </div>
+            )}
             <p className="">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
                 porttitor luctus mollis. Nunc in ante ut est blandit laoreet.
