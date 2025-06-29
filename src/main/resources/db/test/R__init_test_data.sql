@@ -24,3 +24,18 @@ INSERT INTO users (
         'LOCAL'
          );
 
+INSERT INTO articles
+    (title,
+    body,
+    created_at,
+    updated_at,
+    author_id
+    )
+VALUES (
+    'Example Title',
+    'Example Body Lorem ipsum...',
+     CURRENT_TIMESTAMP,
+     CURRENT_TIMESTAMP,
+    (SELECT id FROM users WHERE name = 'testuser')
+    );
+

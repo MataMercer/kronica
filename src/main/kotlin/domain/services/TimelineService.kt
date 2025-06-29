@@ -18,7 +18,7 @@ class TimelineService(
     fun createTimeline(timelineForm: CreateTimelineForm, currentUser: CurrentUser): Timeline? {
         validateForm(timelineForm)
         val timeline = Timeline(
-            name = timelineForm.name!!,
+            name = timelineForm.name,
             description = timelineForm.description!!,
             author = currentUser.toUser()
         )
@@ -34,8 +34,11 @@ class TimelineService(
     }
 
     private fun validateForm(timelineForm: CreateTimelineForm){
-        if (timelineForm.name.isNullOrEmpty()){
+        if (timelineForm.name.isEmpty()){
             throw BadRequestResponse("")
+        }
+        if(timelineRepository.findByName(timelineForm.name) != null){
+            throw BadRequestResponse("Timeline with this name already exists.")
         }
     }
 

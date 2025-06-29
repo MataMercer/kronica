@@ -1,15 +1,19 @@
 package controllers
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import createAuthClient
 import fixtures.Fixtures
 import getHostUrl
 import io.javalin.Javalin
+import io.javalin.json.JavalinJackson
+import io.javalin.json.toJsonString
 import io.javalin.testtools.HttpClient
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -17,6 +21,7 @@ import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
 import org.matamercer.domain.models.User
 import org.matamercer.setupApp
+import org.matamercer.web.CreateTimelineForm
 import org.matamercer.web.FileMetadataForm
 import org.matamercer.web.LoginRequestForm
 import java.io.File
@@ -123,6 +128,53 @@ class CharacterControllerTest {
         print(res.body?.string())
 
         assertThat(res.isSuccessful).isTrue()
+    }
+
+    private fun createTimeline(): Long {
+        val createTimelineForm = CreateTimelineForm(
+            name = fixtures.testTimeline.name,
+            description = fixtures.testTimeline.description
+        )
+
+        val requestBody = JavalinJackson().toJsonString(createTimelineForm).toRequestBody()
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/timelines")
+            .post(requestBody).build()
+        val res = authClient.okHttp.newCall(request).execute()
+        val mapper = ObjectMapper()
+        val body = res.body?.string()
+        val jsonRes = mapper.readTree(body)
+        val timelineId = jsonRes["id"].toString().toLong()
+        return timelineId
+    }
+
+    @Test
+    fun `when fetch characters by timeline returns ok`() {
+        val characterId = createCharacter()
+        val timelineId = createTimeline()
+
+        val characterId2 = createCharacter()
+
+        val articleRequestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("title", fixtures.testArticle.title)
+            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("characters", characterId.toString())
+            .addFormDataPart("timelineId", timelineId.toString())
+            .build()
+        val articleRequest = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles")
+            .post(articleRequestBody).build()
+        val articleRes = authClient.okHttp.newCall(articleRequest).execute()
+        assertThat(articleRes.isSuccessful).isTrue()
+
+        val findCharactersRequest = Request.Builder()
+            .url("${getHostUrl(app)}/api/characters?timeline_id=${1}")
+            .build()
+        val findCharactersResponse = unauthClient.okHttp.newCall(findCharactersRequest).execute()
+        print(findCharactersResponse.body?.string())
+
+        assertThat(findCharactersResponse.isSuccessful).isTrue()
     }
 
 

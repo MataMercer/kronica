@@ -139,7 +139,8 @@ CREATE TABLE timeline_entries
     CONSTRAINT pk_timeline_entries PRIMARY KEY (id),
     CONSTRAINT fk_timeline_id FOREIGN KEY (timeline_id) REFERENCES timelines (id) ON DELETE CASCADE,
     CONSTRAINT fk_article_id FOREIGN KEY (article_id) REFERENCES articles (id) ON DELETE CASCADE,
-    CONSTRAINT uc_timeline_id_index UNIQUE (timeline_id, timeline_index, article_id),
+    CONSTRAINT uc_timeline_id_all UNIQUE (timeline_id, timeline_index, article_id),
+    CONSTRAINT uc_timeline_id_article_id UNIQUE (timeline_id, article_id),
     CONSTRAINT uc_timeline_index UNIQUE (timeline_id, timeline_index) DEFERRABLE INITIALLY DEFERRED
 );
 
@@ -187,7 +188,7 @@ CREATE TABLE files_to_articles
     CONSTRAINT pk_files_to_articles PRIMARY KEY (id),
     CONSTRAINT fk_article_id FOREIGN KEY (article_id) REFERENCES articles (id) ON DELETE CASCADE,
     CONSTRAINT fk_file_id FOREIGN KEY (file_id) REFERENCES files (id) ON DELETE CASCADE,
-    CONSTRAINT uc_files_to_articles UNIQUE (file_id, article_id, index)
+    CONSTRAINT uc_files_to_articles UNIQUE (article_id, index) DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE characters

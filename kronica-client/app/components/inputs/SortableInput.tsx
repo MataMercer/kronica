@@ -1,11 +1,8 @@
 "use client";
-//this is just a test.
 
 import {
     DndContext,
-    KeyboardSensor,
     MouseSensor,
-    PointerSensor,
     TouchSensor,
     UniqueIdentifier,
     useSensor,
@@ -15,13 +12,10 @@ import {
     arrayMove,
     rectSortingStrategy,
     SortableContext,
-    sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
-import { ReactElement, useEffect, useState } from "react";
-import Draggable from "./Dnd/Draggable";
 import SortableItem from "./Dnd/SortableItem";
 import Droppable from "./Dnd/Droppable";
-import { Grip, Trash } from "lucide-react";
+import { Grip } from "lucide-react";
 
 interface InputTypeInterface {
     id: UniqueIdentifier;
@@ -39,6 +33,7 @@ interface Props<T> {
         item: T;
         list: T[];
         setList: (arg0: T[]) => void;
+        index: number;
     }>;
 }
 
@@ -49,9 +44,8 @@ export default function SortableInput<T extends InputTypeInterface>({
 }: Props<T>) {
     const mouseSensor = useSensor(MouseSensor);
     const touchSensor = useSensor(TouchSensor);
-    const keyboardSensor = useSensor(KeyboardSensor);
 
-    const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
+    const sensors = useSensors(mouseSensor, touchSensor);
 
     mouseSensor.sensor.activators = [
         {
@@ -98,35 +92,25 @@ export default function SortableInput<T extends InputTypeInterface>({
         }
     }
 
-    function handleRemoveClick(event: any) {
-        const index = parseInt(event?.target?.value);
-        setList(list.toSpliced(index, 1));
-    }
-
     const CardComponent = cardComponent;
     return (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <SortableContext items={list} strategy={rectSortingStrategy}>
                 <Droppable>
                     {list.map((item, index) => (
-                        <SortableItem key={item.id} id={item.id}>
-                            <div className="content-center p-10">
-                                <Grip />
-                            </div>
-                            <CardComponent
-                                item={item}
-                                setList={setList}
-                                list={list}
-                            />
-                            <button
-                                className="p-10 bg-black text-white"
-                                onClick={handleRemoveClick}
-                                type="button"
-                                value={index}
-                            >
-                                <Trash />
-                            </button>
-                        </SortableItem>
+                        <div key={item.id} className="my-1">
+                            <SortableItem id={item.id}>
+                                <div className="content-center p-10">
+                                    <Grip />
+                                </div>
+                                <CardComponent
+                                    item={item}
+                                    setList={setList}
+                                    list={list}
+                                    index={index}
+                                />
+                            </SortableItem>
+                        </div>
                     ))}
                 </Droppable>
             </SortableContext>

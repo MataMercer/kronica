@@ -13,4 +13,5 @@ interface StorageService {
     fun loadAsFile(filePath: Path): File
     fun loadAsFile(storageId: String, fileName: String): File
     fun generateStorageId():String
+    fun getFilePath(storageId: String, fileName: String):Path
 }

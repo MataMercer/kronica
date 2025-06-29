@@ -40,6 +40,13 @@ class FileModelService(
         return fileModels
     }
 
+    fun deleteFiles(fileList: List<FileModel>){
+       fileList.forEach{
+           val path = storageService.getFilePath(it.storageId, it.name)
+           storageService.delete(path)
+       }
+    }
+
 
     fun toDto(fileModel: FileModel): FileModelDto {
         return FileModelDto(

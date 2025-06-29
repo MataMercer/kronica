@@ -81,11 +81,45 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, articleId)
             it.setInt(++i, index)
+        }
+    }
+
+    fun updateJoinArticleIndex(conn: Connection, fileId: Long, articleId: Long, index: Int): Long {
+        val sql = """
+            UPDATE files_to_articles
+            SET index = ?
+            WHERE file_id = ? AND article_id = ?
+        """.trimIndent()
+
+        return mapper.updateForId(sql, conn) {
+            var i = 0
+            it.setInt(++i, index)
+            it.setLong(++i, fileId)
+            it.setLong(++i, articleId)
+        }
+    }
+
+    fun deleteJoinArticle(conn: Connection, fileId: Long, articleId: Long) {
+        val sql = """
+           WITH deleted AS (
+               DELETE FROM files_to_articles
+               WHERE file_id = ?
+           RETURNING index, article_id)
+           
+           UPDATE files_to_articles
+           SET index = index - 1
+           WHERE article_id = (SELECT article_id FROM deleted)
+           AND index > (SELECT index FROM deleted); 
+        """.trimIndent()
+
+        return mapper.update(sql, conn) {
+            var i = 0
+            it.setLong(++i, fileId)
         }
     }
 
@@ -100,7 +134,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
@@ -119,7 +153,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
@@ -129,7 +163,7 @@ class FileModelDao() {
 
 
     fun create(connection: Connection, fileModel: FileModel): Long {
-        return mapper.update(
+        return mapper.updateForId(
             """
                 INSERT INTO files
                     (
@@ -149,18 +183,29 @@ class FileModelDao() {
         }
     }
 
-    fun update(connection: Connection, fileModel: FileModel): Long {
-        return mapper.update(
+    fun updateCaption(connection: Connection, fileId: Long, caption: String): Long {
+        return mapper.updateForId(
             """
                 UPDATE files
                 SET
-                    name = ?
+                    caption = ?
                 WHERE files.id = ?
             """.trimIndent(), connection
         ) {
             var i = 0
-            it.setString(++i, fileModel.name)
-            fileModel.id?.let { id -> it.setLong(++i, id) }
+            it.setString(++i, caption)
+            it.setLong(++i, fileId)
+        }
+    }
+
+    fun deleteById(connection: Connection, id: Long) {
+        return mapper.update(
+            """
+                DELETE FROM files
+                WHERE files.id = ?
+            """.trimIndent(), connection
+        ) {
+            it.setLong(1, id)
         }
     }
 

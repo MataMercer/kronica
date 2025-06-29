@@ -55,13 +55,15 @@ export default function CharacterProfilePicture({
                             </button>
                         ))}
                     </div>
-                    <Image
-                        width={200}
-                        height={200}
-                        src={`http://localhost:7070/api/files/serve/${profilePicture.storageId}/${profilePicture.name}`}
-                        alt=""
-                        className="m-1"
-                    />
+                    {profilePictures.length > 1 && (
+                        <Image
+                            width={200}
+                            height={200}
+                            src={`http://localhost:7070/api/files/serve/${profilePicture.storageId}/${profilePicture.name}`}
+                            alt=""
+                            className="m-1"
+                        />
+                    )}
                 </div>
             }
         </>

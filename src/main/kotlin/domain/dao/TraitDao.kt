@@ -14,7 +14,7 @@ class TraitDao {
 
     }
 
-    fun createTrait(conn: Connection, name: String, value: String, characterId: Long): Long = mapper.update(
+    fun createTrait(conn: Connection, name: String, value: String, characterId: Long): Long = mapper.updateForId(
         """
             INSERT INTO traits
             (

@@ -24,7 +24,11 @@ export default function LogoutButton() {
     }
 
     return (
-        <button id="logout-button" onClick={() => onLogout()}>
+        <button
+            id="logout-button"
+            className="text-[blueviolet]"
+            onClick={() => onLogout()}
+        >
             LOGOUT
         </button>
     );

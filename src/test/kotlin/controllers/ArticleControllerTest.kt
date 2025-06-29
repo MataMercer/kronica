@@ -18,6 +18,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
+import org.matamercer.domain.models.ArticleDto
 import org.matamercer.domain.models.Notification
 import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
@@ -327,6 +328,44 @@ class ArticleControllerTest {
         val notificationsJsonRes = jsonUtils.getJsonFromResponse(notificationsRes)
         print(notificationsJsonRes.toString())
 
+    }
+
+   private fun getArticleById(articleId: Long):ArticleDto{
+
+       val mapper = jacksonObjectMapper()
+       val request = Request.Builder()
+           .url("${getHostUrl(app)}/api/articles/id/${articleId}")
+           .get()
+           .build()
+       val res = unauthClient.okHttp.newCall(request).execute()
+       assertThat(res.code == 200).isTrue()
+       return mapper.readValue(res.body?.string(), ArticleDto::class.java)
+   }
+
+    @Test
+    fun `when update article return ok response`(){
+        val articleId = createTestArticle(authClient)
+        val article = getArticleById(articleId)
+        val uploadFile = File("resources/test/polarbear.jpg")
+        val mapper = jacksonObjectMapper()
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("id", articleId.toString())
+            .addFormDataPart("title", fixtures.testArticle.title)
+            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(id = article.attachments[0].id, caption = "deleted", delete = true)))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 1, caption = "attach #1")))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(id = article.attachments[1].id, caption = "attach #2")))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 2, caption = "attach #3")))
+            .build()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles")
+            .put(requestBody).build()
+        val res = authClient.okHttp.newCall(request).execute()
+        assertThat(res.code == 200).isTrue()
     }
 
 

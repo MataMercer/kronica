@@ -18,11 +18,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 const onDelete = async (id: number) => {
-    const response = await fetch(`http://localhost:7070/api/articles/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-    });
+    const response = await fetch(
+        `http://localhost:7070/api/articles/id/${id}`,
+        {
+            method: "DELETE",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+        }
+    );
 
     refreshArticles();
 };
@@ -36,31 +39,32 @@ export default function ArticleThumb({ article }: Props) {
             className="flex flex-row justify-between border-black border-[1px] border-b-[5px] mt-1 mb-1 p-1"
             key={article.id}
         >
-            <div className="flex flex-col justify-between">
-                <h3 className="text-xl font-bold capitalize">
-                    <Link href={`/articles/${article.id}`}>
+            <div className="flex flex-col justify-between h-[300px]">
+                <Link href={`/articles/${article.id}`}>
+                    <h3 className="font-bold capitalize flex justify-center">
                         {article.title}
-                    </Link>
-                </h3>
-                {article.attachments.length > 0 && (
-                    <Image
-                        key={article.attachments[0].id}
-                        width={200}
-                        height={200}
-                        src={`http://localhost:7070/files/serve/${article.attachments[0].id}/${article.attachments[0].name}`}
-                        alt="article attachment"
-                        className="m-2"
-                    />
-                )}
-
+                    </h3>
+                    {article.attachments.length > 0 && (
+                        <Image
+                            key={article.attachments[0].id}
+                            width={170}
+                            height={170}
+                            src={`http://localhost:7070/api/files/serve/${article.attachments[0].storageId}/${article.attachments[0].name}`}
+                            alt="article attachment"
+                            className="m-2 object-scale-down max-w-full max-h-[170px] rounded"
+                        />
+                    )}
+                </Link>
                 <div className="flex flex-row justify-between">
                     <div className="flex-col">
-                        <div>{article.attachments.length} Images</div>
-                        <div>BY: {article.author.name}</div>
+                        <div className="text-sm flex ">
+                            {article.attachments.length} Images
+                        </div>
+                        <div>@{article.author.name}</div>
                     </div>
                 </div>
                 {article.characters.length > 0 && (
-                    <div>
+                    <div className="space-x-1">
                         Starring:{" "}
                         {article.characters.map((c) => (
                             <Link key={c.id} href={`/characters/${c.id}`}>
@@ -71,7 +75,7 @@ export default function ArticleThumb({ article }: Props) {
                 )}
                 <AuthProtection requiredRole={"AUTHENTICATED_USER"}>
                     <div className="flex justify-between space-x-1">
-                        <div className="flex space-x-1">
+                        <div className="flex space-x-1 items-center">
                             <button className="text-purple-500 hover:text-red-700">
                                 <Heart
                                     fill={article.youLiked ? "red" : "white"}
@@ -85,17 +89,30 @@ export default function ArticleThumb({ article }: Props) {
                                 <EllipsisVertical />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem>
-                                    <PencilIcon />
-                                    EDIT
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Trash />
-                                    DELETE
-                                </DropdownMenuItem>
+                                <AuthProtection
+                                    requiredRole={"AUTHENTICATED_USER"}
+                                    requiredOwnerId={article.author.id}
+                                >
+                                    <DropdownMenuItem>
+                                        <Link
+                                            href={`/articles/${article.id}/edit`}
+                                            className="flex items-center space-x-1"
+                                        >
+                                            <PencilIcon />
+                                            <span>EDIT</span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={() => onDelete(article.id)}
+                                    >
+                                        <Trash />
+                                        <span>DELETE</span>
+                                    </DropdownMenuItem>
+                                </AuthProtection>
+
                                 <DropdownMenuItem>
                                     <Flag />
-                                    REPORT
+                                    <span>REPORT</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

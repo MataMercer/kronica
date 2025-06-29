@@ -13,3 +13,7 @@ data class TimelineDto(
     val description: String,
     val author: User? = null,
 )
+data class TimelineThumbDto(
+    val id: Long,
+    val name: String,
+)

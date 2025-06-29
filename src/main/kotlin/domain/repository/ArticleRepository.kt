@@ -3,7 +3,9 @@ package org.matamercer.domain.repository
 import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.CharacterQuery
+import org.matamercer.domain.models.FileModel
 import org.matamercer.web.ArticleQuery
+import org.matamercer.web.FileMetadataForm
 import org.matamercer.web.PageQuery
 import org.matamercer.web.dto.Page
 import java.sql.Connection
@@ -60,6 +62,54 @@ class ArticleRepository(
             characterDao.joinArticle(conn, it, newArticleId)
         }
         return@wrap res?.let { aggregate(conn, it) }
+    }
+
+    fun update(article: Article, timelineId: Long?, characters: List<Long>,  fileMetadataList:List<FileMetadataForm>):Article = transact.wrap { conn ->
+        val articleId = articleDao.update(conn, article)
+        var foundArticle = articleDao.findById(conn, articleId) ?: throw IllegalStateException("Article not found after update")
+        foundArticle = aggregate(conn, foundArticle)
+
+        if (foundArticle.timeline?.id != timelineId){
+           if (foundArticle.timeline != null) {
+               timelineDao.deleteTimelineEntry(conn, articleId)
+           }
+            if (timelineId != null) {
+                timelineDao.createTimelineEntry(conn, timelineId, articleId)
+           }
+        }
+
+        //delete files that are marked for deletion first
+        fileMetadataList.filter { it.delete != null && it.delete }.forEach{
+            fileModelDao.deleteById(conn, it.id!!)
+            fileModelDao.deleteJoinArticle(conn, it.id, articleId)
+        }
+
+        //update existing files and create new ones
+        var newFileCounter = 0
+        fileMetadataList.filter { it.delete == null || !it.delete }.forEachIndexed { index, fileMetadata ->
+            if (fileMetadata.isExistingFile()) {
+                if (fileMetadata.caption != null){
+                    fileModelDao.updateCaption(conn, fileMetadata.id!!, fileMetadata.caption)
+                }
+                fileModelDao.updateJoinArticleIndex(conn, fileMetadata.id!!, articleId, index)
+            } else {
+                val newFile = fileModelDao.create(conn, article.attachments[newFileCounter] )
+                fileModelDao.joinArticle(conn, newFile, articleId, index)
+                newFileCounter++
+            }
+        }
+
+        //create new joins for characters and delete unused ones
+        characters.forEach { characterId ->
+            if (!foundArticle.characters.any { it.id == characterId }) {
+                characterDao.joinArticle(conn, characterId, articleId)
+            }
+        }
+        foundArticle.characters.filter { it.id !in characters }.forEach { character ->
+            characterDao.deleteJoinArticle(conn, character.id!!, articleId)
+        }
+
+        return@wrap aggregate(conn, article)
     }
 
     fun likeArticle(articleId: Long, userId: Long) = transact.wrap { conn ->

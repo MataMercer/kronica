@@ -11,8 +11,9 @@ import {
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import NotificationIndicator from "./NotificationIndicator";
 import useNotifications from "./hooks/useNotifications";
-import { Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import Alert from "@/components/CustomUi/Alert";
+import AuthProtection from "./auth/AuthProtection";
 
 export default function Navbar() {
     const {
@@ -24,24 +25,26 @@ export default function Navbar() {
 
     const { notifications, mutate: mutateNotifications } = useNotifications();
 
+    const websiteName = "KRONIKA";
     return (
-        <nav className="fixed w-[70vw] flex text-2xl min-h-[60px] justify-between bg-white border-b-[1px] border-black ">
-            <Link className="ml-10" href="/">
+        <nav className="fixed w-[70vw] flex text-2xl min-h-[60px] justify-between bg-white border-b-[1px] border-black items-center">
+            <Link className="ml-10 flex items-center space-x-2" href="/home">
                 <Image
                     alt="website logo"
                     src="/logo.png"
-                    width={150}
-                    height={75}
+                    width={50}
+                    height={50}
                 />
+                <span className="font-bold">{websiteName}</span>
             </Link>
-            <div>
-                <input className="bg-white m-2" />
+            <div className="items-center flex">
+                <input className="bg-white m-1" />
                 <button>
                     <Search />
                 </button>
             </div>
 
-            <ul className="flex justify-end space-x-5 pt-3 ml-10">
+            <ul className="flex justify-end space-x-5 ml-10 items-center">
                 {currentUser && currentUser.id ? (
                     <>
                         <DropdownMenu>
@@ -63,8 +66,16 @@ export default function Navbar() {
                         </DropdownMenu>
 
                         <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                @{currentUser.name.toUpperCase()}
+                            <DropdownMenuTrigger className="flex space-x-2 items-center ">
+                                <Image
+                                    className="rounded-full object-fill m-1"
+                                    alt="website logo"
+                                    src="/placeholder.jpg"
+                                    width={40}
+                                    height={40}
+                                />
+                                <span>@{currentUser.name.toUpperCase()}</span>
+                                <ChevronDown />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <Link href={`/users/${currentUser.id}`}>
@@ -72,6 +83,18 @@ export default function Navbar() {
                                         PROFILE
                                     </DropdownMenuItem>
                                 </Link>
+                                <Link href={`/users/${currentUser.id}`}>
+                                    <DropdownMenuItem className="">
+                                        SETTINGS
+                                    </DropdownMenuItem>
+                                </Link>
+                                <AuthProtection requiredRole="ADMIN">
+                                    <Link href={`/users/${currentUser.id}`}>
+                                        <DropdownMenuItem className="">
+                                            ADMINISTRATION
+                                        </DropdownMenuItem>
+                                    </Link>
+                                </AuthProtection>
                                 <DropdownMenuItem>
                                     <LogoutButton />
                                 </DropdownMenuItem>

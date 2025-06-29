@@ -49,7 +49,7 @@ class LikeDao {
         it.setLong(1, userId)
     }
 
-    fun likeArticle(conn: Connection, userId: Long, articleId: Long ): Long = mapper.update(
+    fun likeArticle(conn: Connection, userId: Long, articleId: Long ): Long = mapper.updateForId(
         """
             INSERT INTO article_likes
                 (
@@ -65,7 +65,7 @@ class LikeDao {
         it.setLong(++i, articleId)
     }
 
-    fun unlikeArticle(conn: Connection, userId: Long, articleId: Long): Long = mapper.update(
+    fun unlikeArticle(conn: Connection, userId: Long, articleId: Long): Long = mapper.updateForId(
         """
             DELETE FROM article_likes
             WHERE author_id = ? AND article_id = ?

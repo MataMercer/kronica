@@ -1,4 +1,4 @@
-import CharacterForm from "@/app/CharacterForm";
+import CharacterForm from "@/app/forms/CharacterForm";
 
 export default function CreateCharacterPage() {
     return (

@@ -17,7 +17,7 @@ class NotificationDao {
         )
     }
 
-    fun create(conn: Connection, notification: Notification): Long = mapper.update(
+    fun create(conn: Connection, notification: Notification): Long = mapper.updateForId(
         """
             INSERT INTO notifications
                 (

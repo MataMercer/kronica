@@ -91,12 +91,16 @@ class FileSystemStorageService() : StorageService {
         return loadAsFile(path)
     }
 
+    override fun getFilePath(storageId: String, fileName:String): Path {
+        return Paths.get("$storageId/$fileName")
+    }
+
     override fun delete(filePath: Path) {
         try {
-            FileUtils.delete(rootLocation.resolve(filePath).toAbsolutePath().parent.toFile())
+            FileUtils.deleteDirectory(rootLocation.resolve(filePath).toAbsolutePath().parent.toFile())
         } catch (e: IOException) {
             e.printStackTrace()
-            throw StorageFileNotFoundException("Could not read file: " + filePath.fileName, e)
+            throw StorageFileNotFoundException("Could not delete file: " + filePath.fileName, e)
         }
     }
 

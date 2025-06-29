@@ -53,7 +53,24 @@ class TimelineDao {
         it.setLong(1, id)
     }
 
-    fun create(conn: Connection, timeline: Timeline): Long = mapper.update(
+    fun findByName(conn: Connection, name: String): Timeline? = mapper.queryForObject(
+        """
+                SELECT
+                    timelines.id,
+                    timelines.name,
+                    timelines.description,
+                    users.id AS authors_id,
+                    users.name AS authors_name,
+                    users.role AS authors_role
+                FROM timelines
+                INNER JOIN users ON timelines.author_id=users.id
+                WHERE timelines.name = ?
+            """.trimIndent(), conn
+    ) {
+        it.setString(1, name)
+    }
+
+    fun create(conn: Connection, timeline: Timeline): Long = mapper.updateForId(
         """
                 INSERT INTO timelines
                     (
@@ -70,7 +87,8 @@ class TimelineDao {
         timeline.author?.id?.let { it1 -> it.setLong(++i, it1) }
     }
 
-    fun createTimelineEntry(conn: Connection, timelineId: Long, articleId: Long): Long = mapper.update(
+
+    fun createTimelineEntry(conn: Connection, timelineId: Long, articleId: Long): Long = mapper.updateForId(
         """
              INSERT INTO timeline_entries 
                  (timeline_id,
@@ -91,7 +109,45 @@ class TimelineDao {
         it.setLong(++i, articleId)
     }
 
-    fun updateTimelineOrder(conn: Connection, articleId: Long, index: Int): Long = mapper.update(
+
+//    //do not use without calling closegap afterwards
+//    fun deleteTimelineEntryByArticleId(conn: Connection, articleId: Long): Long = mapper.update(
+//        """
+//                DELETE FROM timeline_entries
+//                WHERE article_id = ?
+//            """.trimIndent(), conn
+//    ) {
+//        it.setLong(1, articleId)
+//    }
+//
+//    fun closeGap(conn: Connection, gapIndex: Long ,articleId: Long): Long = mapper.update(
+//        """
+//                UPDATE timeline_entries
+//                SET timeline_index = timeline_index - 1
+//                WHERE timeline_index > ?
+//            """.trimIndent(), conn
+//    ) {
+//        it.setLong(1, gapIndex)
+//    }
+
+    fun deleteTimelineEntry(conn: Connection, articleId: Long) = mapper.update(
+        """
+               WITH deleted AS (
+                   DELETE FROM timeline_entries
+                   WHERE article_id = ?
+               RETURNING timeline_index, timeline_id)
+               
+               UPDATE timeline_entries
+               SET timeline_index = timeline_index - 1
+               WHERE timeline_id = (SELECT timeline_id FROM deleted)
+               AND timeline_index > (SELECT timeline_index FROM deleted); 
+            """.trimIndent(), conn
+    ) {
+        it.setLong(1, articleId)
+    }
+
+
+    fun updateTimelineOrder(conn: Connection, articleId: Long, index: Int): Long = mapper.updateForId(
         """
                 UPDATE timeline_entries
                 SET timeline_index = ?

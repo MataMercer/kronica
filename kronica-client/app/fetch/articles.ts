@@ -5,6 +5,7 @@ import { Timeline } from "./timelines";
 
 export type Page<T> = {
   content: T[]
+  pages: number
 }
 
 export type Article = {
@@ -25,7 +26,7 @@ export type FileModel = {
   storageId: string;
 }
 
-export async function fetchAllArticles(authorId?: number, timelineId?: number) {
+export async function fetchAllArticles(authorId?: number, timelineId?: number, page?: number) {
   const urlSearchParams = new URLSearchParams({
   })
   if (authorId && authorId !== null) {
@@ -34,7 +35,12 @@ export async function fetchAllArticles(authorId?: number, timelineId?: number) {
   if (timelineId && timelineId !== null) {
     urlSearchParams.set("timeline_id", timelineId.toString())
   }
+  if (page && page !== null) {
+    urlSearchParams.set("page", (page - 1).toString())
+    // urlSearchParams.set("size", "20")
+  }
   const url = `http://localhost:7070/api/articles?${urlSearchParams}`;
+  console.log(url)
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",

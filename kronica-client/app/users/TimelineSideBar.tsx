@@ -17,7 +17,7 @@ export default async function TimelineSideBar({
                 <Link
                     href={`/users/${authorId}`}
                     key={0}
-                    className={`p-2 border-2 m-1 border-black text-xl border-b-4 
+                    className={`p-2 border-[1px] m-1 border-black text-xl border-b-4 
                 ${!!!activeTimelineId && "bg-[#8a2be2] text-white font-bold"}
                 `}
                 >
@@ -50,7 +50,7 @@ function TimelineButton({ timeline, authorId, active }: TimelineButtonProps) {
         <Link
             href={`/users/${authorId}/${timeline.id}`}
             key={timeline.id}
-            className={`p-2 border-2 m-1 border-black text-xl border-b-4 
+            className={`p-2 border-[1px] m-1 border-black text-xl border-b-4 
                 ${active && "bg-[#8a2be2] text-white  font-bold"}
                 `}
         >

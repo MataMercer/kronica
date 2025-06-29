@@ -197,7 +197,7 @@ class ArticleDao {
                 VALUES (?, ?, ?, ?, ?)
                 """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setString(++i, article.title)
             it.setString(++i, article.body)
@@ -252,8 +252,21 @@ class ArticleDao {
     }
 
 
-    fun update(article: Article): Long? {
-        TODO("shietttttttt xd")
+    fun update(conn: Connection, article: Article): Long {
+        val sql = """
+            UPDATE articles
+            SET title = ?,
+                body = ?,
+                updated_at = ?
+            WHERE id = ?
+        """.trimIndent()
+        return mapper.updateForId(sql, conn) {
+            var i = 0
+            it.setString(++i, article.title)
+            it.setString(++i, article.body)
+            it.setTimestamp(++i, genTimestamp())
+            it.setLong(++i, article.id ?: throw IllegalArgumentException("Article ID cannot be null"))
+        }
     }
 
     fun deleteById(conn: Connection, id: Long) {

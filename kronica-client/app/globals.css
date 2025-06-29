@@ -74,11 +74,15 @@
         @apply bg-background text-foreground;
     }
 }
+body{
+    font-family: 'helvetica', sans-serif;
+}
 
 .button {
     border: 1px solid black;
     padding: 5px 10px 5px;
     color: blueviolet;
+    text-transform: capitalize;
 }
 .button:hover {
     background-color: black;
@@ -91,6 +95,14 @@ select {
     border: 1px solid black;
     padding: 5px 10px 5px;
     background-color: transparent;
+}
+
+.subheading {
+    /* //text-3xl border-black border-b-[1px] mb-5 */
+    font-size: x-large;
+    font-weight: 600;
+    border-bottom: 1px solid black;
+    margin-bottom: 5px;
 }
 
 a:hover,

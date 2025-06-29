@@ -111,7 +111,7 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
         return list
     }
 
-    fun update(sql: String, conn: Connection, statementSetter: (st: PreparedStatement) -> Unit): Long{
+    fun updateForId(sql: String, conn: Connection, statementSetter: (st: PreparedStatement) -> Unit): Long{
         val st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         st.apply(statementSetter)
         st.executeUpdate()
@@ -126,6 +126,13 @@ class RowMapper<T>(private val mapper:(resultSet: ResultSet)->T){
             throw SQLException("Id not found")
         }
         return id
+    }
+
+    fun update(sql: String, conn: Connection, statementSetter: (st: PreparedStatement) -> Unit){
+        val st = conn.prepareStatement(sql)
+        st.apply(statementSetter)
+        st.executeUpdate()
+        st.close()
     }
 }
 

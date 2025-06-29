@@ -2,7 +2,7 @@ import { MouseEvent, useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { DndContext, UniqueIdentifier } from "@dnd-kit/core";
 import SortableInput from "./SortableInput";
-import { FilePlus } from "lucide-react";
+import { File, FilePlus, Trash, Undo, Upload } from "lucide-react";
 import { metadata } from "@/app/layout";
 
 export type FileInput = {
@@ -38,12 +38,19 @@ type UploadThumbProps = {
     item: FileInput;
     setList: (arg0: FileInput[]) => void;
     list: FileInput[];
+    index: number;
 };
 
-function UploadThumb({ item, list, setList }: UploadThumbProps) {
+function UploadThumb({ item, list, setList, index }: UploadThumbProps) {
     const { data, url, metadata, id } = item;
+
+    function handleRemoveClick(event: any) {
+        const index = parseInt(event?.target?.value);
+        setList(list.toSpliced(index, 1));
+    }
+
     return (
-        <div className="p-2 flex">
+        <div className={`p-0 flex ${metadata.delete && "opacity-25"}`}>
             {" "}
             <img className="w-10" src={url} alt="uploaded" />
             <div className="flex-col">
@@ -53,7 +60,10 @@ function UploadThumb({ item, list, setList }: UploadThumbProps) {
                         New file
                     </div>
                 ) : (
-                    <div className="flex">Existing file</div>
+                    <div className="flex">
+                        <File />
+                        Existing File
+                    </div>
                 )}
                 <div>File Name: {data?.name}</div>
                 <div>File Size: {data && Math.round(data.size / 1000)} KB</div>
@@ -63,18 +73,30 @@ function UploadThumb({ item, list, setList }: UploadThumbProps) {
                         value={metadata.caption}
                         onChange={(e) => {
                             const newCaption = e.target.value;
-
                             const l = list;
-                            l.forEach((it) => {
-                                if (it.id === id) {
-                                    it.metadata.caption = newCaption;
-                                }
-                            });
+                            l[index].metadata.caption = newCaption;
                             setList(l);
                         }}
                     />
                 </label>
             </div>
+            <button
+                className="p-10 bg-black text-white"
+                type="button"
+                value={index}
+                onClick={(e) => {
+                    console.log("wtf");
+                    if (item.metadata.id) {
+                        const l = list;
+                        l[index].metadata.delete = !l[index].metadata.delete;
+                        setList(l);
+                    } else {
+                        handleRemoveClick(e);
+                    }
+                }}
+            >
+                {metadata.delete ? <Undo /> : <Trash />}
+            </button>
         </div>
     );
 }
@@ -93,7 +115,6 @@ function UploadInput({
 
     const [increm, setIncrem] = useState(0);
 
-    console.log(fileInputs);
     const processFile = (file: File) => {
         const reader = new FileReader();
 
@@ -148,7 +169,10 @@ function UploadInput({
 
     return (
         <>
-            <div {...getRootProps()}>
+            <div
+                {...getRootProps()}
+                className="flex flex-col items-center border-black border-[1px] p-2"
+            >
                 <input id={id} {...getInputProps()} />
 
                 {isSingleFile ? (
@@ -161,6 +185,7 @@ function UploadInput({
                         files.]
                     </p>
                 )}
+                <Upload className="text-4xl" size={48} />
             </div>
             <SortableInput<FileInput>
                 list={fileInputs}

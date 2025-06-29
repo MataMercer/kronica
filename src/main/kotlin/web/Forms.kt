@@ -35,6 +35,16 @@ data class CreateArticleForm(
     val characters: List<Long> = listOf()
 )
 
+data class UpdateArticleForm(
+    val id: Long,
+    val title: String? = null,
+    val body: String? = null,
+    val timelineId: Long? = null,
+    val uploadedAttachments: List<UploadedFile> = listOf(),
+    val uploadedAttachmentsMetadata: List<FileMetadataForm> = listOf(),
+    val characters: List<Long> = listOf()
+)
+
 data class CreateTimelineForm(
     val name: String,
     val description: String?
@@ -58,6 +68,8 @@ data class CreateCharacterForm(
     val uploadedProfilePictures: List<UploadedFile> = listOf(),
     val profilePicturesMetaData: List<FileMetadataForm> = listOf(),
 )
+
+
 
 data class FileMetadataForm(
     val id: Long? = null,

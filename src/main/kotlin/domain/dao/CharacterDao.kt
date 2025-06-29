@@ -58,17 +58,21 @@ class CharacterDao {
                 ON characters.author_id=users.id
             LEFT JOIN articles_to_characters
                 ON characters.id=articles_to_characters.character_id
+            LEFT JOIN timeline_entries 
+                ON articles_to_characters.article_id=timeline_entries.article_id 
             WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
-            AND ${if (query?.articleId != null) "articles_to_characters.article_id = ?" else "TRUE"} 
+            AND ${if (query?.articleId != null) "articles_to_characters.article_id = ?" else "TRUE"}
+            AND ${if (query?.timelineId != null) "timeline_entries.timeline_id = ?" else "TRUE"}
             """.trimIndent()
         return mapper.queryForObjectPage(sql, conn, pageQuery) {
             var i = 0
             query?.authorId?.let { it1 -> it.setLong(++i, it1) }
             query?.articleId?.let { it1 -> it.setLong(++i, it1) }
+            query?.timelineId?.let { it1 -> it.setLong(++i, it1) }
         }
     }
 
-    fun create(conn: Connection, character: Character): Long = mapper.update(
+    fun create(conn: Connection, character: Character): Long = mapper.updateForId(
         """
                 INSERT INTO characters
                     (name,
@@ -108,7 +112,20 @@ class CharacterDao {
             VALUES (?, ?)
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
+            var i = 0
+            it.setLong(++i, articleId)
+            it.setLong(++i, characterId)
+        }
+    }
+
+    fun deleteJoinArticle(conn: Connection, characterId: Long, articleId: Long): Long {
+        val sql = """
+            DELETE FROM articles_to_characters
+            WHERE article_id = ? AND character_id = ?
+        """.trimIndent()
+
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setLong(++i, articleId)
             it.setLong(++i, characterId)

@@ -69,3 +69,20 @@ export function useFollowedArticles() {
     mutate
   };
 }
+
+const fetcher = (url: string) => fetch(url, {
+  method: "GET",
+  credentials: "include",
+  next: { tags: ['article'] }
+}).then(res => res.json())
+export function useArticle(id: string) {
+  const { data, mutate, error, isLoading } = useSWR(`http://localhost:7070/api/articles/id/${id}`, fetcher)
+
+  return {
+    article: data as Article,
+    mutate,
+    isLoading,
+    isError: error
+  }
+
+}

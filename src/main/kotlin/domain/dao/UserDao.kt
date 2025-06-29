@@ -72,7 +72,7 @@ class UserDao {
     }
 
 
-    fun create(conn: Connection, user: User, profileId: Long): Long = mapper.update(
+    fun create(conn: Connection, user: User, profileId: Long): Long = mapper.updateForId(
         """
                 INSERT INTO users 
                     (name,
@@ -110,7 +110,7 @@ class UserDao {
               VALUES (?)
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             it.setString(1, profile.description)
         }
     }
@@ -122,7 +122,7 @@ class UserDao {
               VALUES (?, ?)
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setString(++i, socialMediaLink.url)
             it.setString(++i, socialMediaLink.platform)
@@ -139,7 +139,7 @@ class UserDao {
                 role = ?
             WHERE id = ?
         """.trimIndent()
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setString(++i, user.name)
             it.setString(++i, user.email)
@@ -156,7 +156,7 @@ class UserDao {
                 avatar_id = ?
             WHERE id = ?
         """.trimIndent()
-        return mapper.update(sql, conn) {
+        return mapper.updateForId(sql, conn) {
             var i = 0
             it.setString(++i, profile.description)
             profile.avatar?.id?.let { it1 -> it.setLong(++i, it1) }

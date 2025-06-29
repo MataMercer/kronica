@@ -26,6 +26,11 @@ class TimelineRepository(
         return res
     }
 
+    fun findByName(name: String): Timeline? = dataSource.connection.use { conn ->
+        val res = timelineDao.findByName(conn, name)
+        return res
+    }
+
     fun updateOrder(timelineId: Long, order: Array<Long>) = transactionManager.wrap { conn ->
         order.forEachIndexed { index, id ->
             timelineDao.updateTimelineOrder(conn, id, index)
