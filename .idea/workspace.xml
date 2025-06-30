@@ -4,71 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="-auth protection accepts role reqs&#10;-navbar refreshes properly on logout.&#10;-pagination on character and article queries.&#10;-wip likes">
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/articles/[id]/edit/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/articles/[id]/page/[page]/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/articles/create/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/forms/ArticleForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/forms/CharacterForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/forms/LoginForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/forms/TimelineForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/home/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/timelines/create/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/public/placeholder.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CommentDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/CharacterForm.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateArticleButton.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/CreateTimelineButton.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/LogoutButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/LogoutButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/articles/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/articles/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/auth/AuthProtection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/auth/AuthProtection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/characters/[id]/CharacterProfilePicture.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/characters/[id]/CharacterProfilePicture.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/characters/create/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/characters/create/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/components/articles/ArticleThumb.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/components/articles/ArticleThumb.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/components/inputs/SortableInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/SortableInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/components/inputs/UploadInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/components/inputs/UploadInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/characters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/characters.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useArticles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useArticles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/ArticlesDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/ArticlesDisplay.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/TimelineSideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/TimelineSideBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/UserProfileSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/UserProfileSection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/[...slug]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/[...slug]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/public/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/public/logo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileModelDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileModelDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/LikeDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/LikeDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/NotificationDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/NotificationDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/SqlUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/SqlUtils.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TraitDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TraitDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/UserDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/UserDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Tag.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Tag.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Timeline.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Timeline.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileModelService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileModelService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/TimelineService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/TimelineService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/storage/StorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/test/R__init_test_data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/test/R__init_test_data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/dao/ArticleDaoUnitTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/dao/ArticleDaoUnitTest.kt" afterDir="false" />
-    </list>
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="update article works mostly..." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,102 +75,102 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Docker.docker-compose.yml.test_db: Compose Deployment.executor": "Run",
-    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
-    "JUnit.ArticleControllerTest.executor": "Run",
-    "JUnit.ArticleControllerTest.when A follows B or A unfollows B, return the correct articles when queried by following.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article return 200 response.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article returns ok.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article with Timeline returns ok.executor": "Run",
-    "JUnit.ArticleControllerTest.when Create Article without attachments returns ok.executor": "Run",
-    "JUnit.ArticleControllerTest.when create article with empty form return bad response.executor": "Run",
-    "JUnit.ArticleControllerTest.when create articles with characters return good response.executor": "Run",
-    "JUnit.ArticleControllerTest.when filtering articles by timeline, return the correct ones.executor": "Run",
-    "JUnit.ArticleControllerTest.when get article by id return ok response.executor": "Run",
-    "JUnit.ArticleControllerTest.when get by following return ok response.executor": "Run",
-    "JUnit.ArticleControllerTest.when update article return ok response.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.When findById, return the article.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.executor": "Coverage",
-    "JUnit.ArticleServiceUnitTest.whenCreateArticleReturnId.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenCreateArticle_returnId.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenDeleteByIdWithWrongAuthor_throwForbiddenResponse.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenDeleteById_delete.executor": "Run",
-    "JUnit.ArticleServiceUnitTest.whenFindById_returnArticle.executor": "Run",
-    "JUnit.CharacterControllerTest.executor": "Run",
-    "JUnit.CharacterControllerTest.when Create character returns ok.executor": "Run",
-    "JUnit.CharacterControllerTest.when fetch characters by timeline returns ok.executor": "Run",
-    "JUnit.CharacterControllerTest.when fetch characters by user returns ok.executor": "Debug",
-    "JUnit.TimelineControllerTest.executor": "Run",
-    "JUnit.TimelineControllerTest.when Create Timeline returns ok.executor": "Run",
-    "JUnit.TimelineControllerTest.when get timelines by author returns ok.executor": "Run",
-    "JUnit.TimelineControllerTest.when update article position backwards, return ok.executor": "Run",
-    "JUnit.TimelineControllerTest.when update article position forwards, return ok.executor": "Run",
-    "JUnit.TimelineControllerTest.when update article position, return ok.executor": "Run",
-    "JUnit.UserControllerTest.Following another user returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.Following another user that is already followed returns bad response.executor": "Run",
-    "JUnit.UserControllerTest.Following yourself returns bad response.executor": "Run",
-    "JUnit.UserControllerTest.GET to fetch users returns list of users.executor": "Run",
-    "JUnit.UserControllerTest.GET to fetch users returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.Login returns 200.executor": "Run",
-    "JUnit.UserControllerTest.Login returns 300.executor": "Run",
-    "JUnit.UserControllerTest.Login with 200.executor": "Run",
-    "JUnit.UserControllerTest.Login with correct credentials returns ok.executor": "Run",
-    "JUnit.UserControllerTest.Login with wrong credentials returns unauthorized.executor": "Run",
-    "JUnit.UserControllerTest.Logout returns ok.executor": "Run",
-    "JUnit.UserControllerTest.Unfollowing another user returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.When logged in getCurrentuser returns ok response.executor": "Debug",
-    "JUnit.UserControllerTest.When logged out getCurrentuser returns bad response.executor": "Run",
-    "JUnit.UserControllerTest.currentuser returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.executor": "Run",
-    "JUnit.UserControllerTest.find 1 user returns ok response.executor": "Run",
-    "JUnit.UserControllerTest.logout return ok and successfully unauths user.executor": "Run",
-    "JUnit.UserControllerTest.logout return ok and successfully.executor": "Run",
-    "JUnit.UserControllerTest.logout return ok.executor": "Run",
-    "JUnit.UserControllerTest.logout returns ok.executor": "Run",
-    "JUnit.UserControllerTest.testv2.executor": "Run",
-    "JUnit.kotlin in WikiApi.executor": "Coverage",
-    "Kotlin.MainKt.executor": "Debug",
-    "Maven.WikiApi [clean].executor": "Run",
-    "Maven.WikiApi [flyway:baseline].executor": "Run",
-    "Maven.WikiApi [flyway:clean].executor": "Run",
-    "Maven.WikiApi [flyway:migrate].executor": "Run",
-    "Maven.WikiApi [flyway:undo].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/mercer/dev/kronica",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.build.executor": "Run",
-    "npm.dev.executor": "Run",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "ts.external.directory.path": "C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Docker.docker-compose.yml.test_db: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when A follows B or A unfollows B, return the correct articles when queried by following.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when Create Article return 200 response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when Create Article returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when Create Article with Timeline returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when Create Article without attachments returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when create article with empty form return bad response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when create articles with characters return good response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when filtering articles by timeline, return the correct ones.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when get article by id return ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when get by following return ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleControllerTest.when update article return ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.When findById, return the article.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenCreateArticleReturnId.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenCreateArticle_returnId.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenDeleteByIdWithWrongAuthor_throwForbiddenResponse.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenDeleteById_delete.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ArticleServiceUnitTest.whenFindById_returnArticle.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CharacterControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CharacterControllerTest.when Create character returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CharacterControllerTest.when fetch characters by timeline returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CharacterControllerTest.when fetch characters by user returns ok.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.TimelineControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TimelineControllerTest.when Create Timeline returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TimelineControllerTest.when get timelines by author returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TimelineControllerTest.when update article position backwards, return ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TimelineControllerTest.when update article position forwards, return ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TimelineControllerTest.when update article position, return ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Following another user returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Following another user that is already followed returns bad response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Following yourself returns bad response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.GET to fetch users returns list of users.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.GET to fetch users returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login returns 200.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login returns 300.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login with 200.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login with correct credentials returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Login with wrong credentials returns unauthorized.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Logout returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.Unfollowing another user returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.When logged in getCurrentuser returns ok response.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.UserControllerTest.When logged out getCurrentuser returns bad response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.currentuser returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.find 1 user returns ok response.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout return ok and successfully unauths user.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout return ok and successfully.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout return ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.logout returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.testv2.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.kotlin in WikiApi.executor&quot;: &quot;Coverage&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Debug&quot;,
+    &quot;Maven.WikiApi [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:baseline].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:migrate].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.WikiApi [flyway:undo].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mercer/dev/kronica&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "kotlin"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;kotlin&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Mercer\dev\WikiApp\src\main\jte" />
@@ -512,7 +448,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750585680975</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="update article works mostly...">
+      <option name="closed" value="true" />
+      <created>1751192783300</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1751192783300</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -544,7 +488,8 @@
     <MESSAGE value="ignore env attemtp 1" />
     <MESSAGE value="attempt 2" />
     <MESSAGE value="-auth protection accepts role reqs&#10;-navbar refreshes properly on logout.&#10;-pagination on character and article queries.&#10;-wip likes" />
-    <option name="LAST_COMMIT_MESSAGE" value="-auth protection accepts role reqs&#10;-navbar refreshes properly on logout.&#10;-pagination on character and article queries.&#10;-wip likes" />
+    <MESSAGE value="update article works mostly..." />
+    <option name="LAST_COMMIT_MESSAGE" value="update article works mostly..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
