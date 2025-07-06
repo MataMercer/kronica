@@ -25,7 +25,7 @@ export async function fetchAllTimelines(authorId: number) {
   }
 }
 
-export default function useTimelines(authorId?: number) {
+export function useTimelines(authorId?: number) {
   const { data, mutate, error } = useSWR(authorId ? ["useTimelines", authorId] : null, ([URL, authorId]) => fetchAllTimelines(authorId));
 
   const loading = !data && !error;
@@ -34,4 +34,20 @@ export default function useTimelines(authorId?: number) {
     timelines: data,
     mutate
   };
+}
+
+const fetcher = (url: string) => fetch(url, {
+  method: "GET",
+  credentials: "include",
+  next: { tags: ['timeline'] }
+}).then(res => res.json())
+export function useTimeline(id: string){
+  const { data, mutate, error, isLoading } = useSWR(`http://localhost:7070/api/timelines/id/${id}`, fetcher)
+
+  return {
+    timeline: data as Timeline | undefined,
+    mutate,
+    isLoading,
+    isError: error,
+  }
 }

@@ -1,27 +1,25 @@
 package org.matamercer.web.controllers
 
+import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
-import org.matamercer.domain.models.CharacterDto
 import org.matamercer.domain.models.CharacterQuery
 import org.matamercer.domain.services.CharacterService
-import org.matamercer.domain.services.TimelineService
 import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateCharacterForm
 import org.matamercer.web.FileMetadataForm
-import org.matamercer.web.dto.Page
+import org.matamercer.web.UpdateCharacterForm
 
 @Controller("/api/characters")
 class CharacterController(
     private val characterService: CharacterService,
-    private val timelineService: TimelineService
 ) {
 
-    @Route(HandlerType.GET, "/{id}")
+    @Route(HandlerType.GET, "/id/{id}")
     fun getCharacter(ctx: Context) {
-        val foundArticle = characterService.getById(ctx.pathParam("id").toLong())
-        ctx.json(foundArticle)
+        val character = characterService.getById(ctx.pathParam("id").toLong())
+        ctx.json(characterService.toDto(character))
     }
 
     @Route(HandlerType.GET, "/")
@@ -55,13 +53,8 @@ class CharacterController(
             body = ctx.formParam("body"),
             uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
             uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
-            profilePicturesMetaData = ctx.formParamsAsClass("uploadedProfilePicturesMetadata", FileMetadataForm::class.java).get(),
+            profilePicturesMetadata = ctx.formParamsAsClass("uploadedProfilePicturesMetadata", FileMetadataForm::class.java).get(),
             uploadedAttachmentsMetadata = ctx.formParamsAsClass("uploadedAttachmentsMetadata", FileMetadataForm::class.java).get(),
-            gender = ctx.formParam("gender"),
-            age = ctx.formParam("age")?.toInt(),
-            birthday = ctx.formParam("birthday"),
-            firstSeen = ctx.formParam("firstSeen"),
-            status = ctx.formParam("status"),
             traits = ctx.formParam("traits")?.split(",") ?: emptyList()
         )
 //        ctx.uploadedFileMap()
@@ -71,5 +64,23 @@ class CharacterController(
         val a = characterService.getById(characterId)
         val dto = characterService.toDto(a)
         ctx.json(dto)
+    }
+
+    @Route(HandlerType.PUT, "/{id}")
+    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    fun updateCharacter(ctx: Context) {
+        val updateCharacterForm = UpdateCharacterForm(
+            id = ctx.formParam("id")?.toLong() ?: throw BadRequestResponse("Character ID is required"),
+            name = ctx.formParam("name"),
+            body = ctx.formParam("body"),
+            uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
+            uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
+            profilePicturesMetadata = ctx.formParamsAsClass("uploadedProfilePicturesMetadata", FileMetadataForm::class.java).get(),
+            uploadedAttachmentsMetadata = ctx.formParamsAsClass("uploadedAttachmentsMetadata", FileMetadataForm::class.java).get(),
+            traits = ctx.formParam("traits")?.split(",") ?: emptyList()
+        )
+        val author = getCurrentUser(ctx)
+        characterService.update(updateCharacterForm, author)
+        ctx.status(204) // No Content
     }
 }

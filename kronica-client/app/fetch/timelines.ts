@@ -1,13 +1,6 @@
 
 import { cookies } from "next/headers";
-import { User } from "../Types/Models";
-
-export type Timeline = {
-  id: number;
-  name: string;
-  description: string;
-  author: User;
-}
+import {Timeline} from "../Types/Models";
 
 export async function fetchAllTimelines(authorId: number) {
   const urlSearchParams = new URLSearchParams({
@@ -34,7 +27,7 @@ export async function fetchAllTimelines(authorId: number) {
 }
 
 export async function fetchTimeline(id: string) {
-  const url = `http://localhost:7070/api/timelines/${id}`;
+  const url = `http://localhost:7070/api/timelines/id/${id}`;
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",

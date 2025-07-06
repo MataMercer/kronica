@@ -87,6 +87,21 @@ class TimelineDao {
         timeline.author?.id?.let { it1 -> it.setLong(++i, it1) }
     }
 
+    fun update(conn: Connection, timeline: Timeline): Long = mapper.updateForId(
+        """
+                UPDATE timelines
+                SET name = ?,
+                    description = ?
+                WHERE id = ?
+            """.trimIndent(), conn
+    ) {
+        var i = 0
+        it.setString(++i, timeline.name)
+        it.setString(++i, timeline.description)
+        if (timeline.id == null) throw IllegalArgumentException("Timeline ID cannot be null")
+        it.setLong(++i, timeline.id)
+    }
+
 
     fun createTimelineEntry(conn: Connection, timelineId: Long, articleId: Long): Long = mapper.updateForId(
         """

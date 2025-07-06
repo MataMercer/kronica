@@ -1,9 +1,9 @@
 "use client";
-import { FileModel } from "@/app/fetch/articles";
 import clsx from "clsx";
 import Image from "next/image";
 import { it } from "node:test";
 import { useState } from "react";
+import {FileModel} from "@/app/Types/Models";
 
 type CharacterProfilePictureProps = {
     profilePictures: FileModel[];
@@ -51,11 +51,11 @@ export default function CharacterProfilePicture({
                                     setCurrentIndex(e.target.value);
                                 }}
                             >
-                                {it.caption}
+                                {it.caption || `Picture ${index + 1}`}
                             </button>
                         ))}
                     </div>
-                    {profilePictures.length > 1 && (
+                    {profilePictures.length > 0 && (
                         <Image
                             width={200}
                             height={200}

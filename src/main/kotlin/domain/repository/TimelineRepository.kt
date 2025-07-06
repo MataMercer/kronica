@@ -31,6 +31,12 @@ class TimelineRepository(
         return res
     }
 
+    fun update(timeline: Timeline): Timeline? = transactionManager.wrap { conn ->
+        val updatedId = timelineDao.update(conn, timeline)
+        val res = timelineDao.findById(conn, updatedId)
+        return@wrap res
+    }
+
     fun updateOrder(timelineId: Long, order: Array<Long>) = transactionManager.wrap { conn ->
         order.forEachIndexed { index, id ->
             timelineDao.updateTimelineOrder(conn, id, index)

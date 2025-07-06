@@ -1,5 +1,6 @@
 package org.matamercer.domain.services
 
+import io.javalin.http.BadRequestResponse
 import io.javalin.http.InternalServerErrorResponse
 import io.javalin.http.UploadedFile
 import org.matamercer.domain.models.FileModel
@@ -55,4 +56,25 @@ class FileModelService(
             storageId = fileModel.storageId,
         )
     }
+
+    fun validateFileMetadataList(fileMetadata: List<FileMetadataForm>,
+                             uploadedFiles: List<UploadedFile>, existingFiles: List<FileModel>) {
+        val newMetadataCount = fileMetadata.filter{!it.isExistingFile()}.size
+        if (uploadedFiles.size != newMetadataCount){
+            throw BadRequestResponse("Each uploaded attachment must have a corresponding metadata entry.")
+        }
+        val existingMetadata = fileMetadata.filter{it.isExistingFile()}
+        val existingMetadataCount = existingMetadata.size
+        if (existingMetadata.map { it.id }.toSet().size != existingMetadataCount){
+            throw BadRequestResponse("Each metadata entry that has an existing id must be unique.")
+        }
+
+        val existingFilesId = fileMetadata.filter { it.isExistingFile() }.map { it.id }.toSet()
+        val originalFiles = existingFiles.map { it.id }.toSet()
+        if (existingFilesId != originalFiles){
+            throw BadRequestResponse("Each existing file attached to the entity must have a corresponding metadata entry with the same id.")
+        }
+    }
+
+
 }

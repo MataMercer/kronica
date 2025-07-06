@@ -157,7 +157,6 @@ class TimelineControllerTest {
         val articleId2 = createTestArticle(timelineId)
         val articleId3 = createTestArticle(timelineId)
 
-
         val updateTimelineOrderForm = UpdateTimelineOrderForm(
            listOf(3, 1, 2)
         )

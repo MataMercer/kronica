@@ -19,7 +19,12 @@ class ArticleDao {
             timeline = Timeline(
                 id = timelineId,
                 name = rs.getString("timelines_name"),
-                description = rs.getString("timelines_description")
+                description = rs.getString("timelines_description"),
+                author = User(
+                    id = rs.getLong("authors_id"),
+                    name = rs.getString("authors_name"),
+                    role = enumValueOf(rs.getString("authors_role"))
+                )
             )
         }
 

@@ -1,33 +1,17 @@
-import { cookies } from "next/headers";
-import { FileModel, Page } from "./articles";
-import { User } from "../Types/Models";
+import {cookies} from "next/headers";
+import {Page} from "./articles";
+import {Character} from "../Types/Models";
 
-
-export type Character = {
-  id: number;
-  age: number;
-  status: string;
-  gender: string;
-  firstSeen: string;
-  birthday: string;
-  name: string;
-  body: string;
-  author: User;
-  attachments: FileModel[];
-  profilePictures: FileModel[];
-  traits: {};
-}
 
 export async function fetchCharacter(id: string) {
-  const url = `http://localhost:7070/api/characters/${id}`;
+  const url = `http://localhost:7070/api/characters/id/${id}`;
   const res = await fetch(url, {
     method: "GET",
     credentials: "include",
     headers: { Cookie: (await cookies()).toString() },
   });
   if (!res.ok) {
-    const error = new Error("Failed to get an character");
-    throw error
+    throw new Error("Failed to get an character")
   }
 
   if (res.ok) {
@@ -41,10 +25,10 @@ export async function fetchCharacters(
   timelineId?: number
 ) {
   const urlSearchParams = new URLSearchParams({});
-  if (authorId && authorId !== null) {
+  if (authorId) {
     urlSearchParams.set("author_id", authorId.toString());
   }
-  if (timelineId && timelineId !== null) {
+  if (timelineId) {
     urlSearchParams.set("timeline_id", timelineId.toString());
   }
   const url = `http://localhost:7070/api/characters?${urlSearchParams}`;
@@ -54,8 +38,7 @@ export async function fetchCharacters(
     headers: { Cookie: (await cookies()).toString() },
   });
   if (!res.ok) {
-    const error = new Error("Failed to fetch characters");
-    throw error;
+    throw new Error("Failed to fetch characters");
   }
 
   if (res.ok) {

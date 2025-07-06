@@ -50,23 +50,35 @@ data class CreateTimelineForm(
     val description: String?
 )
 
+data class UpdateTimelineForm(
+    val id: Long,
+    val name: String? = null,
+    val description: String? = null,
+)
+
 data class UpdateTimelineOrderForm(
     val order: List<Long> = listOf()
 )
 
 data class CreateCharacterForm(
     val name: String? = null,
-    val gender: String? = null,
-    val age: Int? = null,
-    val birthday: String? = null,
-    val firstSeen: String? = null,
-    val status: String? = null,
     val body: String? = null,
     val traits: List<String> = listOf(),
     val uploadedAttachments: List<UploadedFile> = listOf(),
     val uploadedAttachmentsMetadata: List<FileMetadataForm> = listOf(),
     val uploadedProfilePictures: List<UploadedFile> = listOf(),
-    val profilePicturesMetaData: List<FileMetadataForm> = listOf(),
+    val profilePicturesMetadata: List<FileMetadataForm> = listOf(),
+)
+
+data class UpdateCharacterForm(
+    val id: Long,
+    val name: String? = null,
+    val body: String? = null,
+    val traits: List<String> = listOf(),
+    val uploadedAttachments: List<UploadedFile> = listOf(),
+    val uploadedAttachmentsMetadata: List<FileMetadataForm> = listOf(),
+    val uploadedProfilePictures: List<UploadedFile> = listOf(),
+    val profilePicturesMetadata: List<FileMetadataForm> = listOf(),
 )
 
 

@@ -6,15 +6,10 @@ data class Character(
     val id: Long? = null,
     val author: User,
     val name: String,
-    val gender: String,
-    val birthday: String,
-    val firstSeen: String,
-    val status: String,
-    val age: Int,
     val body: String,
     var attachments: List<FileModel> = listOf(),
     var profilePictures: List<FileModel> = listOf(),
-    var traits: Map<String, String> = emptyMap(),
+    var traits: List<Trait> = listOf(),
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
     )
@@ -28,12 +23,7 @@ data class CharacterDto(
     val updatedAt: Date? = null,
     val attachments: List<FileModelDto> = listOf(),
     val profilePictures: List<FileModelDto> = listOf(),
-    val gender: String,
-    val age: Int,
-    val status: String,
-    val birthday: String,
-    val firstSeen: String,
-    var traits: Map<String, String> = emptyMap(),
+    var traits: List<Trait> = listOf(),
 )
 
 data class CharacterQuery(

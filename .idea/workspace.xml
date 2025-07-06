@@ -4,7 +4,60 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="update article works mostly..." />
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="update article works mostly...">
+      <change afterPath="$PROJECT_DIR$/kronica-client/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/characters/[id]/edit/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/forms/UserProfileForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/app/timelines/[id]/edit/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kronica-client/components/CustomUi/EmptyPlaceholder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/Types/Models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/Types/Models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/articles/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/articles/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/characters/[id]/CharacterProfilePicture.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/characters/[id]/CharacterProfilePicture.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/characters/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/characters/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/characters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/characters.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/timelines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/timelines.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/forms/ArticleForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/forms/ArticleForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/forms/CharacterForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/forms/CharacterForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/forms/TimelineForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/forms/TimelineForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/home/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/home/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useArticles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useArticles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useCharacters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useCharacters.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useTimelines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useTimelines.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/ArticlesDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/ArticlesDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/TimelineSideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/TimelineSideBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/UserProfileSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/UserProfileSection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileModelDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileModelDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TraitDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TraitDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Character.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Character.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Timeline.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Timeline.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileModelService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/FileModelService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/TimelineService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/TimelineService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/Router.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/Router.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/TimelineController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/TimelineController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/TimelineControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/TimelineControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,7 +121,7 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2aezV82qYRtpLQ8kI7no63sJjv3" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+  <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -102,8 +155,12 @@
     &quot;JUnit.ArticleServiceUnitTest.whenFindById_returnArticle.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.CharacterControllerTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.CharacterControllerTest.when Create character returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CharacterControllerTest.when delete character returns ok.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CharacterControllerTest.when fetch characters by id returns ok.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.CharacterControllerTest.when fetch characters by timeline returns ok.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.CharacterControllerTest.when fetch characters by user returns ok.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.CharacterControllerTest.when fetch nonexistent character by id returns not found.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CharacterControllerTest.when update character returns ok.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TimelineControllerTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TimelineControllerTest.when Create Timeline returns ok.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TimelineControllerTest.when get timelines by author returns ok.executor&quot;: &quot;Run&quot;,
@@ -133,7 +190,7 @@
     &quot;JUnit.UserControllerTest.logout returns ok.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.UserControllerTest.testv2.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.kotlin in WikiApi.executor&quot;: &quot;Coverage&quot;,
-    &quot;Kotlin.MainKt.executor&quot;: &quot;Debug&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Run&quot;,
     &quot;Maven.WikiApi [clean].executor&quot;: &quot;Run&quot;,
     &quot;Maven.WikiApi [flyway:baseline].executor&quot;: &quot;Run&quot;,
     &quot;Maven.WikiApi [flyway:clean].executor&quot;: &quot;Run&quot;,
@@ -158,7 +215,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -197,7 +254,7 @@
     </option>
   </component>
   <component name="RunManager" selected="Kotlin.MainKt">
-    <configuration name="ArticleControllerTest.when A follows B or A unfollows B, return the correct articles when queried by following" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ArticleControllerTest.when filtering articles by timeline, return the correct ones" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
         <pattern>
@@ -207,45 +264,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="controllers" />
       <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
-      <option name="METHOD_NAME" value="when A follows B or A unfollows B, return the correct articles when queried by following" />
+      <option name="METHOD_NAME" value="when filtering articles by timeline, return the correct ones" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ArticleControllerTest.when get article by id return ok response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
-      <option name="METHOD_NAME" value="when get article by id return ok response" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ArticleControllerTest.when update article return ok response" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="controllers.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="controllers" />
-      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
-      <option name="METHOD_NAME" value="when update article return ok response" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CharacterControllerTest.when fetch characters by timeline returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CharacterControllerTest.when Create character returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
         <pattern>
@@ -255,7 +280,39 @@
       </extension>
       <option name="PACKAGE_NAME" value="controllers" />
       <option name="MAIN_CLASS_NAME" value="controllers.CharacterControllerTest" />
-      <option name="METHOD_NAME" value="when fetch characters by timeline returns ok" />
+      <option name="METHOD_NAME" value="when Create character returns ok" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CharacterControllerTest.when fetch nonexistent character by id returns not found" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.CharacterControllerTest" />
+      <option name="METHOD_NAME" value="when fetch nonexistent character by id returns not found" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CharacterControllerTest.when update character returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.CharacterControllerTest" />
+      <option name="METHOD_NAME" value="when update character returns ok" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -281,19 +338,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.ArticleControllerTest.when update article return ok response" />
-      <item itemvalue="JUnit.CharacterControllerTest.when fetch characters by timeline returns ok" />
-      <item itemvalue="JUnit.ArticleControllerTest.when A follows B or A unfollows B, return the correct articles when queried by following" />
-      <item itemvalue="JUnit.ArticleControllerTest.when get article by id return ok response" />
+      <item itemvalue="JUnit.ArticleControllerTest.when filtering articles by timeline, return the correct ones" />
+      <item itemvalue="JUnit.CharacterControllerTest.when Create character returns ok" />
+      <item itemvalue="JUnit.CharacterControllerTest.when update character returns ok" />
+      <item itemvalue="JUnit.CharacterControllerTest.when fetch nonexistent character by id returns not found" />
       <item itemvalue="Kotlin.MainKt" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Kotlin.MainKt" />
-        <item itemvalue="JUnit.ArticleControllerTest.when update article return ok response" />
-        <item itemvalue="JUnit.CharacterControllerTest.when fetch characters by timeline returns ok" />
-        <item itemvalue="JUnit.ArticleControllerTest.when A follows B or A unfollows B, return the correct articles when queried by following" />
-        <item itemvalue="JUnit.ArticleControllerTest.when get article by id return ok response" />
+        <item itemvalue="JUnit.CharacterControllerTest.when update character returns ok" />
+        <item itemvalue="JUnit.CharacterControllerTest.when Create character returns ok" />
+        <item itemvalue="JUnit.ArticleControllerTest.when filtering articles by timeline, return the correct ones" />
+        <item itemvalue="JUnit.CharacterControllerTest.when fetch nonexistent character by id returns not found" />
       </list>
     </recent_temporary>
   </component>
@@ -492,15 +549,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="update article works mostly..." />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt</url>
-          <line>297</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="okhttp3.internal.http.RealResponseBody" memberName="source" />

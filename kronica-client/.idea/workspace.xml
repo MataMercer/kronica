@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="aa76c5f2-5d79-43c4-bfa4-67545c84a228" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/characters/[id]/edit/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/forms/UserProfileForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/timelines/[id]/edit/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/CustomUi/EmptyPlaceholder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Types/Models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/Types/Models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/articles/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/articles/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/characters/[id]/CharacterProfilePicture.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/characters/[id]/CharacterProfilePicture.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/characters/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/characters/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/fetch/articles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/fetch/characters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/fetch/characters.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/fetch/timelines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/fetch/timelines.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/forms/ArticleForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms/ArticleForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/forms/CharacterForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms/CharacterForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/forms/TimelineForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms/TimelineForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/home/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/hooks/useArticles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/hooks/useArticles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/hooks/useCharacters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/hooks/useCharacters.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/hooks/useTimelines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/hooks/useTimelines.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/ArticlesDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/ArticlesDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/TimelineSideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/TimelineSideBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/UserProfileSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/UserProfileSection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/CharacterDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FileModelDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FileModelDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TimelineDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TimelineDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TraitDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TraitDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Character.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Character.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Timeline.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Timeline.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/CharacterRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/CharacterRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TimelineRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/CharacterService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/CharacterService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/FileModelService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/FileModelService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/TimelineService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/TimelineService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/Forms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/CharacterController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/CharacterController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/Router.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/Router.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/TimelineController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/TimelineController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/TimelineControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/TimelineControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/fixtures/Fixtures.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2zM6hCoslfNYNZKGuxNFqg0FKe8" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/mdenholm/dev/kronica/kronica-client&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/mdenholm/dev/kronica/kronica-client/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aa76c5f2-5d79-43c4-bfa4-67545c84a228" name="Changes" comment="" />
+      <created>1751528712085</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751528712085</updated>
+      <workItem from="1751528713534" duration="1746000" />
+      <workItem from="1751531304981" duration="6467000" />
+      <workItem from="1751618511757" duration="3503000" />
+      <workItem from="1751688812785" duration="4116000" />
+      <workItem from="1751769339619" duration="1225000" />
+      <workItem from="1751781056949" duration="12983000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

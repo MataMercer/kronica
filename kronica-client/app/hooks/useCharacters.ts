@@ -1,6 +1,6 @@
 import useSWR from "swr";
-import { Character } from "../fetch/characters";
-import { Page } from "../fetch/articles";
+import {Page} from "../fetch/articles";
+import {Character} from "../Types/Models";
 
 export async function fetchAllCharacters(authorId: number) {
   const urlSearchParams = new URLSearchParams({
@@ -13,8 +13,7 @@ export async function fetchAllCharacters(authorId: number) {
     next: { tags: ['characters'] }
   });
   if (!res.ok) {
-    const error = new Error("Failed to fetch characters");
-    throw error
+      throw new Error("Failed to fetch characters")
   }
 
   if (res.ok) {
@@ -23,7 +22,7 @@ export async function fetchAllCharacters(authorId: number) {
   }
 }
 
-export default function useCharacters(authorId?: number) {
+export function useCharacters(authorId?: number) {
   const { data, mutate, error } = useSWR(authorId ? ["useCharacters", authorId] : null, ([URL, authorId]) => fetchAllCharacters(authorId));
 
   const loading = !data && !error;
@@ -32,4 +31,19 @@ export default function useCharacters(authorId?: number) {
     characters: data?.content,
     mutate
   };
+}
+
+export function useCharacter(id?: number) {
+    const { data, mutate, error, isLoading } = useSWR(id ? `http://localhost:7070/api/characters/id/${id}` : null, (url) => fetch(url, {
+        method: "GET",
+        credentials: "include",
+        next: { tags: ['character'] }
+    }).then(res => res.json()));
+
+    return {
+        character: data as Character | undefined,
+        mutate,
+        isLoading,
+        isError: error,
+    };
 }

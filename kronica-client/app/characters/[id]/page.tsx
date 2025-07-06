@@ -1,6 +1,10 @@
 import { fetchCharacter } from "@/app/fetch/characters";
 import Image from "next/image";
 import CharacterProfilePicture from "./CharacterProfilePicture";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {EllipsisVertical, Flag, PencilIcon, Trash} from "lucide-react";
+import AuthProtection from "@/app/auth/AuthProtection";
+import Link from "next/link";
 
 export default async function CharacterPage(props: {
     params: Promise<{ id: string }>;
@@ -9,10 +13,43 @@ export default async function CharacterPage(props: {
     const id = params.id;
     const character = id && (await fetchCharacter(id));
 
+    console.log(character)
     return (
         character && (
             <div className="">
                 <h1 className="text-3xl flex justify-left">{character.name}</h1>
+                <DropdownMenu>
+                    <DropdownMenuTrigger className="p-0 ">
+                        <EllipsisVertical size={20}/>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <AuthProtection
+                            requiredRole={"AUTHENTICATED_USER"}
+                            requiredOwnerId={character.author.id}
+                        >
+                            <DropdownMenuItem>
+                                <Link
+                                    href={`/characters/${character.id}/edit`}
+                                    className="flex items-center space-x-1"
+                                >
+                                    <PencilIcon/>
+                                    <span>EDIT</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                // onClick={() => onDelete(timeline.id)}
+                            >
+                                <Trash/>
+                                <span>DELETE</span>
+                            </DropdownMenuItem>
+                        </AuthProtection>
+
+                        <DropdownMenuItem>
+                            <Flag/>
+                            <span>REPORT</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
                 <div className="m-2  p-2 border-black border-2 float-right">
                     <div className="border-black border-2 flex justify-center text-2xl font-bold">
                         {character.name}
@@ -23,33 +60,14 @@ export default async function CharacterPage(props: {
 
                     <div className="">
                         <DataRow infoKey="Name" infoValue={character.name} />
-                        <DataRow
-                            infoKey="Status"
-                            infoValue={character.status}
-                        />
-                        <DataRow
-                            infoKey="First Seen"
-                            infoValue={character.gender}
-                        />
-                        <DataRow
-                            infoKey="Age"
-                            infoValue={character.age.toString()}
-                        />
-                        <DataRow
-                            infoKey="Birthday"
-                            infoValue={character.birthday}
-                        />
-                        <DataRow
-                            infoKey="First Seen"
-                            infoValue={character.firstSeen}
-                        />
+
                         {character.traits &&
-                            Object.entries(character.traits).map(
+                            character.traits.map(
                                 (it, index) => (
                                     <DataRow
                                         key={index}
-                                        infoKey={it[0]}
-                                        infoValue={it[1] as string}
+                                        infoKey={it.name}
+                                        infoValue={it.value}
                                     />
                                 )
                             )}

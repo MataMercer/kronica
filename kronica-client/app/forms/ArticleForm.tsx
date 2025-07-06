@@ -5,9 +5,9 @@ import MDEditor from "@uiw/react-md-editor";
 import { useEffect } from "react";
 import React from "react";
 import UploadInput, { FileInput } from "../components/inputs/UploadInput";
-import useTimelines from "../hooks/useTimelines";
+import {useTimelines} from "../hooks/useTimelines";
 import useCurrentUser from "../hooks/useCurrentUser";
-import useCharacters from "../hooks/useCharacters";
+import {useCharacters} from "../hooks/useCharacters";
 import { useToast } from "@/components/hooks/use-toast";
 import { useArticle } from "../hooks/useArticles";
 import Select from "react-select";
@@ -55,7 +55,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
     const userId = user && user.id;
     const { timelines, mutate: mutateTimelines } = useTimelines(userId);
     const { characters, mutate: mutateCharacters } = useCharacters(userId);
-    const { article, mutate: mutateArticle } = useArticle(id?.toString() || "");
+    const { article, mutate: mutateArticle } = useArticle(id);
     const { toast } = useToast();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         if (id) {
@@ -139,7 +139,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                 title: "Article Successfully Updated",
                 description: data.title,
             });
-            mutateArticle();
+            await mutateArticle();
         }
     }
 
@@ -209,20 +209,6 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                     </label>
                     <label className="flex flex-col" htmlFor="name">
                         Timeline (Optional)
-                        {/* <select
-                            {...register("timelineId")}
-                            disabled={!!!timelines}
-                        >
-                            <option key={0} value={undefined}>
-                                None
-                            </option>
-                            {timelines &&
-                                timelines.map((it) => (
-                                    <option key={it.id} value={it.id}>
-                                        {it.name}
-                                    </option>
-                                ))}
-                        </select> */}
                         <Controller
                             name="timeline"
                             control={control}
@@ -234,7 +220,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                                     ]}
                                     value={field.value}
                                     onChange={field.onChange}
-                                    isDisabled={!!!timelines}
+                                    isDisabled={!timelines}
                                 />
                             )}
                         />
@@ -242,17 +228,6 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                     {characters && characters.length > 0 && (
                         <label className="flex flex-col" htmlFor="name">
                             Starring Characters (Optional)
-                            {/* <select
-                                {...register("characters")}
-                                disabled={!!!timelines}
-                                multiple
-                            >
-                                {characters.map((it) => (
-                                    <option key={it.id} value={it.id}>
-                                        {it.name}
-                                    </option>
-                                ))}
-                            </select> */}
                             <Controller
                                 name="characters"
                                 control={control}
@@ -262,7 +237,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                                         value={field.value}
                                         onChange={field.onChange}
                                         isMulti
-                                        isDisabled={!!!characters}
+                                        isDisabled={!characters}
                                     />
                                 )}
                             />
@@ -304,7 +279,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                     </label>
                 </div>
                 <button className="button" type="submit">
-                    {id ? "Save Changes" : "Submit"}
+                    {id ? "SAVE CHANGES" : "SUBMIT"}
                 </button>
             </form>
         </div>

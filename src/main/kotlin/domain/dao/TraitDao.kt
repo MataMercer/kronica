@@ -40,6 +40,19 @@ class TraitDao {
         it.setString(2, name)
     }
 
+    fun updateTrait(conn: Connection, name: String, value: String, characterId: Long): Long = mapper.updateForId(
+        """
+            UPDATE traits
+            SET val = ?
+            WHERE name = ?
+            AND character_id = ?
+        """.trimIndent(), conn){
+        var i = 0
+        it.setString(++i, value)
+        it.setString(++i, name)
+        it.setLong(++i, characterId)
+    }
+
     fun findTraitsByCharacter(conn: Connection, characterId: Long): List<Trait> = mapper.queryForObjectList(
         """
             SELECT 

@@ -7,6 +7,7 @@ import io.javalin.http.sse.SseClient
 import io.javalin.websocket.WsConfig
 import io.javalin.websocket.WsHandlerType
 import org.matamercer.authorizeCheck
+import org.matamercer.domain.models.Trait
 import org.matamercer.getCurrentUser
 import org.matamercer.getCurrentUserRole
 import org.matamercer.security.UserRole
@@ -79,11 +80,12 @@ class Router(
             val routeAnnotation = method.getAnnotation(Route::class.java)
             val roleAnnotation = method.getAnnotation(RequiredRole::class.java)
             val handler:(Context)->Unit = { ctx: Context ->
-//                try {
+                //hide invocation target exception
+                try {
                     method.invoke(obj, ctx)
-//                }catch (e:InvocationTargetException){
-//                    print("InvocationException")
-//                }
+                }catch (e:InvocationTargetException){
+                    throw e.cause as Throwable
+                }
             }
 
             if (roleAnnotation == null){

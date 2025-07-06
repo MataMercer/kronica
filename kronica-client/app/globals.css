@@ -114,3 +114,16 @@ a:hover,
 a {
     color: #8a2be2;
 }
+
+.timeline-side-button {
+    .timeline-side-option-button{
+       visibility: hidden;
+    }
+}
+
+.timeline-side-button:focus,
+.timeline-side-button:hover{
+    .timeline-side-option-button{
+        visibility: visible;
+    }
+}

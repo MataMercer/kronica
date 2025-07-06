@@ -19,6 +19,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
+import org.matamercer.domain.models.CharacterDto
 import org.matamercer.domain.models.User
 import org.matamercer.setupApp
 import org.matamercer.web.CreateTimelineForm
@@ -65,11 +66,6 @@ class CharacterControllerTest {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("name", testCharacter.name)
-            .addFormDataPart("age", testCharacter.age.toString())
-            .addFormDataPart("gender", testCharacter.gender)
-            .addFormDataPart("birthday", testCharacter.birthday)
-            .addFormDataPart("firstSeen", testCharacter.firstSeen)
-            .addFormDataPart("status", testCharacter.status)
             .addFormDataPart("body", testCharacter.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
@@ -97,16 +93,12 @@ class CharacterControllerTest {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("name", testCharacter.name)
-            .addFormDataPart("age", testCharacter.age.toString())
-            .addFormDataPart("gender", testCharacter.gender)
-            .addFormDataPart("birthday", testCharacter.birthday)
-            .addFormDataPart("firstSeen", testCharacter.firstSeen)
-            .addFormDataPart("status", testCharacter.status)
             .addFormDataPart("body", testCharacter.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #1")))
             .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 1, caption = "attach #2")))
+            .addFormDataPart("traits", "mobile suit:gundam,allegiance:londo bell")
             .build()
 
         val request = Request.Builder()
@@ -128,6 +120,30 @@ class CharacterControllerTest {
         print(res.body?.string())
 
         assertThat(res.isSuccessful).isTrue()
+    }
+
+    @Test
+    fun `when fetch characters by id returns ok`() {
+        val characterId = createCharacter()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/characters/${characterId}")
+            .build()
+        val res = unauthClient.okHttp.newCall(request).execute()
+        print(res.body?.string())
+
+        assertThat(res.isSuccessful).isTrue()
+    }
+
+    @Test
+   fun `when fetch nonexistent character by id returns not found`() {
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/characters/${999999}")
+            .build()
+        val res = unauthClient.okHttp.newCall(request).execute()
+        print(res.body?.string())
+
+        assertThat(res.code).isEqualTo(404)
     }
 
     private fun createTimeline(): Long {
@@ -175,6 +191,66 @@ class CharacterControllerTest {
         print(findCharactersResponse.body?.string())
 
         assertThat(findCharactersResponse.isSuccessful).isTrue()
+    }
+
+    @Test
+    fun `when delete character returns ok`() {
+        val characterId = createCharacter()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/characters/${characterId}")
+            .delete().build()
+
+        val res = authClient.okHttp.newCall(request).execute()
+        assertThat(res.isSuccessful).isTrue()
+    }
+
+    private fun getCharacterById(characterId: Long): CharacterDto {
+
+        val mapper = jacksonObjectMapper()
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/characters/${characterId}")
+            .build()
+        val res = unauthClient.okHttp.newCall(request).execute()
+        return mapper.readValue(res.body?.string(), CharacterDto::class.java)
+    }
+
+    @Test
+    fun `when update character returns ok`() {
+        val characterId = createCharacter()
+        val character = getCharacterById(characterId)
+        val testCharacter = fixtures.testCharacter.copy(id = characterId, name = "Updated Name")
+        val uploadFile = File("resources/test/polarbear.jpg")
+        val mapper = jacksonObjectMapper()
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("id", characterId.toString())
+            .addFormDataPart("name", testCharacter.name)
+            .addFormDataPart("body", testCharacter.body)
+            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(id=character.attachments[0].id, caption = "attach #1")))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(id=character.attachments[1].id , caption = "attach #2")))
+            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #3")))
+            .addFormDataPart("traits", "mobile suit:derp,allegiance:zeon")
+            .build()
+
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/characters/${characterId}")
+            .put(requestBody).build()
+
+        val res = authClient.okHttp.newCall(request).execute()
+
+        val updatedCharacter = getCharacterById(characterId)
+        assertThat(updatedCharacter.attachments.size).isEqualTo(3)
+        assertThat(updatedCharacter.attachments[0].caption).isEqualTo("attach #1")
+        assertThat(updatedCharacter.attachments[1].caption).isEqualTo("attach #2")
+        assertThat(updatedCharacter.attachments[2].caption).isEqualTo("attach #3")
+
+        assertThat(updatedCharacter.traits.size).isEqualTo(2)
+        assertThat(updatedCharacter.traits["mobile suit"]).isEqualTo("derp")
+        assertThat(updatedCharacter.traits["allegiance"]).isEqualTo("zeon")
+        assertThat(res.code).isEqualTo(204)
+        assertThat(res.isSuccessful).isTrue()
     }
 
 

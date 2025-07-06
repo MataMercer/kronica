@@ -1,41 +1,21 @@
 import { cookies } from "next/headers";
-import { User } from "../Types/Models";
-import { Character } from "./characters";
-import { Timeline } from "./timelines";
+import {Article} from "@/app/Types/Models";
 
 export type Page<T> = {
   content: T[]
   pages: number
 }
 
-export type Article = {
-  id: number;
-  title: string;
-  body: string;
-  author: User;
-  attachments: FileModel[];
-  characters: Character[];
-  timeline: Timeline;
-  youLiked: boolean;
-  likeCount: number;
-}
-export type FileModel = {
-  id: number;
-  name: string;
-  caption: string;
-  storageId: string;
-}
-
 export async function fetchAllArticles(authorId?: number, timelineId?: number, page?: number) {
   const urlSearchParams = new URLSearchParams({
   })
-  if (authorId && authorId !== null) {
+  if (authorId) {
     urlSearchParams.set("author_id", authorId.toString())
   }
-  if (timelineId && timelineId !== null) {
+  if (timelineId) {
     urlSearchParams.set("timeline_id", timelineId.toString())
   }
-  if (page && page !== null) {
+  if (page) {
     urlSearchParams.set("page", (page - 1).toString())
     // urlSearchParams.set("size", "20")
   }

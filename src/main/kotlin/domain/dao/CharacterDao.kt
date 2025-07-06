@@ -19,11 +19,6 @@ class CharacterDao {
                 name = rs.getString("authors_name"),
                 role = enumValueOf(rs.getString("authors_role"))
             ),
-            birthday = rs.getString("birthday"),
-            gender = rs.getString("gender"),
-            age = rs.getInt("age"),
-            firstSeen = rs.getString("first_seen"),
-            status = rs.getString("status"),
         )
     }
 
@@ -79,14 +74,9 @@ class CharacterDao {
                     body,
                     created_at,
                     updated_at,
-                    author_id,
-                    age,
-                    birthday,
-                    first_seen,
-                    status,
-                    gender
+                    author_id
                     )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?)
                 """.trimIndent(), conn
     ) {
         var i = 0
@@ -95,11 +85,22 @@ class CharacterDao {
         it.setTimestamp(++i, genTimestamp())
         it.setTimestamp(++i, genTimestamp())
         character.author.id?.let { it1 -> it.setLong(++i, it1) }
-        it.setInt(++i, character.age)
-        it.setString(++i, character.birthday)
-        it.setString(++i, character.firstSeen)
-        it.setString(++i, character.status)
-        it.setString(++i, character.gender)
+    }
+
+    fun update(conn: Connection, character: Character):Long = mapper.updateForId(
+        """
+            UPDATE characters
+            SET name = ?,
+                body = ?,
+                updated_at = ?
+            WHERE id = ?
+        """.trimIndent(), conn
+    ) {
+        var i = 0
+        it.setString(++i, character.name)
+        it.setString(++i, character.body)
+        it.setTimestamp(++i, genTimestamp())
+        it.setLong(++i, character.id ?: throw IllegalArgumentException("Character ID cannot be null"))
     }
 
     fun joinArticle(conn: Connection, characterId: Long, articleId: Long): Long {

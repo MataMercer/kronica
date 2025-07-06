@@ -7,6 +7,7 @@ import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.CharacterRepository
 import org.matamercer.web.CreateCharacterForm
+import org.matamercer.web.UpdateCharacterForm
 import org.matamercer.web.dto.Page
 
 class CharacterService(
@@ -17,12 +18,10 @@ class CharacterService(
     fun create(form: CreateCharacterForm, currentUser: CurrentUser): Long {
         val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
         val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions)
-        val profilePicturesCaptions = form.profilePicturesMetaData.filter { !it.isExistingFile() }.map { it.caption }
+        val profilePicturesCaptions = form.profilePicturesMetadata.filter { !it.isExistingFile() }.map { it.caption }
         val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures, profilePicturesCaptions)
 
-        val traits = form.traits.map {
-            it.split(":", ignoreCase = false, limit = 2)
-        }.associate { it[0] to it[1] }
+        val traits = getTraitsFromStringList(form.traits)
 
         val c = characterRepository.create(
             Character(
@@ -31,16 +30,61 @@ class CharacterService(
                 author = currentUser.toUser(),
                 attachments = attachments,
                 profilePictures = profilePictures,
-                age = form.age!!,
-                status = form.status!!,
-                birthday = form.birthday!!,
-                gender = form.gender!!,
-                firstSeen = form.firstSeen!!,
                 traits = traits
             )
         )
         if (c?.id == null) throw InternalServerErrorResponse()
         return c.id
+    }
+
+    fun update(form: UpdateCharacterForm, currentUser: CurrentUser) {
+        val foundCharacter = getById(form.id)
+        authCheck(currentUser, foundCharacter)
+        validateUpdateForm(form, foundCharacter)
+
+        val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
+        val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions)
+        val profilePicturesCaptions = form.profilePicturesMetadata.filter { !it.isExistingFile() }.map { it.caption }
+        val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures, profilePicturesCaptions)
+
+
+        characterRepository.update(
+            Character(
+                id = form.id,
+                name = form.name!!,
+                body = form.body!!,
+                author = currentUser.toUser(),
+                attachments = attachments,
+                profilePictures = profilePictures,
+                traits = getTraitsFromStringList(form.traits)
+            ),
+            form.uploadedAttachmentsMetadata,
+            form.profilePicturesMetadata
+        )
+
+        val attachmentsToDelete = form.uploadedAttachmentsMetadata.filter { it.delete == true }.map { it.id }
+        val profilePicturesToDelete = form.profilePicturesMetadata.filter { it.delete == true }.map { it.id }
+        fileModelService.deleteFiles(foundCharacter.attachments.filter { it.id in attachmentsToDelete })
+        fileModelService.deleteFiles(foundCharacter.profilePictures.filter { it.id in profilePicturesToDelete })
+    }
+
+    private fun validateUpdateForm(form: UpdateCharacterForm, originalCharacter: Character) {
+        if (form.name.isNullOrBlank()) {
+            throw BadRequestResponse("Character name is required")
+        }
+        if (form.body.isNullOrBlank()) {
+            throw BadRequestResponse("Character body is required")
+        }
+        fileModelService.validateFileMetadataList(
+            form.uploadedAttachmentsMetadata,
+            form.uploadedAttachments,
+            originalCharacter.attachments
+        )
+        fileModelService.validateFileMetadataList(
+            form.profilePicturesMetadata,
+            form.uploadedProfilePictures,
+            originalCharacter.profilePictures
+        )
     }
 
     fun getById(id: Long?): Character {
@@ -65,7 +109,15 @@ class CharacterService(
             throw ForbiddenResponse()
         }
         characterRepository.deleteById(id)
+        fileModelService.deleteFiles(c.attachments)
+        fileModelService.deleteFiles(c.profilePictures)
     }
+
+    private fun getTraitsFromStringList(stringList: List<String>): List<Trait> =
+        stringList
+            .map { it.split(":", ignoreCase = false, limit = 2)}
+            .filter { it.size == 2 }
+            .map { Trait(name = it[0].trim(), value = it[1].trim()) }
 
     fun toDto(c: Character): CharacterDto {
         return CharacterDto(
@@ -96,12 +148,13 @@ class CharacterService(
                     caption = it.caption
                 )
             },
-            gender = c.gender,
-            age = c.age,
-            status = c.status,
-            birthday = c.birthday,
-            firstSeen = c.firstSeen,
             traits = c.traits
         )
+    }
+
+    fun authCheck(currentUser: CurrentUser, character: Character) {
+        if (currentUser.id != character.author.id && !currentUser.role.isAdmin()) {
+            throw ForbiddenResponse()
+        }
     }
 }

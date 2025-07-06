@@ -1,15 +1,14 @@
 "use client";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { refreshArticles } from "../actions";
+import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {refreshArticles} from "../actions";
 import MDEditor from "@uiw/react-md-editor";
-import { useEffect, useState } from "react";
-import React from "react";
-import UploadInput, { FileInput } from "../components/inputs/UploadInput";
-import useTimelines from "../hooks/useTimelines";
+import React, {useEffect} from "react";
+import UploadInput, {FileInput} from "../components/inputs/UploadInput";
 import useCurrentUser from "../hooks/useCurrentUser";
-import useCharacters from "../hooks/useCharacters";
-import { useToast } from "@/components/hooks/use-toast";
-import { CircleMinus, CirclePlus } from "lucide-react";
+import {useToast} from "@/components/hooks/use-toast";
+import {CircleMinus, CirclePlus} from "lucide-react";
+import {useCharacter} from "@/app/hooks/useCharacters";
+import {useRouter} from "next/navigation";
 
 type Trait = {
     name: string;
@@ -18,26 +17,20 @@ type Trait = {
 
 type Inputs = {
     name: string;
-    gender: string;
-    age: number;
-    birthday: string;
-    firstSeen: string;
-    status: string;
     traits: Trait[];
-
     body: string;
     uploadedAttachments: FileInput[];
     uploadedProfilePictures: FileInput[];
 };
 
-export default function CharacterForm() {
+export default function CharacterForm({id}: { id?: number }) {
     const {
         register,
         handleSubmit,
         watch,
         setValue,
         reset,
-        formState: { errors },
+        formState: {errors},
         control,
     } = useForm<Inputs>({
         defaultValues: {
@@ -55,19 +48,23 @@ export default function CharacterForm() {
         loggedOut,
         mutate: mutateCurrentUser,
     } = useCurrentUser();
-    const userId = user && user.id;
 
-    const { toast } = useToast();
+    const {toast} = useToast();
+    const {character, mutate: mutateCharacter} = useCharacter(id)
+    const router = useRouter();
 
-    const ref = React.useRef(undefined);
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
+
+        if (id) {
+            await handleUpdateCharacter(id, data);
+        } else {
+            await handleCreateCharacter(data);
+        }
+    };
+
+    async function handleCreateCharacter(data: Inputs) {
         const formData = new FormData();
         formData.append("name", data.name);
-        formData.append("gender", data.gender);
-        formData.append("age", data.age.toString());
-        formData.append("birthday", data.birthday);
-        formData.append("firstSeen", data.firstSeen);
-        formData.append("status", data.status);
         formData.append("body", data.body);
 
         let traitsData =
@@ -112,12 +109,112 @@ export default function CharacterForm() {
                 title: "Character Successfully Created",
                 description: data.name,
             });
-            refreshArticles();
-            //do some shit
             reset();
-        } else {
         }
-    };
+    }
+
+    async function handleUpdateCharacter(id: number, data: Inputs) {
+        const formData = new FormData();
+        formData.append("id", id.toString());
+        formData.append("name", data.name);
+        formData.append("body", data.body);
+
+        let traitsData =
+            data.traits.length > 0
+                ? data.traits[0].name + ":" + data.traits[0].value
+                : "";
+        data.traits.forEach((it, index) => {
+            if (index != 0) {
+                traitsData = traitsData + "," + it.name + ":" + it.value;
+            }
+        });
+        formData.append("traits", traitsData);
+
+        data.uploadedAttachments
+            .map((it) => {
+                if (!it.metadata.id && it.data) {
+                    formData.append("uploadedAttachments", it.data);
+                }
+                formData.append(
+                    "uploadedAttachmentsMetadata",
+                    JSON.stringify(it.metadata)
+                );
+            });
+
+        data.uploadedProfilePictures.map((it) => {
+            if (!it.metadata.id && it.data) {
+                formData.append("uploadedProfilePictures", it.data);
+            }
+            formData.append(
+                "uploadedProfilePicturesMetadata",
+                JSON.stringify(it.metadata)
+            )
+        })
+
+        const response = await fetch(
+            `http://localhost:7070/api/characters/${id}`,
+            {
+                method: "PUT",
+                credentials: "include",
+                body: formData,
+            }
+        );
+
+        if (response.ok) {
+            router.push(`/characters/${id}`);
+            toast({
+                title: "Character Successfully Updated",
+                description: data.name,
+            });
+        } else {
+            const errorData = await response.json();
+            toast({
+                title: "Error Updating Character",
+                description: errorData.message || "An error occurred",
+                variant: "destructive"
+            });
+            console.error(errorData as string);
+        }
+    }
+
+    useEffect(() => {
+        if (id && character) {
+            const {name, body, traits, attachments, profilePictures} = character;
+            setValue("name", name);
+            setValue("body", body);
+            console.log(traits)
+            if (traits && traits.length > 0) {
+                setValue("traits", traits.map(it => ({name: it.name, value: it.value})));
+            }
+            if (attachments && attachments.length > 0) {
+                setValue("uploadedAttachments", attachments.map(
+                    (a, index) =>
+                        ({
+                            id: index.toString(),
+                            url: `http://localhost:7070/api/files/serve/${a.storageId}/${a.name}`,
+                            metadata: {
+                                id: a.id,
+                                caption: a.caption,
+                                delete: false
+                            }
+                        })));
+            }
+
+            if (profilePictures && profilePictures.length > 0) {
+                setValue("uploadedProfilePictures", profilePictures.map(
+                    (a, index) =>
+                        ({
+                            id: index.toString(),
+                            url: `http://localhost:7070/api/files/serve/${a.storageId}/${a.name}`,
+                            metadata: {
+                                id: a.id,
+                                caption: a.caption,
+                                delete: false
+                            }
+                        })));
+            }
+        }
+    }, [character, id, setValue]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -125,7 +222,7 @@ export default function CharacterForm() {
                 <label className="flex flex-col" htmlFor="name">
                     Name
                     <input
-                        {...register("name", { required: true })}
+                        {...register("name", {required: true})}
                         id="name"
                         defaultValue="Unnamed"
                     />
@@ -136,7 +233,7 @@ export default function CharacterForm() {
                     <Controller
                         name="uploadedProfilePictures"
                         control={control}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <UploadInput
                                 id="uploadedProfilePictures"
                                 setFileInputs={(files: FileInput[]) => {
@@ -147,58 +244,12 @@ export default function CharacterForm() {
                         )}
                     ></Controller>
                 </label>
-                <label className="flex flex-col" htmlFor="gender">
-                    Gender
-                    <input
-                        {...register("gender", { required: true })}
-                        id="gender"
-                        defaultValue="Male"
-                    />
-                </label>
-                <label className="flex flex-col" htmlFor="age">
-                    Age
-                    <input
-                        {...register("age", {
-                            min: 1,
-                            max: 30000,
-                            required: true,
-                        })}
-                        id="age"
-                        defaultValue="18"
-                        type="number"
-                    />
-                </label>
-                <label className="flex flex-col" htmlFor="birthday">
-                    Birthday
-                    <input
-                        {...register("birthday", { required: true })}
-                        id="birthday"
-                        defaultValue="Jan 1, 1990"
-                    />
-                </label>
-                <label className="flex flex-col" htmlFor="firstSeen">
-                    First Seen
-                    <input
-                        {...register("firstSeen", { required: true })}
-                        id="firstSeen"
-                        defaultValue="Episode 1"
-                    />
-                </label>
-                <label className="flex flex-col" htmlFor="Status">
-                    Status
-                    <input
-                        {...register("status", { required: true })}
-                        id="Status"
-                        defaultValue="Alive"
-                    />
-                </label>
-
                 <label className="flex flex-col">
-                    Custom Traits
+                    Traits
                     <Controller
                         name="traits"
                         control={control}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <div>
                                 {field.value.map((it, index) => (
                                     <div
@@ -242,7 +293,8 @@ export default function CharacterForm() {
                                                 );
                                             }}
                                         >
-                                            <CircleMinus /> <div>Remove</div>
+                                            <CircleMinus/>
+                                            <div>Remove</div>
                                         </button>
                                     </div>
                                 ))}
@@ -253,11 +305,12 @@ export default function CharacterForm() {
                                     onClick={() => {
                                         setValue("traits", [
                                             ...field.value,
-                                            { name: "", value: "" },
+                                            {name: "", value: ""},
                                         ]);
                                     }}
                                 >
-                                    <CirclePlus /> <div>Additional Trait</div>
+                                    <CirclePlus/>
+                                    <div>Additional Trait</div>
                                 </button>
                             </div>
                         )}
@@ -266,17 +319,11 @@ export default function CharacterForm() {
 
                 <label className="flex flex-col" htmlFor="body">
                     Body
-                    {/* <textarea
-                                    {...register("body", { required: true })}
-                                    id="body"
-                                    defaultValue="Empty body"
-                                    rows={20}
-                                /> */}
                     <Controller
                         name="body"
                         control={control}
                         defaultValue="Empty body"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <div data-color-mode="light">
                                 <MDEditor
                                     value={field.value}
@@ -292,7 +339,7 @@ export default function CharacterForm() {
                     <Controller
                         name="uploadedAttachments"
                         control={control}
-                        render={({ field }) => (
+                        render={({field}) => (
                             <UploadInput
                                 id="uploadedAttachments"
                                 setFileInputs={(files: FileInput[]) => {

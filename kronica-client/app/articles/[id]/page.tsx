@@ -42,7 +42,7 @@ export default async function ArticlePage(props: {
                                     src={`http://localhost:7070/api/files/serve/${it.storageId}/${it.name}`}
                                     alt="article attachment"
                                 />
-                                <div>{it.name}</div>
+                                <div>Page {index + 1}</div>
                             </Link>
                         ))}
                     </div>

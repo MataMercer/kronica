@@ -1,11 +1,15 @@
 import ArticleThumb from "@/app/components/articles/ArticleThumb";
-import { fetchAllArticles } from "@/app/fetch/articles";
+import {fetchAllArticles} from "@/app/fetch/articles";
 import KronologizeButton from "./EditTimelineButton";
-import { fetchTimeline } from "../fetch/timelines";
-import { fetchCharacters } from "@/app/fetch/characters";
+import {fetchTimeline} from "../fetch/timelines";
+import {fetchCharacters} from "@/app/fetch/characters";
 import Link from "next/link";
 import Image from "next/image";
 import Pagination from "@/components/CustomUi/Pagination";
+import EmptyPlaceholder from "@/components/CustomUi/EmptyPlaceholder";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {EllipsisVertical, Flag, PencilIcon, Settings, Trash} from "lucide-react";
+import AuthProtection from "@/app/auth/AuthProtection";
 
 type ArticleDisplayProps = {
     timelineId: number;
@@ -13,12 +17,12 @@ type ArticleDisplayProps = {
     page?: number;
 };
 export default async function ArticleDisplay({
-    timelineId,
-    authorId,
-    page = 1,
-}: ArticleDisplayProps) {
+                                                 timelineId,
+                                                 authorId,
+                                                 page = 1,
+                                             }: ArticleDisplayProps) {
     const articlePage = await fetchAllArticles(authorId, timelineId, page);
-    const { content: articles, pages: articlePages } = articlePage || {
+    const {content: articles, pages: articlePages} = articlePage || {
         content: [],
     };
     const timeline = timelineId
@@ -65,13 +69,47 @@ export default async function ArticleDisplay({
                                         height={100}
                                     />
                                 )}
-                                <div>{c.name}</div>
+                                <div className={"flex justify-between space-x-1 sm:space-y-0"}>
+                                    <div>{c.name}</div>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger className="p-0 ">
+                                            <EllipsisVertical size={20}/>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <AuthProtection
+                                                requiredRole={"AUTHENTICATED_USER"}
+                                                requiredOwnerId={c.author.id}
+                                            >
+                                                <DropdownMenuItem>
+                                                    <Link
+                                                        href={`/characters/${c.id}/edit`}
+                                                        className="flex items-center space-x-1"
+                                                    >
+                                                        <PencilIcon/>
+                                                        <span>EDIT</span>
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    // onClick={() => onDelete(timeline.id)}
+                                                >
+                                                    <Trash/>
+                                                    <span>DELETE</span>
+                                                </DropdownMenuItem>
+                                            </AuthProtection>
+
+                                            <DropdownMenuItem>
+                                                <Flag/>
+                                                <span>REPORT</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
                             </Link>
                         ))}
                     </div>
                 </div>
             ) : (
-                <div>There are no characters.</div>
+                <EmptyPlaceholder/>
             )}
             <div className="flex space-x-2 border-black border-b-[1px] mb-1 justify-between">
                 <h1 className="text-3xl ">Articles</h1>
@@ -79,20 +117,24 @@ export default async function ArticleDisplay({
 
             {articles && articles.length > 0 && (
                 <div className="mb-5">
-                    <KronologizeButton timelineId={timelineId} />
+                    <KronologizeButton timelineId={timelineId}/>
                 </div>
             )}
 
-            <div className="grid sm:grid-cols-5 gap-2">
-                {articles && articles.length > 0 ? (
-                    articles.map((article) => (
-                        <ArticleThumb key={article.id} article={article} />
-                    ))
-                ) : (
-                    <div>There are no articles.</div>
-                )}
-            </div>
-            <Pagination currentPage={page} totalPages={articlePages} />
+            {articles && articles.length > 0 ? (
+                <div className="grid sm:grid-cols-5 gap-2">
+                    {
+                        articles.map((article) => (
+                            <ArticleThumb key={article.id} article={article}/>
+                        ))
+                    }
+                </div>
+            ) : (
+                <EmptyPlaceholder/>
+            )}
+            {articlePages && articles.length > 0 && (
+                <Pagination currentPage={page} totalPages={articlePages}/>
+            )}
         </div>
     );
 }

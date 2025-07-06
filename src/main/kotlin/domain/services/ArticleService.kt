@@ -66,7 +66,7 @@ class ArticleService(
     fun update(form: UpdateArticleForm, currentUser: CurrentUser): Long {
         val originalArticle = getById(form.id)
         authCheck(currentUser, originalArticle)
-        validateUpdateForm(form)
+        validateUpdateForm(form, originalArticle)
         val existingFilesId = form.uploadedAttachmentsMetadata.filter { it.isExistingFile() }.map { it.id }.toSet()
         val originalArticleFiles = originalArticle.attachments.map { it.id }.toSet()
         if (!originalArticleFiles.containsAll(existingFilesId)){
@@ -111,20 +111,11 @@ class ArticleService(
 //        }
     }
 
-    private fun validateUpdateForm(form: UpdateArticleForm) {
+    private fun validateUpdateForm(form: UpdateArticleForm, originalArticle: Article) {
         if (form.title == null && form.body == null) {
             throw BadRequestResponse()
         }
-
-        val newMetadataCount = form.uploadedAttachmentsMetadata.filter{!it.isExistingFile()}.size
-        if (form.uploadedAttachments.size != newMetadataCount){
-            throw BadRequestResponse("Each uploaded attachment must have a corresponding metadata entry.")
-        }
-        val existingMetadata = form.uploadedAttachmentsMetadata.filter{it.isExistingFile()}
-        val existingMetadataCount = existingMetadata.size
-        if (existingMetadata.map { it.id }.toSet().size != existingMetadataCount){
-            throw BadRequestResponse("Each metadata entry that has an existing id must be unique.")
-        }
+       fileModelService.validateFileMetadataList(form.uploadedAttachmentsMetadata, form.uploadedAttachments, originalArticle.attachments)
     }
 
     private fun getMentionedUsers(input: String): List<User> {
@@ -155,7 +146,8 @@ class ArticleService(
         val article = articleRepository.findById(id) ?: throw NotFoundResponse()
         authCheck(currentUser, article)
         articleRepository.deleteById(id)
-        TODO("Implement file deletion from storage")
+
+        fileModelService.deleteFiles(article.attachments)
     }
 
 

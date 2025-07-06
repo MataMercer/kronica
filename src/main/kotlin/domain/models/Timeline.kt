@@ -4,14 +4,14 @@ data class Timeline(
     val id: Long? = null,
     val name: String,
     val description: String,
-    val author: User? = null,
+    val author: User,
     )
 
 data class TimelineDto(
     val id: Long? = null,
     val name: String,
     val description: String,
-    val author: User? = null,
+    val author: UserDto,
 )
 data class TimelineThumbDto(
     val id: Long,

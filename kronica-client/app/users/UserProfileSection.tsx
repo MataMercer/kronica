@@ -1,7 +1,7 @@
 import { fetchUser } from "@/app/fetch/users";
 import { User } from "../Types/Models";
 import Badge from "@/components/CustomUi/Badge";
-import { BellPlus, UserPlus } from "lucide-react";
+import {BellPlus, Settings, UserPlus} from "lucide-react";
 import Image from "next/image";
 import { fetchCurrentUser } from "../fetch/auth";
 
@@ -36,19 +36,24 @@ export default async function UserProfileSection({
                                 </span>
                             </Badge>
                         </div>
-                        {currentUser.id !== user.id && (
+                        {currentUser.id !== user.id ? (
                             <div className="space-x-2 flex">
-                                <button className="button text-xl flex space-x-2">
+                                <button className="button text-xl flex space-x-2 items-center">
                                     <BellPlus />
                                     <span>NOTIFICATIONS</span>
                                 </button>
-                                <button className="button text-xl flex space-x-2">
+                                <button className="button text-xl flex space-x-2 items-center">
                                     {" "}
                                     <UserPlus />
                                     <span>FOLLOW</span>
                                 </button>
                             </div>
-                        )}
+                        ): <div className="space-x-2 flex">
+                            <button className="button text-xl flex space-x-2 items-center">
+                                <Settings/>
+                                <span>EDIT PROFILE</span>
+                            </button>
+                        </div>}
                     </div>
                 )}
                 <p className="">

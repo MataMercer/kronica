@@ -1,6 +1,6 @@
 import useSWR from "swr";
-import { Timeline } from "../fetch/timelines";
-import { Article, Page } from "../fetch/articles";
+import {Page} from "../fetch/articles";
+import {Article} from "@/app/Types/Models";
 
 
 export async function fetchAllArticles(authorId?: string, timelineId?: string) {
@@ -15,8 +15,7 @@ export async function fetchAllArticles(authorId?: string, timelineId?: string) {
     next: { tags: ['articles'] }
   });
   if (!res.ok) {
-    const error = new Error("Failed to fetch articles");
-    throw error
+    throw new Error("Failed to fetch articles")
   }
 
   if (res.ok) {
@@ -37,8 +36,7 @@ export async function fetchFollowedArticles() {
   });
   if (!res.ok) {
     console.log(res.status)
-    const error = new Error("Failed to fetch articles");
-    throw error
+    throw new Error("Failed to fetch articles")
   }
 
   if (res.ok) {
@@ -75,11 +73,11 @@ const fetcher = (url: string) => fetch(url, {
   credentials: "include",
   next: { tags: ['article'] }
 }).then(res => res.json())
-export function useArticle(id: string) {
-  const { data, mutate, error, isLoading } = useSWR(`http://localhost:7070/api/articles/id/${id}`, fetcher)
+export function useArticle(id?: number) {
+  const { data, mutate, error, isLoading } = useSWR(id ? `http://localhost:7070/api/articles/id/${id}` : null, fetcher)
 
   return {
-    article: data as Article,
+    article: data as Article | undefined,
     mutate,
     isLoading,
     isError: error

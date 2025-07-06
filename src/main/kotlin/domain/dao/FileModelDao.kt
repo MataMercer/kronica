@@ -142,6 +142,42 @@ class FileModelDao() {
         }
     }
 
+    fun updateJoinCharacterIndex(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
+        val sql = """
+            UPDATE files_to_characters
+            SET index = ?
+            WHERE file_id = ? AND character_id = ?
+        """.trimIndent()
+
+        return mapper.updateForId(sql, conn) {
+            var i = 0
+            it.setInt(++i, index)
+            it.setLong(++i, fileId)
+            it.setLong(++i, characterId)
+        }
+    }
+
+    fun deleteJoinCharacter(conn: Connection, fileId: Long, characterId: Long) {
+        val sql = """
+           WITH deleted AS (
+               DELETE FROM files_to_characters
+               WHERE file_id = ? AND character_id = ?
+           RETURNING index)
+           
+           UPDATE files_to_characters
+           SET index = index - 1
+           WHERE character_id = ?
+           AND index > (SELECT index FROM deleted); 
+        """.trimIndent()
+
+        return mapper.update(sql, conn) {
+            var i = 0
+            it.setLong(++i, fileId)
+            it.setLong(++i, characterId)
+            it.setLong(++i, characterId)
+        }
+    }
+
     fun joinCharacterProfile(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
         val sql = """
             INSERT INTO files_to_character_profiles
@@ -158,6 +194,42 @@ class FileModelDao() {
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
             it.setInt(++i, index)
+        }
+    }
+
+    fun updateJoinCharacterProfileIndex(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
+        val sql = """
+            UPDATE files_to_character_profiles
+            SET index = ?
+            WHERE file_id = ? AND character_id = ?
+        """.trimIndent()
+
+        return mapper.updateForId(sql, conn) {
+            var i = 0
+            it.setInt(++i, index)
+            it.setLong(++i, fileId)
+            it.setLong(++i, characterId)
+        }
+    }
+
+    fun deleteJoinCharacterProfile(conn: Connection, fileId: Long, characterId: Long) {
+        val sql = """
+           WITH deleted AS (
+               DELETE FROM files_to_character_profiles
+               WHERE file_id = ? AND character_id = ?
+           RETURNING index)
+           
+           UPDATE files_to_character_profiles
+           SET index = index - 1
+           WHERE character_id = ?
+           AND index > (SELECT index FROM deleted); 
+        """.trimIndent()
+
+        return mapper.update(sql, conn) {
+            var i = 0
+            it.setLong(++i, fileId)
+            it.setLong(++i, characterId)
+            it.setLong(++i, characterId)
         }
     }
 

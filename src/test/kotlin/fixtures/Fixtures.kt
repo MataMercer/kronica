@@ -41,11 +41,6 @@ class Fixtures {
     val testCharacter = Character(
         id = 1,
         name = "Amuro",
-        gender = "male",
-        birthday = "Oct 11, 2024",
-        firstSeen = "Episode 1",
-        status = "alive",
-        age = 20,
         body = "lorem ipsum",
         author = rootUser,
         attachments = emptyList(),

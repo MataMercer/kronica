@@ -1,10 +1,11 @@
-import { PenTool, PersonStanding, Rows4 } from "lucide-react";
+import {PenTool, PersonStanding, Rows4} from "lucide-react";
 import Link from "next/link";
-import { fetchAllArticles } from "../fetch/articles";
+import {fetchAllArticles} from "../fetch/articles";
 import AuthProtectionSSR from "../auth/AuthProtectionSSR";
 import ArticleThumb from "../components/articles/ArticleThumb";
-import { fetchCurrentUser } from "../fetch/auth";
-import { redirect } from "next/navigation";
+import {fetchCurrentUser} from "../fetch/auth";
+import {redirect} from "next/navigation";
+import EmptyPlaceholder from "@/components/CustomUi/EmptyPlaceholder";
 
 export default async function Home() {
     const articles = (await fetchAllArticles())?.content;
@@ -26,7 +27,7 @@ export default async function Home() {
                             className="flex content-center"
                         >
                             <button className="button flex space-x-1">
-                                <PenTool />
+                                <PenTool/>
                                 <span>CREATE ARTICLE</span>
                             </button>
                         </Link>
@@ -37,7 +38,7 @@ export default async function Home() {
                             className="flex content-center"
                         >
                             <button className="button flex space-x-1">
-                                <Rows4 />
+                                <Rows4/>
                                 <span>CREATE TIMELINE</span>
                             </button>
                         </Link>
@@ -48,7 +49,7 @@ export default async function Home() {
                             className="flex content-center"
                         >
                             <button className="button flex space-x-1">
-                                <PersonStanding />
+                                <PersonStanding/>
                                 <span>CREATE CHARACTER</span>
                             </button>
                         </Link>
@@ -60,27 +61,31 @@ export default async function Home() {
                 <h2 className="text-2xl border-black border-b-[1px]">
                     NEW FROM EVERYONE
                 </h2>
-                <div className="grid sm:grid-cols-5 gap-2">
-                    {articles ? (
-                        articles.map((article) => (
-                            <ArticleThumb key={article.id} article={article} />
-                        ))
+                    {articles && articles.length > 0 ? (
+                        <div className="grid sm:grid-cols-5 gap-2">
+                            {
+                                articles.map((article) => (
+                                    <ArticleThumb key={article.id} article={article}/>
+                                ))
+                            }
+                        </div>
                     ) : (
-                        <div>There are no articles.</div>
+                        <EmptyPlaceholder/>
                     )}
-                </div>
                 <h2 className="text-2xl border-black border-b-[1px] mb-10">
                     NEW FROM FOLLOWING
                 </h2>
-                <div className="grid sm:grid-cols-5 gap-2">
-                    {articles ? (
-                        articles.map((article) => (
-                            <ArticleThumb key={article.id} article={article} />
-                        ))
+                    {articles && articles.length > 0 ? (
+                        <div className="grid sm:grid-cols-5 gap-2">
+                            {
+                                articles.map((article) => (
+                                    <ArticleThumb key={article.id} article={article}/>
+                                ))
+                            }
+                        </div>
                     ) : (
-                        <div>There are no articles.</div>
+                        <EmptyPlaceholder/>
                     )}
-                </div>
             </div>
         </>
     );
