@@ -5,63 +5,52 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa76c5f2-5d79-43c4-bfa4-67545c84a228" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/characters/[id]/edit/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/forms/UserProfileForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/timelines/[id]/edit/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/CustomUi/EmptyPlaceholder.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/forms/ReorderTimelineForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/timelines/[id]/reorder/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/MalwareScanner.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/UploadSecurity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Types/Models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/Types/Models.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/articles/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/articles/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/characters/[id]/CharacterProfilePicture.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/characters/[id]/CharacterProfilePicture.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/characters/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/characters/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/fetch/articles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fetch/characters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/fetch/characters.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/fetch/timelines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/fetch/timelines.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/forms/ArticleForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms/ArticleForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/forms/CharacterForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms/CharacterForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/forms/TimelineForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms/TimelineForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/articles/[id]/page/[page]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/articles/[id]/page/[page]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/home/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/home/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/hooks/useArticles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/hooks/useArticles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/hooks/useCharacters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/hooks/useCharacters.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/hooks/useTimelines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/hooks/useTimelines.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/timelines/[id]/edit/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/timelines/[id]/edit/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/users/ArticlesDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/ArticlesDisplay.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/users/TimelineSideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/TimelineSideBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/users/UserProfileSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/UserProfileSection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/EditTimelineButton.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/AppConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/AppConfig.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/CharacterDao.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FileModelDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FileModelDao.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TimelineDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TimelineDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TraitDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TraitDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Character.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Character.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Timeline.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/models/Timeline.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/CharacterRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/CharacterRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/UserDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/UserDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/models/FileModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/models/FileModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TimelineRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/CharacterService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/CharacterService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/FileModelService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/FileModelService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/TimelineService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/TimelineService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/Forms.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/CharacterController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/CharacterController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/Router.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/Router.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/TimelineController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/TimelineController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/UserService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/ArticleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/ArticleController.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/resources/db/test/R__init_test_data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/resources/db/test/R__init_test_data.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/TimelineControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/TimelineControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/UserControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/UserControllerTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/test/kotlin/fixtures/Fixtures.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -97,6 +86,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/timelines/[id]" />
+    </key>
+  </component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
@@ -132,6 +126,8 @@
       <workItem from="1751688812785" duration="4116000" />
       <workItem from="1751769339619" duration="1225000" />
       <workItem from="1751781056949" duration="12983000" />
+      <workItem from="1751853906294" duration="6394000" />
+      <workItem from="1752461527355" duration="1204000" />
     </task>
     <servers />
   </component>

@@ -1,4 +1,4 @@
-import { Article, fetchArticle } from "@/app/fetch/articles";
+import { fetchArticle } from "@/app/fetch/articles";
 import {
     ArrowDown,
     ArrowLeft,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {Article} from "@/app/Types/Models";
 
 export default async function Page(props: {
     params: Promise<{ id: string; page: string }>;

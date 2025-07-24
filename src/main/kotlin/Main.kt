@@ -16,20 +16,28 @@ import org.eclipse.jetty.server.session.JDBCSessionDataStoreFactory
 import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.AppConfig
 import org.matamercer.config.Seeder
+import org.matamercer.config.reader.ArgsReader
+import org.matamercer.config.reader.DotEnvReader
+import org.matamercer.config.reader.PropertiesReader
 import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.CurrentUser
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.*
 import org.matamercer.domain.services.*
 import org.matamercer.domain.services.storage.FileSystemStorageService
+import org.matamercer.domain.services.upload.UploadService
+import org.matamercer.domain.services.upload.image.ImageResizer
+import org.matamercer.domain.services.upload.security.ClamAVScanner
+import org.matamercer.domain.services.upload.security.UploadSecurity
 import org.matamercer.security.UserRole
 import org.matamercer.security.generateCsrfToken
 import org.matamercer.web.FileMetadataForm
+import org.matamercer.web.Router
 import org.matamercer.web.controllers.*
 
 
 fun main(args: Array<String>) {
-    setupApp()
+    setupApp(args = args)
         .start(7070)
 }
 
@@ -39,7 +47,20 @@ enum class AppMode {
     TEST
 }
 
-fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
+const val configFileName = "config.properties"
+const val defaultConfigFileName = "default-config.properties"
+fun configSetup(args: Array<String>){
+    AppConfig.registerConfigReader(PropertiesReader(defaultConfigFileName))
+    AppConfig.registerConfigReader(DotEnvReader())
+    AppConfig.registerConfigReader(PropertiesReader(configFileName))
+    AppConfig.registerConfigReader(ArgsReader(args))
+    AppConfig.reload()
+}
+
+fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<String>()): Javalin {
+
+    configSetup(args)
+
     val dataSource: HikariDataSource = if (appMode == AppMode.TEST) {
         initTestDataSource()
     } else {
@@ -56,8 +77,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val app = createJavalinApp()
 
-    val storageService = FileSystemStorageService()
-    val fileModelService = FileModelService(storageService = storageService)
+
 
     val userDao = UserDao()
     val followDao = FollowDao()
@@ -72,7 +92,24 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val httpClient = OkHttpClient()
     val userRepository = UserRepository(userDao, followDao, transactionManager, dataSource)
-    val userService = UserService(userRepository, fileModelService, notificationService, httpClient)
+    val userService = UserService(userRepository, notificationService, httpClient)
+
+
+    val storageService = FileSystemStorageService()
+
+    val malwareScanner = ClamAVScanner()
+    val uploadSecurity = UploadSecurity(userService = userService)
+    val uploadService = UploadService(
+        storageService = storageService,
+        uploadSecurity = uploadSecurity,
+        imageResizer = ImageResizer()
+    )
+    val fileModelDao = FileModelDao()
+    val fileModelRepository = FileModelRepository(fileModelDao = fileModelDao, dataSource = dataSource)
+    val fileModelService = FileModelService(uploadService = uploadService, fileModelRepository = fileModelRepository)
+    val userProfileService = UserProfileService(userService, userRepository, fileModelService)
+
+
     val seeder = Seeder(userService)
     seeder.initRootUser()
     seeder.initTestUser()
@@ -80,14 +117,19 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val articleDao = ArticleDao()
     val characterDao = CharacterDao()
-    val fileModelDao = FileModelDao()
     val likeDao = LikeDao()
 
     val traitDao = TraitDao()
 
     val timelineDao = TimelineDao()
-    val timelineRepository = TimelineRepository(timelineDao, dataSource, transactionManager)
-    val timelineService = TimelineService(timelineRepository)
+    val timelineRepository = TimelineRepository(
+        timelineDao = timelineDao,
+        articleDao = articleDao,
+        fileModelDao = fileModelDao,
+        dataSource, transactionManager)
+    val timelineService = TimelineService(
+        fileModelService= fileModelService,
+        timelineRepository = timelineRepository)
 
     if (appMode == AppMode.TEST) {
         storageService.deleteAll()
@@ -116,14 +158,15 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
 
     val articleController = ArticleController(articleService, timelineService)
     val timelineController = TimelineController(timelineService)
-    val userController = UserController(userService)
+    val userController = UserController(userService, userProfileService)
     val authController = AuthController(userService)
     val characterController = CharacterController(characterService)
-    val fileController = FileController(storageService)
+    val fileController = FileController(fileModelService = fileModelService, uploadService = uploadService)
     val notificationController = NotificationController(notificationService)
     val oAuthController = OAuthController(userService)
 
     val router = Router(
+        listOf(
         articleController,
         timelineController,
         userController,
@@ -132,8 +175,10 @@ fun setupApp(appMode: AppMode? = AppMode.DEV): Javalin {
         characterController,
         fileController,
         notificationController,
+        ),
         app
     )
+
     router.setupRoutes()
 
     app.error(404) { ctx ->

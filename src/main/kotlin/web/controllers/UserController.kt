@@ -3,6 +3,7 @@ package org.matamercer.web.controllers
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import io.javalin.http.bodyValidator
+import org.matamercer.domain.services.UserProfileService
 import org.matamercer.domain.services.UserService
 import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
@@ -11,7 +12,8 @@ import org.matamercer.web.UpdateUserForm
 
 @Controller("/api/users")
 class UserController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val userProfileService: UserProfileService
 ) {
     @Route(HandlerType.GET,"/{id}")
     fun getUser(ctx: Context){
@@ -27,7 +29,7 @@ class UserController(
             ctx.uploadedFiles().first()
         )
         val currentUser = getCurrentUser(ctx)
-        userService.updateProfile(currentUser, updateProfileForm)
+        userProfileService.updateProfile(currentUser, updateProfileForm)
         ctx.json("Profile updated")
     }
 

@@ -142,6 +142,15 @@ class CharacterDao {
         it.setLong(1, id)
     }
 
+    fun deleteByAuthorId(conn: Connection, authorId: Long) = mapper.update(
+        """
+            DELETE FROM characters
+            WHERE author_id = ?
+        """.trimIndent(), conn
+    ) {
+        it.setLong(1, authorId)
+    }
+
     fun findCharacterCountByAuthorId(conn: Connection, id: Long): Long? = mapper.queryForLong(
         """
             SELECT COUNT(*) AS count

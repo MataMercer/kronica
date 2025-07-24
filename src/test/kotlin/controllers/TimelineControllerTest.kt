@@ -197,4 +197,29 @@ class TimelineControllerTest {
         assertThat(articlesRes.isSuccessful).isTrue()
         print(articlesRes.body?.string())
     }
+
+    @Test
+    fun `when delete timeline, return ok`() {
+        val timelineId = createTimeline()
+        val articleId = createTestArticle(timelineId)
+        val request = Request.Builder()
+            .url("${getHostUrl(app)}/api/timelines/${timelineId}")
+            .delete().build()
+        val res = authClient.okHttp.newCall(request).execute()
+        assertThat(res.code == 200).isTrue()
+
+        // Verify that the timeline is deleted
+        val getRequest = Request.Builder()
+            .url("${getHostUrl(app)}/api/timelines/${timelineId}")
+            .get().build()
+        val getRes = authClient.okHttp.newCall(getRequest).execute()
+        assertThat(getRes.code == 404).isTrue() // Should return 404 if deleted
+
+        // Verify that the articles in the timeline are also deleted
+        val articleGetRequest = Request.Builder()
+            .url("${getHostUrl(app)}/api/articles/id/${articleId}")
+            .get().build()
+        val articleGetRes = authClient.okHttp.newCall(articleGetRequest).execute()
+        assertThat(articleGetRes.code == 404).isTrue() // Should return 404 if article is deleted
+    }
 }

@@ -13,12 +13,10 @@ import org.matamercer.security.hashPassword
 import org.matamercer.security.verifyPassword
 import org.matamercer.web.LoginRequestForm
 import org.matamercer.web.RegisterUserForm
-import org.matamercer.web.UpdateProfileForm
 import org.matamercer.web.UpdateUserForm
 
 class UserService(
     private val userRepository: UserRepository,
-    private val fileModelService: FileModelService,
     private val notificationService: NotificationService,
     private val httpClient: OkHttpClient
 ) {
@@ -67,6 +65,10 @@ class UserService(
     }
 
     private fun getDiscordOAuthAccessToken(code: String): String{
+        if (AppConfig.discordOAuthClientId==null || AppConfig.discordOAuthClientSecret==null){
+            throw InternalServerErrorResponse("Discord OAuth client ID or secret is not configured.")
+        }
+
         val redirectUri = "http://localhost:3000/oauth/callback"
         val url = HttpUrl.Builder().scheme("https")
             .host("discord.com")
@@ -88,7 +90,7 @@ class UserService(
             .add("code", code)
             .add("redirect_uri", redirectUri)
             .build()
-        val credentials = Credentials.basic(AppConfig.discordOAuthClientId, AppConfig.discordOAuthClientSecret)
+        val credentials = Credentials.basic(AppConfig.discordOAuthClientId!!, AppConfig.discordOAuthClientSecret!!)
         val request = Request.Builder()
             .url(url)
             .header("Content-Type", "application/x-www-form-urlencoded")
@@ -210,20 +212,6 @@ class UserService(
         userRepository.update(user)
     }
 
-    fun updateProfile(currentUser: CurrentUser, updateProfileForm: UpdateProfileForm) {
-        val avatar = fileModelService.uploadFiles(listOf(updateProfileForm.avatar)).first()
-        val profile = updateProfileForm.description?.let {
-            Profile(
-                id = currentUser.id,
-                description = it,
-                avatar = avatar
-            )
-        }
-        if (profile == null) {
-            throw BadRequestResponse()
-        }
-        userRepository.updateProfile(profile)
-    }
 
     fun delete(currentUser: CurrentUser, id: Long) {
         authCheck(currentUser, id)

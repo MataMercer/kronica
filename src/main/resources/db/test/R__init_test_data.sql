@@ -1,4 +1,4 @@
-WITH inserted_profile_id AS (INSERT INTO profiles (
+WITH inserted_profile_id AS (INSERT INTO user_profiles (
     description
     )
     VALUES (

@@ -1,6 +1,5 @@
 import ArticleThumb from "@/app/components/articles/ArticleThumb";
 import {fetchAllArticles} from "@/app/fetch/articles";
-import KronologizeButton from "./EditTimelineButton";
 import {fetchTimeline} from "../fetch/timelines";
 import {fetchCharacters} from "@/app/fetch/characters";
 import Link from "next/link";
@@ -114,12 +113,6 @@ export default async function ArticleDisplay({
             <div className="flex space-x-2 border-black border-b-[1px] mb-1 justify-between">
                 <h1 className="text-3xl ">Articles</h1>
             </div>
-
-            {articles && articles.length > 0 && (
-                <div className="mb-5">
-                    <KronologizeButton timelineId={timelineId}/>
-                </div>
-            )}
 
             {articles && articles.length > 0 ? (
                 <div className="grid sm:grid-cols-5 gap-2">

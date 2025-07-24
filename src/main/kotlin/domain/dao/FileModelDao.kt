@@ -13,6 +13,8 @@ class FileModelDao() {
             name = rs.getString("name"),
             caption = rs.getString("caption"),
             storageId = rs.getString("storage_id"),
+            sizeBytes = rs.getLong("size_bytes"),
+            mimeType = rs.getString("mime_type"),
         )
     }
 
@@ -25,6 +27,18 @@ class FileModelDao() {
         """.trimIndent()
         return mapper.queryForObject(sql, conn) {
             it.setLong(1, id)
+        }
+    }
+
+    fun findByStorageId(conn: Connection, storageId: String): FileModel? {
+        val sql = """
+            SELECT
+                files.*
+            FROM files
+            WHERE files.storage_id = ?
+        """.trimIndent()
+        return mapper.queryForObject(sql, conn) {
+            it.setString(1, storageId)
         }
     }
 
@@ -233,6 +247,18 @@ class FileModelDao() {
         }
     }
 
+    fun joinUserProfile(conn: Connection, fileId: Long, profileId: Long) = mapper.update(
+        """INSERT INTO user_profile_pictures
+            (
+                file_id,
+                profile_id,
+            )
+            VALUES (?, ? )
+        """.trimIndent(), conn){
+        var i= 0
+        it.setLong(++i, fileId)
+        it.setLong(++i, profileId)
+    }
 
     fun create(connection: Connection, fileModel: FileModel): Long {
         return mapper.updateForId(
@@ -242,9 +268,12 @@ class FileModelDao() {
                     name,
                     storage_id,
                     created_at,
-                    caption
+                    caption,
+                    size_bytes,
+                    mime_type,
+                    author_id
                     )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?)
             """.trimIndent(), connection
         ) {
             var i = 0
@@ -252,6 +281,13 @@ class FileModelDao() {
             it.setString(++i, fileModel.storageId)
             it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
             it.setString(++i, fileModel.caption)
+            it.setLong(++i, fileModel.sizeBytes)
+            it.setString(++i, fileModel.mimeType)
+
+            if (fileModel.author==null || fileModel.author.id == null){
+                throw IllegalArgumentException("Author ID cannot be null")
+            }
+            it.setLong(++i, fileModel.author.id)
         }
     }
 
@@ -280,6 +316,49 @@ class FileModelDao() {
             it.setLong(1, id)
         }
     }
+
+    fun findByTimeline(conn: Connection, timelineId: Long): List<FileModel> {
+        val sql = """
+            SELECT * FROM files 
+                JOIN files_to_articles 
+                ON files.id=files_to_articles.file_id
+                JOIN articles
+                ON article_id=articles.id
+                JOIN timeline_entries
+                ON articles.id=timeline_entries.article_id
+                WHERE timeline_id=?
+            ;
+
+        """.trimIndent()
+        return mapper.queryForObjectList(sql, conn) {
+            it.setLong(1, timelineId)
+        }
+    }
+
+    fun findByUser(conn: Connection, userId: Long): List<FileModel> {
+        val sql = """
+            SELECT * FROM files 
+                WHERE author_id=?
+                
+        """.trimIndent()
+        return mapper.queryForObjectList(sql, conn) {
+            it.setLong(1, userId)
+        }
+    }
+
+    fun calcUserStorageUsed(conn: Connection, userId: Long): Long {
+        val sql = """
+            SELECT SUM(size_bytes) AS total_size
+            FROM files
+            WHERE author_id = ?
+        """.trimIndent()
+
+        return mapper.queryForLong(sql, conn) {
+            it.setLong(1, userId)
+        } ?: 0L
+    }
+
+
 
 
 }

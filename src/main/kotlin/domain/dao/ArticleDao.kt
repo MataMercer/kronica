@@ -283,4 +283,26 @@ class ArticleDao {
             it.setLong(1, id)
         }
     }
+
+    fun deleteByTimelineId(conn: Connection, timelineId: Long) {
+        val sql = """
+            DELETE FROM articles
+            USING timeline_entries
+            WHERE articles.id = timeline_entries.article_id 
+            AND timeline_entries.timeline_id = ?;
+        """.trimIndent()
+        mapper.update(sql, conn) {
+            it.setLong(1, timelineId)
+        }
+    }
+
+    fun deleteByAuthorId(conn: Connection, authorId: Long) {
+        val sql = """
+            DELETE FROM articles
+            WHERE articles.author_id = ?
+        """.trimIndent()
+        mapper.update(sql, conn) {
+            it.setLong(1, authorId)
+        }
+    }
 }

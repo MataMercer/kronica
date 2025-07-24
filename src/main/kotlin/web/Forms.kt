@@ -81,8 +81,6 @@ data class UpdateCharacterForm(
     val profilePicturesMetadata: List<FileMetadataForm> = listOf(),
 )
 
-
-
 data class FileMetadataForm(
     val id: Long? = null,
     val uploadIndex: Int? = null,
@@ -94,6 +92,11 @@ data class FileMetadataForm(
        return id != null
     }
 }
+
+data class FileUploadForm(
+    val uploadedFile: UploadedFile,
+    val caption: String = ""
+)
 
 data class ArticleQuery(
     val authorId: Long? = null,

@@ -6,6 +6,7 @@ import io.javalin.http.InternalServerErrorResponse
 import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.CharacterRepository
+import org.matamercer.domain.services.upload.image.ImagePresetSize
 import org.matamercer.web.CreateCharacterForm
 import org.matamercer.web.UpdateCharacterForm
 import org.matamercer.web.dto.Page
@@ -13,13 +14,25 @@ import org.matamercer.web.dto.Page
 class CharacterService(
     private val characterRepository: CharacterRepository,
     private val fileModelService: FileModelService
+
 ) {
 
+    private val attachmentSizes = setOf(
+        ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.LARGE
+    )
+
     fun create(form: CreateCharacterForm, currentUser: CurrentUser): Long {
-        val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
-        val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions)
-        val profilePicturesCaptions = form.profilePicturesMetadata.filter { !it.isExistingFile() }.map { it.caption }
-        val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures, profilePicturesCaptions)
+
+        fileModelService.checkUserStorageLimit(currentUser, form.uploadedAttachments + form.uploadedProfilePictures)
+
+        val attachmentForms =
+            fileModelService.zipUploadedFilesWithCaptions(form.uploadedAttachments, form.uploadedAttachmentsMetadata)
+        val attachments = fileModelService.uploadImages(attachmentForms, attachmentSizes, currentUser)
+        val profilePictureForms = fileModelService.zipUploadedFilesWithCaptions(
+            form.uploadedProfilePictures,
+            form.profilePicturesMetadata
+        )
+        val profilePictures = fileModelService.uploadImages(profilePictureForms, attachmentSizes, currentUser)
 
         val traits = getTraitsFromStringList(form.traits)
 
@@ -41,11 +54,15 @@ class CharacterService(
         val foundCharacter = getById(form.id)
         authCheck(currentUser, foundCharacter)
         validateUpdateForm(form, foundCharacter)
+        fileModelService.checkUserStorageLimit(currentUser, form.uploadedAttachments + form.uploadedProfilePictures)
 
-        val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
-        val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions)
-        val profilePicturesCaptions = form.profilePicturesMetadata.filter { !it.isExistingFile() }.map { it.caption }
-        val profilePictures = fileModelService.uploadFiles(form.uploadedProfilePictures, profilePicturesCaptions)
+        val attachmentForms =
+            fileModelService.zipUploadedFilesWithCaptions(form.uploadedAttachments, form.uploadedAttachmentsMetadata)
+        val attachments = fileModelService.uploadImages(attachmentForms, attachmentSizes, currentUser)
+        val profilePictureForms = fileModelService.zipUploadedFilesWithCaptions(
+            form.uploadedProfilePictures, form.profilePicturesMetadata
+        )
+        val profilePictures = fileModelService.uploadImages(profilePictureForms, attachmentSizes, currentUser)
 
 
         characterRepository.update(
@@ -62,7 +79,7 @@ class CharacterService(
             form.profilePicturesMetadata
         )
 
-        val attachmentsToDelete = form.uploadedAttachmentsMetadata.filter { it.delete == true }.map { it.id }
+        val attachmentsToDelete = form.uploadedAttachmentsMetadata.filter { it.delete==true }.map { it.id }
         val profilePicturesToDelete = form.profilePicturesMetadata.filter { it.delete == true }.map { it.id }
         fileModelService.deleteFiles(foundCharacter.attachments.filter { it.id in attachmentsToDelete })
         fileModelService.deleteFiles(foundCharacter.profilePictures.filter { it.id in profilePicturesToDelete })
@@ -115,46 +132,44 @@ class CharacterService(
 
     private fun getTraitsFromStringList(stringList: List<String>): List<Trait> =
         stringList
-            .map { it.split(":", ignoreCase = false, limit = 2)}
+            .map { it.split(":", ignoreCase = false, limit = 2) }
             .filter { it.size == 2 }
             .map { Trait(name = it[0].trim(), value = it[1].trim()) }
 
-    fun toDto(c: Character): CharacterDto {
-        return CharacterDto(
-            id = c.id,
-            name = c.name,
-            body = c.body,
-            author = UserDto(
-                id = c.author.id,
-                name = c.author.name,
-                role = c.author.role,
-                createdAt = c.author.createdAt
-            ),
-            createdAt = c.createdAt,
-            updatedAt = c.updatedAt,
-            attachments = c.attachments.map {
-                FileModelDto(
-                    id = it.id,
-                    name = it.name,
-                    storageId = it.storageId,
-                    caption = it.caption
-                )
-            },
-            profilePictures = c.profilePictures.map {
-                FileModelDto(
-                    id = it.id,
-                    name = it.name,
-                    storageId = it.storageId,
-                    caption = it.caption
-                )
-            },
-            traits = c.traits
-        )
-    }
+    fun toDto(c: Character): CharacterDto = CharacterDto(
+        id = c.id,
+        name = c.name,
+        body = c.body,
+        author = UserDto(
+            id = c.author.id,
+            name = c.author.name,
+            role = c.author.role,
+            createdAt = c.author.createdAt
+        ),
+        createdAt = c.createdAt,
+        updatedAt = c.updatedAt,
+        attachments = c.attachments.map {
+            FileModelDto(
+                id = it.id,
+                name = it.name,
+                storageId = it.storageId,
+                caption = it.caption
+            )
+        },
+        profilePictures = c.profilePictures.map {
+            FileModelDto(
+                id = it.id,
+                name = it.name,
+                storageId = it.storageId,
+                caption = it.caption
+            )
+        },
+        traits = c.traits
+    )
 
     fun authCheck(currentUser: CurrentUser, character: Character) {
         if (currentUser.id != character.author.id && !currentUser.role.isAdmin()) {
-            throw ForbiddenResponse()
+            throw ForbiddenResponse("You don't own this resource and you're not an admin.")
         }
     }
 }

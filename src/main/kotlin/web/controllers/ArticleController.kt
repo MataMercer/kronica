@@ -3,6 +3,7 @@ package org.matamercer.web.controllers
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
+import io.javalin.validation.Validator
 import org.matamercer.domain.services.ArticleService
 import org.matamercer.domain.services.TimelineService
 import org.matamercer.getCurrentUser
@@ -17,12 +18,15 @@ class ArticleController(
     private val timelineService: TimelineService
 ) {
 
-    @Route(HandlerType.GET, "/id/{id}")
-    fun getArticle(ctx: Context) {
-        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
-        val a = articleService.toDto(foundArticle)
-        ctx.json(a)
-    }
+//    @Route(HandlerType.GET, "/id/{id}")
+//    fun getArticle(ctx: Context) {
+//        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
+//        val a = articleService.toDto(foundArticle)
+//        ctx.json(a)
+//    }
+
+    
+
 
     @Route(HandlerType.GET, "/")
     fun getArticles(ctx: Context) {
@@ -53,6 +57,7 @@ class ArticleController(
 
     @Route(HandlerType.POST, "/")
     @RequiredRole(UserRole.CONTRIBUTOR_USER)
+
     fun createArticle(ctx: Context) {
 //        val createArticleForm = ctx.bodyValidator<CreateArticleForm>()
 //            .check({ !it.title.isNullOrBlank() }, "Title is empty")
@@ -94,6 +99,12 @@ class ArticleController(
         val a = articleService.getById(articleId)
         val dto = articleService.toDto(a)
         ctx.json(dto)
+    }
+
+    @Route(HandlerType.POST, "/like/{id}")
+    fun likeArticle(ctx: Context){
+        val author = getCurrentUser(ctx)
+        val articleId = ctx.pathParam("id").toLong()
     }
 
     @Route(HandlerType.GET, "/following")

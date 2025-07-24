@@ -105,7 +105,7 @@ class UserDao {
 
     fun createProfile(conn: Connection, profile: Profile): Long {
         val sql = """
-           INSERT INTO profiles
+           INSERT INTO user_profiles
                (description)
               VALUES (?)
         """.trimIndent()
@@ -151,15 +151,13 @@ class UserDao {
 
     fun updateProfile(conn: Connection, profile: Profile): Long {
         val sql = """
-            UPDATE profiles
+            UPDATE user_profiles
             SET description = ?,
-                avatar_id = ?
             WHERE id = ?
         """.trimIndent()
         return mapper.updateForId(sql, conn) {
             var i = 0
             it.setString(++i, profile.description)
-            profile.avatar?.id?.let { it1 -> it.setLong(++i, it1) }
             profile.id?.let { id -> it.setLong(++i, id) }
         }
     }

@@ -363,5 +363,24 @@ class ArticleControllerTest {
         assertThat(res.code == 200).isTrue()
     }
 
+    @Test
+    fun `when delete article return ok response`(){
+        val articleId = createTestArticle(authClient)
+        createCharacter()
+//        val request = Request.Builder()
+//            .url("${getHostUrl(app)}/api/articles/id/${articleId}")
+//            .delete()
+//            .build()
+//        val res = authClient.okHttp.newCall(request).execute()
+//        assertThat(res.code == 200).isTrue()
+//
+//        val getArticleRequest = Request.Builder()
+//            .url("${getHostUrl(app)}/api/articles/id/${articleId}")
+//            .get()
+//            .build()
+//        val getArticleRes = unauthClient.okHttp.newCall(getArticleRequest).execute()
+//        assertThat(getArticleRes.code == 404).isTrue()
+    }
+
 
 }

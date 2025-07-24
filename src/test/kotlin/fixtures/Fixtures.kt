@@ -4,6 +4,7 @@ import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.Character
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.Timeline
+import org.matamercer.domain.models.Trait
 import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
 
@@ -44,12 +45,13 @@ class Fixtures {
         body = "lorem ipsum",
         author = rootUser,
         attachments = emptyList(),
-        traits = mapOf("mobile suit" to "gundam", "allegiance" to "londo bell")
+        traits = listOf(Trait(name = "mobile suit", value = "gundam") , Trait(name = "allegiance", value = "londo bell") )
     )
 
     val testTimeline = Timeline(
         id = 1,
         name= "First Timeline",
-        description = "This is a timeline about aliens."
+        description = "This is a timeline about aliens.",
+        author = rootUser
     )
 }

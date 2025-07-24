@@ -138,4 +138,10 @@ class UserControllerTest {
         assertThat(followRes.isSuccessful).isFalse()
     }
 
+    @Test
+    fun `Deleting a user returns ok response`() {
+        val deleteRes = authClient.delete("/api/users/${testUser.id}")
+        assertThat(deleteRes.isSuccessful).isTrue()
+    }
+
 }

@@ -14,7 +14,8 @@ import org.matamercer.web.UpdateTimelineForm
 import org.matamercer.web.UpdateTimelineOrderForm
 
 class TimelineService(
-    private val timelineRepository: TimelineRepository
+    private val timelineRepository: TimelineRepository,
+    private val fileModelService: FileModelService
 ) {
 
 
@@ -78,12 +79,14 @@ class TimelineService(
 
     fun delete(currentUser: CurrentUser, timelineId: Long){
         checkAuth(currentUser, timelineId)
+        val filesToDelete = timelineRepository.findFileModelsByTimelineId(timelineId)
         timelineRepository.delete(timelineId)
+        fileModelService.deleteFiles(filesToDelete)
     }
 
     private fun checkAuth(currentUser: CurrentUser, timelineId: Long){
         val t = getTimelineById(timelineId)
-        if (t.author?.id != currentUser.id){
+        if (t.author.id != currentUser.id){
            throw UnauthorizedResponse("User is not the author of this timeline.")
         }
     }

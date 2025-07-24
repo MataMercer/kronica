@@ -7,7 +7,10 @@ class FileModel(
     val createdAt: Date? = null,
     val name: String,
     val caption: String? = null,
-    val storageId:String,
+    val storageId: String,
+    val sizeBytes: Long,
+    val mimeType: String,
+    val author: User? = null,
 )
 
 data class FileModelDto(

@@ -162,7 +162,7 @@ class TimelineDao {
     }
 
 
-    fun updateTimelineOrder(conn: Connection, articleId: Long, index: Int): Long = mapper.updateForId(
+    fun updateTimelineOrder(conn: Connection, articleId: Long, index: Int) = mapper.update(
         """
                 UPDATE timeline_entries
                 SET timeline_index = ?

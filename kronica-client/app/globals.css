@@ -76,6 +76,13 @@
 }
 body{
     font-family: 'helvetica', sans-serif;
+    /*background: repeating-linear-gradient(*/
+    /*        45deg,*/
+    /*        white,*/
+    /*        white 2px,*/
+    /*        black 2px,*/
+    /*        black 4px*/
+    /*);*/
 }
 
 .button {
@@ -87,6 +94,10 @@ body{
 .button:hover {
     background-color: black;
     color: white;
+}
+.button:disabled{
+    color: gray;
+    text-decoration: line-through;
 }
 
 input,

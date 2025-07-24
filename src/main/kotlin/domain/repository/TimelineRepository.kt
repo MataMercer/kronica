@@ -1,12 +1,17 @@
 package org.matamercer.domain.repository
 
+import org.matamercer.domain.dao.ArticleDao
+import org.matamercer.domain.dao.FileModelDao
 import org.matamercer.domain.dao.TimelineDao
 import org.matamercer.domain.dao.TransactionManager
+import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.Timeline
 import javax.sql.DataSource
 
 class TimelineRepository(
     private val timelineDao: TimelineDao,
+    private val articleDao: ArticleDao,
+    private val fileModelDao: FileModelDao,
     private val dataSource: DataSource,
     private val transactionManager: TransactionManager
 ) {
@@ -37,6 +42,10 @@ class TimelineRepository(
         return@wrap res
     }
 
+    fun findFileModelsByTimelineId(timelineId: Long): List<FileModel> = transactionManager.wrap { conn ->
+        fileModelDao.findByTimeline(conn, timelineId)
+    }
+
     fun updateOrder(timelineId: Long, order: Array<Long>) = transactionManager.wrap { conn ->
         order.forEachIndexed { index, id ->
             timelineDao.updateTimelineOrder(conn, id, index)
@@ -44,6 +53,12 @@ class TimelineRepository(
     }
 
     fun delete(id: Long) = transactionManager.wrap { conn ->
+
+        val fileModels = fileModelDao.findByTimeline(conn, id)
+        articleDao.deleteByTimelineId(conn, id)
         timelineDao.delete(conn, id)
+        fileModels.forEach { fileModel ->
+            fileModelDao.deleteById(conn, fileModel.id!!)
+        }
     }
 }

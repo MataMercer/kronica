@@ -7,10 +7,8 @@ import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
 import org.matamercer.domain.repository.UserRepository
-import org.matamercer.web.ArticleQuery
-import org.matamercer.web.CreateArticleForm
-import org.matamercer.web.PageQuery
-import org.matamercer.web.UpdateArticleForm
+import org.matamercer.domain.services.upload.image.ImagePresetSize
+import org.matamercer.web.*
 import org.matamercer.web.dto.Page
 
 class ArticleService(
@@ -20,6 +18,9 @@ class ArticleService(
     private val userRepository: UserRepository,
     private val notificationService: NotificationService
 ) {
+    private val attachmentSizes = setOf(
+        ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.LARGE
+    )
 
     fun getById(id: Long?): Article {
         if (id == null) throw BadRequestResponse()
@@ -29,8 +30,8 @@ class ArticleService(
     }
 
     fun getAll(query: ArticleQuery, pageQuery: PageQuery, currentUser: CurrentUser?): Page<ArticleDto> {
-        val page =  articleRepository.findAll(query, pageQuery)
-        return page.convert{toDto(it, currentUser)}
+        val page = articleRepository.findAll(query, pageQuery)
+        return page.convert { toDto(it, currentUser) }
     }
 
 
@@ -41,9 +42,16 @@ class ArticleService(
 
     fun create(form: CreateArticleForm, currentUser: CurrentUser): Long {
         validateCreateForm(form)
+        fileModelService.checkUserStorageLimit(currentUser, form.uploadedAttachments)
+        val fileForms = fileModelService.zipUploadedFilesWithCaptions(
+            form.uploadedAttachments,
+            form.uploadedAttachmentsMetadata
+        )
+        val attachments = fileModelService.uploadImages(
+            fileForms,
+            attachmentSizes, currentUser
+        )
 
-        val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
-        val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions )
         val article = articleRepository.create(
             Article(
                 title = form.title!!,
@@ -67,14 +75,22 @@ class ArticleService(
         val originalArticle = getById(form.id)
         authCheck(currentUser, originalArticle)
         validateUpdateForm(form, originalArticle)
+        fileModelService.checkUserStorageLimit(currentUser, form.uploadedAttachments)
         val existingFilesId = form.uploadedAttachmentsMetadata.filter { it.isExistingFile() }.map { it.id }.toSet()
         val originalArticleFiles = originalArticle.attachments.map { it.id }.toSet()
-        if (!originalArticleFiles.containsAll(existingFilesId)){
+        if (!originalArticleFiles.containsAll(existingFilesId)) {
             throw BadRequestResponse("File metadata entries for existing files have ids that don't belong to the original article.")
         }
 
         val attachmentCaptions = form.uploadedAttachmentsMetadata.filter { !it.isExistingFile() }.map { it.caption }
-        val attachments = fileModelService.uploadFiles(form.uploadedAttachments, attachmentCaptions )
+        val attachments = fileModelService.uploadImages(form.uploadedAttachments.mapIndexed { index, it ->
+            FileUploadForm(
+                uploadedFile = it,
+                caption = attachmentCaptions[index]!!
+            )
+        }, setOf(
+            ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.LARGE
+        ), currentUser)
         val article = articleRepository.update(
             Article(
                 id = form.id,
@@ -93,7 +109,9 @@ class ArticleService(
         if (article.id == null) throw InternalServerErrorResponse()
 
 
-        val fileIdsToDelete = form.uploadedAttachmentsMetadata.filter { it.isExistingFile() && it.delete != null && it.delete }.map { it.id }
+        val fileIdsToDelete =
+            form.uploadedAttachmentsMetadata.filter { it.isExistingFile() && it.delete != null && it.delete }
+                .map { it.id }
         fileModelService.deleteFiles(originalArticle.attachments.filter { it.id in fileIdsToDelete })
 
         notifyMentionedUsers(form.body, currentUser, article.id)
@@ -102,20 +120,21 @@ class ArticleService(
 
     }
 
-    private fun validateCreateForm(createArticleForm: CreateArticleForm) {
+    private fun validateCreateForm(createArticleForm: CreateArticleForm) =
         if (createArticleForm.title == null && createArticleForm.body == null) {
             throw BadRequestResponse()
+        } else {
         }
-//        if (createArticleForm.uploadedAttachments.size > createArticleForm.uploadedAttachmentsMetadata.size){
-//            throw BadRequestResponse("Each uploaded attachment must have a corresponding metadata entry.")
-//        }
-    }
 
     private fun validateUpdateForm(form: UpdateArticleForm, originalArticle: Article) {
         if (form.title == null && form.body == null) {
             throw BadRequestResponse()
         }
-       fileModelService.validateFileMetadataList(form.uploadedAttachmentsMetadata, form.uploadedAttachments, originalArticle.attachments)
+        fileModelService.validateFileMetadataList(
+            form.uploadedAttachmentsMetadata,
+            form.uploadedAttachments,
+            originalArticle.attachments
+        )
     }
 
     private fun getMentionedUsers(input: String): List<User> {
@@ -125,10 +144,11 @@ class ArticleService(
         val mentionedUsers = mentions.mapNotNull { userRepository.findByName(it) }
         return mentionedUsers
     }
-    private fun notifyMentionedUsers(input:String, currentUser: CurrentUser, articleId: Long){
+
+    private fun notifyMentionedUsers(input: String, currentUser: CurrentUser, articleId: Long) {
         val mentionedUsers = getMentionedUsers(input)
         mentionedUsers.forEach {
-            if (it.id==null) return@forEach
+            if (it.id == null) return@forEach
             val n = Notification(
                 subject = currentUser.toUser(),
                 subjectId = currentUser.id,
@@ -148,6 +168,25 @@ class ArticleService(
         articleRepository.deleteById(id)
 
         fileModelService.deleteFiles(article.attachments)
+    }
+
+    fun likeArticle(articleId: Long, currentUser: CurrentUser) {
+        val article = articleRepository.findById(articleId) ?: throw NotFoundResponse()
+
+        val youLiked = articleRepository.checkIfLiked(currentUser.id, articleId)
+        if (youLiked) {
+            throw BadRequestResponse("You have already liked this article.")
+        }
+        articleRepository.likeArticle(articleId, currentUser.id)
+    }
+
+    fun unlikeArticle(articleId: Long, currentUser: CurrentUser) {
+        val article = articleRepository.findById(articleId) ?: throw NotFoundResponse()
+        val youLiked = articleRepository.checkIfLiked(currentUser.id, articleId)
+        if (!youLiked) {
+            throw BadRequestResponse("You have not liked this article yet.")
+        }
+        articleRepository.unlikeArticle(articleId, currentUser.id)
     }
 
 
