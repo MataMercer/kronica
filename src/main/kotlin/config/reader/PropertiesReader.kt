@@ -8,12 +8,13 @@ class PropertiesReader(
 ) : ConfigReader {
     private var properties: Properties = Properties()
     init {
-        properties = Properties()
-        FileInputStream(configFileName).use { input ->
-            properties.load(input)
-        }
-        FileInputStream(configFileName).use { input ->
-            properties.load(input)
+        with(properties){
+            FileInputStream(configFileName).use { input ->
+                load(input)
+            }
+            FileInputStream(configFileName).use { input ->
+                load(input)
+            }
         }
     }
     override fun get(key: String): String? {

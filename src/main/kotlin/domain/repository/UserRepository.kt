@@ -1,8 +1,6 @@
 package org.matamercer.domain.repository
 
-import org.matamercer.domain.dao.FollowDao
-import org.matamercer.domain.dao.TransactionManager
-import org.matamercer.domain.dao.UserDao
+import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.AuthProvider
 import org.matamercer.domain.models.Follow
 import org.matamercer.domain.models.Profile
@@ -11,6 +9,7 @@ import javax.sql.DataSource
 
 class UserRepository(
     private val userDao: UserDao,
+    private val userProfileDao: UserProfileDao,
     private val followDao: FollowDao,
     private val transactionManager: TransactionManager,
     private val dataSource: DataSource
@@ -37,16 +36,12 @@ class UserRepository(
     }
 
     fun create(user: User) = transactionManager.wrap { conn ->
-        val profileId = userDao.createProfile(conn, Profile(description = ""))
+        val profileId = userProfileDao.createProfile(conn, Profile(description = ""))
         return@wrap userDao.create(conn, user, profileId)
     }
 
     fun update(user: User) = transactionManager.wrap { conn ->
         userDao.update(conn, user)
-    }
-
-    fun updateProfile(profile: Profile) = transactionManager.wrap { conn ->
-        userDao.updateProfile(conn, profile)
     }
 
     fun delete(id: Long) = transactionManager.wrap { conn ->
@@ -66,16 +61,18 @@ class UserRepository(
     }
 
     fun findFollowers(followeeId: Long): List<Follow> = dataSource.connection.use { conn ->
-        return followDao.findFollowers(conn, followeeId)
+        followDao.findFollowers(conn, followeeId)
     }
 
     fun findFollowings(followerId: Long): List<Follow> = dataSource.connection.use { conn ->
-        return followDao.findFollowings(conn, followerId)
+        followDao.findFollowings(conn, followerId)
     }
 
     fun findFollowerCount(followeeId: Long): Long? = dataSource.connection.use { conn ->
-        return followDao.findFollowerCount(conn, followeeId)
+        followDao.findFollowerCount(conn, followeeId)
     }
+
+
 
 
 }

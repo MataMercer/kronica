@@ -7,11 +7,11 @@ class ArgsReader(
 
     override fun get(key: String): String? = argMap[key]
 
-    fun getArgMap(args: Array<String>): Map<String, String> {
+    private fun getArgMap(args: Array<String>): Map<String, String> {
         val argMap = args.toList()
             .chunked(2)
             .filter { it.size==2 && it[0].contains("-") }
-            .associate { it[0] to it[1] }
+            .associate { it[0].removePrefix("-") to it[1] }
         return argMap
     }
 

@@ -5,21 +5,17 @@ import {
     ArrowLeftToLine,
     ArrowRight,
     ArrowRightToLine,
-    SquareArrowLeft,
-    SquareArrowRight,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import {Article} from "@/app/Types/Models";
+import { Article } from "@/app/Types/Models";
+import Img from "@/components/CustomUi/Img";
 
 export default async function Page(props: {
     params: Promise<{ id: string; page: string }>;
 }) {
     const params = await props.params;
-    const id = params.id;
-    const page = params.page;
+    const { id, page } = params;
     const article = await fetchArticle(id);
-
     return (
         <div>
             {article && (
@@ -27,9 +23,7 @@ export default async function Page(props: {
                     <Link href={`/articles/${article.id}`}>
                         <h1 className="text-3xl font-bold">{article.title}</h1>
                     </Link>
-
                     <Navigation article={article} page={Number(page)} />
-
                     <Link
                         href={`/articles/${article.id}/page/${
                             Number(page) < article.attachments.length
@@ -37,16 +31,16 @@ export default async function Page(props: {
                                 : Number(page)
                         }`}
                     >
-                        <Image
-                            src={`http://localhost:7070/api/files/serve/${
+                        <Img
+                            storageId={
                                 article.attachments[Number(page) - 1]?.storageId
-                            }/${article.attachments[Number(page) - 1]?.name}`}
+                            }
                             alt="Article Attachment"
                             width={1200}
                             height={1200}
+                            size="MEDIUM"
                         />
                     </Link>
-
                     <Navigation article={article} page={Number(page)} />
                     <Link href={`/articles/${article.id}`}>
                         <ArrowDown className="text-xl border-[blueviolet]  border-[2px]" />

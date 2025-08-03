@@ -1,0 +1,1 @@
+export type ImagePresetSize = "TINY" | "SMALL" | "MEDIUM" | "ORIGINAL";

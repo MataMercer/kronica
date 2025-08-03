@@ -18,6 +18,7 @@ import org.matamercer.config.AppConfig
 import org.matamercer.config.Seeder
 import org.matamercer.config.reader.ArgsReader
 import org.matamercer.config.reader.DotEnvReader
+import org.matamercer.config.reader.EnvReader
 import org.matamercer.config.reader.PropertiesReader
 import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.CurrentUser
@@ -27,8 +28,7 @@ import org.matamercer.domain.services.*
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.domain.services.upload.UploadService
 import org.matamercer.domain.services.upload.image.ImageResizer
-import org.matamercer.domain.services.upload.security.ClamAVScanner
-import org.matamercer.domain.services.upload.security.UploadSecurity
+import org.matamercer.domain.services.upload.security.*
 import org.matamercer.security.UserRole
 import org.matamercer.security.generateCsrfToken
 import org.matamercer.web.FileMetadataForm
@@ -52,15 +52,14 @@ const val defaultConfigFileName = "default-config.properties"
 fun configSetup(args: Array<String>){
     AppConfig.registerConfigReader(PropertiesReader(defaultConfigFileName))
     AppConfig.registerConfigReader(DotEnvReader())
+    AppConfig.registerConfigReader(EnvReader())
     AppConfig.registerConfigReader(PropertiesReader(configFileName))
     AppConfig.registerConfigReader(ArgsReader(args))
     AppConfig.reload()
 }
 
 fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<String>()): Javalin {
-
     configSetup(args)
-
     val dataSource: HikariDataSource = if (appMode == AppMode.TEST) {
         initTestDataSource()
     } else {
@@ -76,9 +75,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     val transactionManager = TransactionManager(dataSource)
 
     val app = createJavalinApp()
-
-
-
     val userDao = UserDao()
     val followDao = FollowDao()
     val notificationDao = NotificationDao()
@@ -91,14 +87,23 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     val notificationService = NotificationService(notificationRepository)
 
     val httpClient = OkHttpClient()
-    val userRepository = UserRepository(userDao, followDao, transactionManager, dataSource)
+    val userProfileDao = UserProfileDao()
+    val userRepository = UserRepository(
+        userDao = userDao,
+        followDao = followDao,
+        userProfileDao = userProfileDao,
+        transactionManager = transactionManager,
+        dataSource = dataSource)
     val userService = UserService(userRepository, notificationService, httpClient)
 
 
     val storageService = FileSystemStorageService()
 
-    val malwareScanner = ClamAVScanner()
-    val uploadSecurity = UploadSecurity(userService = userService)
+    val uploadSecurity = UploadSecurity(
+        mimeTypeDetector = TikaDetector(),
+        textFileValidator = TextFileValidator(),
+        imageFileValidator = ImageFileValidator()
+    )
     val uploadService = UploadService(
         storageService = storageService,
         uploadSecurity = uploadSecurity,
@@ -107,7 +112,17 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     val fileModelDao = FileModelDao()
     val fileModelRepository = FileModelRepository(fileModelDao = fileModelDao, dataSource = dataSource)
     val fileModelService = FileModelService(uploadService = uploadService, fileModelRepository = fileModelRepository)
-    val userProfileService = UserProfileService(userService, userRepository, fileModelService)
+
+    val userProfileRepository = UserProfileRepository(
+        userProfileDao = userProfileDao,
+        fileModelDao = fileModelDao,
+        transactionManager = transactionManager,
+        dataSource = dataSource
+    )
+    val userProfileService = UserProfileService(
+        userProfileRepository = userProfileRepository,
+        fileModelService = fileModelService
+    )
 
 
     val seeder = Seeder(userService)
@@ -131,7 +146,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         fileModelService= fileModelService,
         timelineRepository = timelineRepository)
 
-    if (appMode == AppMode.TEST) {
+    if (appMode == AppMode.TEST || appMode == AppMode.DEV) {
         storageService.deleteAll()
     }
     storageService.init()
@@ -178,13 +193,10 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         ),
         app
     )
-
     router.setupRoutes()
-
     app.error(404) { ctx ->
         ctx.result("Error 404: Not found")
     }
-
     app.sse("/sse") { client ->
         client.sendEvent("connected", "Hello, SSE")
         client.onClose { println("Client disconnected") }

@@ -10,7 +10,7 @@ enum class ImagePresetSize(
     TINY(50, 50, 0.2f),
     SMALL(100, 100, 0.25f),
     MEDIUM(2000, 2000, 0.75f),
-    LARGE(width = AppConfig.maxImageWidth!!,
+    ORIGINAL(width = AppConfig.maxImageWidth!!,
         height = AppConfig.maxImageHeight!!,
         quality = 1f);
 

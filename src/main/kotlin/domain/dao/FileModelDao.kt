@@ -56,7 +56,7 @@ class FileModelDao() {
         }
     }
 
-    fun findCharacterAttachments(conn: Connection, id: Long): List<FileModel>{
+    fun findCharacterAttachments(conn: Connection, id: Long): List<FileModel> {
         val sql = """
             SELECT 
                 files.*
@@ -70,7 +70,7 @@ class FileModelDao() {
         }
     }
 
-    fun findCharacterProfilePictures(conn: Connection, id: Long): List<FileModel>{
+    fun findCharacterProfilePictures(conn: Connection, id: Long): List<FileModel> {
         val sql = """
             SELECT 
                 files.*
@@ -81,6 +81,20 @@ class FileModelDao() {
         """.trimIndent()
         return mapper.queryForObjectList(sql, conn) {
             it.setLong(1, id)
+        }
+    }
+
+    fun findUserProfilePicture(conn: Connection, profileId: Long): FileModel? {
+        val sql = """
+            SELECT 
+                files.*
+            FROM files
+            INNER JOIN user_profile_pictures ON files.id=user_profile_pictures.file_id
+            INNER JOIN user_profiles ON user_profile_pictures.profile_id = user_profiles.id
+            WHERE user_profiles.id = ?
+        """.trimIndent()
+        return mapper.queryForObject(sql, conn) {
+            it.setLong(1, profileId)
         }
     }
 
@@ -254,14 +268,26 @@ class FileModelDao() {
                 profile_id,
             )
             VALUES (?, ? )
-        """.trimIndent(), conn){
-        var i= 0
+        """.trimIndent(), conn
+    ) {
+        var i = 0
         it.setLong(++i, fileId)
         it.setLong(++i, profileId)
     }
 
-    fun create(connection: Connection, fileModel: FileModel): Long {
-        return mapper.updateForId(
+    fun deleteJoinUserProfile(conn: Connection, fileId: Long, profileId: Long) = mapper.update(
+        """
+            DELETE FROM user_profile_pictures
+            WHERE file_id = ? AND profile_id = ?
+        """.trimIndent(), conn
+    ) {
+        var i = 0
+        it.setLong(++i, fileId)
+        it.setLong(++i, profileId)
+    }
+
+    fun create(connection: Connection, fileModel: FileModel) =
+        mapper.updateForId(
             """
                 INSERT INTO files
                     (
@@ -273,7 +299,7 @@ class FileModelDao() {
                     mime_type,
                     author_id
                     )
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             """.trimIndent(), connection
         ) {
             var i = 0
@@ -284,15 +310,14 @@ class FileModelDao() {
             it.setLong(++i, fileModel.sizeBytes)
             it.setString(++i, fileModel.mimeType)
 
-            if (fileModel.author==null || fileModel.author.id == null){
+            if (fileModel.author?.id == null) {
                 throw IllegalArgumentException("Author ID cannot be null")
             }
             it.setLong(++i, fileModel.author.id)
         }
-    }
 
-    fun updateCaption(connection: Connection, fileId: Long, caption: String): Long {
-        return mapper.updateForId(
+    fun updateCaption(connection: Connection, fileId: Long, caption: String) =
+        mapper.updateForId(
             """
                 UPDATE files
                 SET
@@ -304,21 +329,20 @@ class FileModelDao() {
             it.setString(++i, caption)
             it.setLong(++i, fileId)
         }
-    }
 
-    fun deleteById(connection: Connection, id: Long) {
-        return mapper.update(
-            """
+    fun deleteById(connection: Connection, id: Long) = mapper.update(
+        """
                 DELETE FROM files
                 WHERE files.id = ?
             """.trimIndent(), connection
-        ) {
-            it.setLong(1, id)
-        }
+    ) {
+        it.setLong(1, id)
     }
 
-    fun findByTimeline(conn: Connection, timelineId: Long): List<FileModel> {
-        val sql = """
+
+    fun findByTimeline(conn: Connection, timelineId: Long) =
+        mapper.queryForObjectList(
+            """
             SELECT * FROM files 
                 JOIN files_to_articles 
                 ON files.id=files_to_articles.file_id
@@ -329,11 +353,10 @@ class FileModelDao() {
                 WHERE timeline_id=?
             ;
 
-        """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        """.trimIndent(), conn
+        ) {
             it.setLong(1, timelineId)
         }
-    }
 
     fun findByUser(conn: Connection, userId: Long): List<FileModel> {
         val sql = """
@@ -357,8 +380,6 @@ class FileModelDao() {
             it.setLong(1, userId)
         } ?: 0L
     }
-
-
 
 
 }

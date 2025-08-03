@@ -34,7 +34,7 @@ data class OAuthUserInfo(
 data class Profile(
     val id: Long? = null,
     val description: String,
-    val avatar: FileModel? = null,
+    var picture: FileModel? = null,
     val socialMediaLinks: List<SocialMediaLink> = listOf(),
     val articleCount: Long? = null,
     val characterCount: Long? = null,

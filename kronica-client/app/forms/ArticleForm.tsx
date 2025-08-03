@@ -5,12 +5,13 @@ import MDEditor from "@uiw/react-md-editor";
 import { useEffect } from "react";
 import React from "react";
 import UploadInput, { FileInput } from "../components/inputs/UploadInput";
-import {useTimelines} from "../hooks/useTimelines";
+import { useTimelines } from "../hooks/useTimelines";
 import useCurrentUser from "../hooks/useCurrentUser";
-import {useCharacters} from "../hooks/useCharacters";
+import { useCharacters } from "../hooks/useCharacters";
 import { useToast } from "@/components/hooks/use-toast";
 import { useArticle } from "../hooks/useArticles";
 import Select from "react-select";
+import Alert from "@/components/CustomUi/Alert";
 
 type SelectType = {
     label: string;
@@ -36,8 +37,9 @@ export default function ArticleForm({ id }: ArticleFormProps) {
         watch,
         setValue,
         reset,
-        formState,
+        formState: { errors },
         control,
+        setError,
     } = useForm<Inputs>({
         defaultValues: {
             title: "ExampleTitle",
@@ -100,6 +102,15 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                 title: "Article Successfully Created",
                 description: data.title,
             });
+        } else {
+            response.text().then((errorMessage) => {
+                setError("root.serverError", {
+                    type: response.status.toString(),
+                    message: errorMessage,
+                });
+            });
+
+            console.log(errors);
         }
     }
 
@@ -198,6 +209,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
+                <Alert message={errors?.root?.ServerError?.message} />
                 <div className="flex flex-col gap-4 py-4">
                     <label className="flex flex-col" htmlFor="title">
                         Title

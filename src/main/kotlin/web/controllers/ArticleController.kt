@@ -18,12 +18,12 @@ class ArticleController(
     private val timelineService: TimelineService
 ) {
 
-//    @Route(HandlerType.GET, "/id/{id}")
-//    fun getArticle(ctx: Context) {
-//        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
-//        val a = articleService.toDto(foundArticle)
-//        ctx.json(a)
-//    }
+    @Route(HandlerType.GET, "/id/{id}")
+    fun getArticle(ctx: Context) {
+        val foundArticle = articleService.getById(ctx.pathParam("id").toLong())
+        val a = articleService.toDto(foundArticle)
+        ctx.json(a)
+    }
 
     
 

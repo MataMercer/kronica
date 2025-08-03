@@ -26,7 +26,7 @@ class UserController(
     fun updateProfile(ctx: Context){
         val updateProfileForm = UpdateProfileForm(
             description = ctx.formParam("description"),
-            ctx.uploadedFiles().first()
+            picture = ctx.uploadedFiles().firstOrNull()
         )
         val currentUser = getCurrentUser(ctx)
         userProfileService.updateProfile(currentUser, updateProfileForm)

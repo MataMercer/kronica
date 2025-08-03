@@ -16,6 +16,7 @@ object AppConfig {
     var maxAttachmentCount: Int? = null
     var maxImageWidth: Int? = null
     var maxImageHeight: Int? = null
+    var appMode: String? = null
 
     private fun calcMB(size: Int) = size * 1024 * 1024
 
@@ -24,15 +25,16 @@ object AppConfig {
     }
 
     fun reload(){
-        discordOAuthClientSecret = resolve("discordOauthClientSecret")
-        discordOAuthClientId = resolve("discordOauthClientId")
+        discordOAuthClientSecret = resolve(AppConfig::discordOAuthClientSecret.name)
+        discordOAuthClientId = resolve(AppConfig::discordOAuthClientId.name)
 
-        uploadSizeLimit = calcMB(resolveInt("uploadSizeLimit", true)!!)
-        uploadUserSizeLimit = calcMB(resolveInt("uploadUserSizeLimit", true)!!)
-        maxFileNameLength = resolveInt("maxFileNameLength", true)
-        maxAttachmentCount = resolveInt("maxAttachmentCount", true)
-        maxImageWidth = resolveInt("maxImageWidth", true)
-        maxImageHeight = resolveInt("maxImageHeight", true)
+        uploadSizeLimit = calcMB(resolveInt(AppConfig::uploadSizeLimit.name, true)!!)
+        uploadUserSizeLimit = calcMB(resolveInt(AppConfig::uploadUserSizeLimit.name, true)!!)
+        maxFileNameLength = resolveInt(AppConfig::maxFileNameLength.name, true)
+        maxAttachmentCount = resolveInt(AppConfig::maxAttachmentCount.name, true)
+        maxImageWidth = resolveInt(AppConfig::maxImageWidth.name, true)
+        maxImageHeight = resolveInt(AppConfig::maxImageHeight.name, true)
+        appMode = resolve(AppConfig::appMode.name, true)
     }
 
     private fun resolveInt(key: String, required: Boolean = false): Int? {

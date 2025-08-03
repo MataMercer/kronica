@@ -21,16 +21,18 @@ class AppConfigUnitTest {
     fun `test app config`(){
         configReader = mockk<ConfigReader>()
         every { configReader.get(any()) } returns "0"
-        AppConfig.registerConfigReader(configReader)
-        AppConfig.reload()
-        assert(AppConfig.discordOAuthClientId == "0")
-        assert(AppConfig.discordOAuthClientSecret == "0")
-        assert(AppConfig.uploadSizeLimit == 0)
-        assert(AppConfig.uploadUserSizeLimit == 0)
-        assert(AppConfig.maxFileNameLength == 0)
-        assert(AppConfig.maxAttachmentCount == 0)
-        assert(AppConfig.maxImageWidth == 0)
-        assert(AppConfig.maxImageHeight == 0)
+        with(AppConfig){
+            registerConfigReader(configReader)
+            reload()
+            assert(discordOAuthClientId == "0")
+            assert(discordOAuthClientSecret == "0")
+            assert(uploadSizeLimit == 0)
+            assert(uploadUserSizeLimit == 0)
+            assert(maxFileNameLength == 0)
+            assert(maxAttachmentCount == 0)
+            assert(maxImageWidth == 0)
+            assert(maxImageHeight == 0)
+        }
     }
 
     @Test

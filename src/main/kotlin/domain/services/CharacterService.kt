@@ -18,7 +18,7 @@ class CharacterService(
 ) {
 
     private val attachmentSizes = setOf(
-        ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.LARGE
+        ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.ORIGINAL
     )
 
     fun create(form: CreateCharacterForm, currentUser: CurrentUser): Long {

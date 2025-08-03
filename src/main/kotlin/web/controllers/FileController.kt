@@ -28,7 +28,7 @@ class FileController(
         var file: File? = null;
         if (imageSize.isNotEmpty()){
             file = uploadService.download(fileModel, ImageDownloadRequest(
-                imagePresetSize = ImagePresetSize.valueOf(imageSize)))
+                imagePresetSize = ImagePresetSize.valueOf(imageSize.uppercase())))
         }
 
         if (file == null){

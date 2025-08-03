@@ -1,4 +1,6 @@
 import { fetchArticle } from "@/app/fetch/articles";
+import { ImagePresetSize } from "@/app/Types/ImagePresetSize";
+import Img from "@/components/CustomUi/Img";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -36,11 +38,12 @@ export default async function ArticlePage(props: {
                                 className="flex flex-col justify-center items-center border-black border-[1px] border-b-[5px]"
                                 key={it.id}
                             >
-                                <Image
+                                <Img
                                     width={200}
                                     height={200}
-                                    src={`http://localhost:7070/api/files/serve/${it.storageId}/${it.name}`}
                                     alt="article attachment"
+                                    storageId={it.storageId}
+                                    size="MEDIUM"
                                 />
                                 <div>Page {index + 1}</div>
                             </Link>

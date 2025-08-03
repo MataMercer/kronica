@@ -1,8 +1,10 @@
 package org.matamercer.domain.services.upload.security
 
+import java.io.InputStream
+
 class TextFileValidator(): ContentValidator{
-    override fun validateContent(content: ByteArray) {
-        val textContent = String(content)
+    override fun validateContent(inputStream: InputStream) {
+        val textContent = String(inputStream.readBytes())
         if (textContent.length > 10000) { // Example limit, adjust as needed
             throw IllegalArgumentException("Text content exceeds maximum allowed length of 10000 characters.")
         }

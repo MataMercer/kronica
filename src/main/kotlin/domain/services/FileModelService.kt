@@ -22,33 +22,44 @@ class FileModelService(
         forms: List<FileUploadForm>,
         sizes: Set<ImagePresetSize>,
         currentUser: CurrentUser
-    ): List<FileModel> {
-        return forms.map {
-            val storageId = uploadService.uploadImage(it.uploadedFile, sizes)
-            FileModel(
-                name = it.uploadedFile.filename(),
-                storageId = storageId,
-                caption = it.caption,
-                sizeBytes = it.uploadedFile.size(),
-                mimeType = ContentType.getContentTypeByExtension(it.uploadedFile.extension())!!.mimeType,
-                author = currentUser.toUser()
-            )
-        }
+    ): List<FileModel> = forms.map {
+        val storageId = uploadService.uploadImage(it.uploadedFile, sizes)
+        val extension = it.uploadedFile.extension().replace(".", "")
+        val mimeType = ContentType.getContentTypeByExtension(extension)?.mimeType
+        FileModel(
+            name = it.uploadedFile.filename(),
+            storageId = storageId,
+            caption = it.caption,
+            sizeBytes = it.uploadedFile.size(),
+            mimeType = mimeType!!,
+            author = currentUser.toUser()
+        )
     }
 
     fun zipUploadedFilesWithCaptions(
         uploadedFiles: List<UploadedFile>,
         fileMetadata: List<FileMetadataForm>
-    ): List<FileUploadForm> {
-        return uploadedFiles
-            .zip(fileMetadata.filter { !it.isExistingFile() })
-            .map { (file, metadata) ->
-                FileUploadForm(
-                    uploadedFile = file,
-                    caption = metadata.caption ?: "",
-                )
+    ): List<FileUploadForm> =
+        fileMetadata.filter { !it.isExistingFile() }.let { newFileMetadata ->
+            if (uploadedFiles.size == newFileMetadata.size)
+                uploadedFiles
+                    .zip(newFileMetadata)
+                    .map { (file, metadata) ->
+                        FileUploadForm(
+                            uploadedFile = file,
+                            caption = metadata.caption ?: "",
+                        )
+                    } else {
+                uploadedFiles.map {
+                    FileUploadForm(
+                        uploadedFile = it,
+                        caption = ""
+                    )
+                }
             }
-    }
+
+        }
+
 
     fun findByStorageId(storageId: String) =
         fileModelRepository.findByStorageId(storageId)
@@ -98,11 +109,12 @@ class FileModelService(
         }
     }
 
-    fun checkUserStorageLimit(currentUser: CurrentUser, uploadedFiles: List<UploadedFile>) {
-        val totalSize = uploadedFiles.sumOf { it.size() }
-        if (fileModelRepository.calcUserStorageUsed(currentUser.id) + totalSize > AppConfig.uploadUserSizeLimit!!){
-            throw BadRequestResponse("User storage limit exceeded. You can only upload up to ${AppConfig.uploadUserSizeLimit} bytes.")
-        }
+    fun checkUserStorageLimit(currentUser: CurrentUser, uploadedFiles: List<UploadedFile>) =
+        uploadedFiles.sumOf { it.size() }
+            .let { totalSize ->
+                if (fileModelRepository.calcUserStorageUsed(currentUser.id) + totalSize > AppConfig.uploadUserSizeLimit!!) {
+                    throw BadRequestResponse("User storage limit exceeded. You can only upload up to ${AppConfig.uploadUserSizeLimit} bytes.")
+                }
+            }
 
-    }
 }

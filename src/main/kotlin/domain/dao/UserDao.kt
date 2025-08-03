@@ -103,17 +103,8 @@ class UserDao {
     }
 
 
-    fun createProfile(conn: Connection, profile: Profile): Long {
-        val sql = """
-           INSERT INTO user_profiles
-               (description)
-              VALUES (?)
-        """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
-            it.setString(1, profile.description)
-        }
-    }
+
 
     fun createSocialMediaLink(conn: Connection, socialMediaLink: SocialMediaLink, profileId: Long): Long {
         val sql = """
@@ -149,18 +140,7 @@ class UserDao {
         }
     }
 
-    fun updateProfile(conn: Connection, profile: Profile): Long {
-        val sql = """
-            UPDATE user_profiles
-            SET description = ?,
-            WHERE id = ?
-        """.trimIndent()
-        return mapper.updateForId(sql, conn) {
-            var i = 0
-            it.setString(++i, profile.description)
-            profile.id?.let { id -> it.setLong(++i, id) }
-        }
-    }
+
 
     fun delete(conn: Connection, id: Long) {
         val sql = """

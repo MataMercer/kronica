@@ -2,11 +2,12 @@ package org.matamercer.domain.services.upload.security
 
 import io.javalin.http.BadRequestResponse
 import org.matamercer.config.AppConfig
+import java.io.InputStream
 import javax.imageio.ImageIO
 
 class ImageFileValidator: ContentValidator {
-    override fun validateContent(content: ByteArray) {
-       val bufferedImage = ImageIO.read(content.inputStream())
+    override fun validateContent(inputStream: InputStream) {
+       val bufferedImage = ImageIO.read(inputStream)
         if (bufferedImage.height > AppConfig.maxImageHeight!!){
            throw BadRequestResponse("Image height exceeds maximum allowed height of ${AppConfig.maxImageHeight}) pixels.")
         }

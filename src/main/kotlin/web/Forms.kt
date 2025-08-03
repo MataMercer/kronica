@@ -23,7 +23,8 @@ data class UpdateUserForm(
 )
 data class UpdateProfileForm(
     val description: String?,
-    val avatar: UploadedFile
+    val picture: UploadedFile? = null,
+    val deletePicture: Boolean? = null,
 )
 
 data class CreateArticleForm(

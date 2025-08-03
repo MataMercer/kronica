@@ -215,9 +215,10 @@ class CharacterControllerTest {
 
         val mapper = jacksonObjectMapper()
         val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/characters/${characterId}")
+            .url("${getHostUrl(app)}/api/characters/id/${characterId}")
             .build()
         val res = unauthClient.okHttp.newCall(request).execute()
+        assertThat(res.code).isEqualTo(200)
         return mapper.readValue(res.body?.string(), CharacterDto::class.java)
     }
 

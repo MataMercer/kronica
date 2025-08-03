@@ -1,18 +1,15 @@
 "use client";
-
 import { refreshArticles } from "@/app/actions";
 import AuthProtection from "@/app/auth/AuthProtection";
-import { Article } from "@/app/fetch/articles";
-import { UserRole } from "@/app/Types/Models";
+import { ImagePresetSize } from "@/app/Types/ImagePresetSize";
+import { Article } from "@/app/Types/Models";
+import Img from "@/components/CustomUi/Img";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import MDEditor from "@uiw/react-md-editor";
 import { EllipsisVertical, Flag, Heart, PencilIcon, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,13 +42,14 @@ export default function ArticleThumb({ article }: Props) {
                         {article.title}
                     </h3>
                     {article.attachments.length > 0 && (
-                        <Image
+                        <Img
                             key={article.attachments[0].id}
                             width={170}
                             height={170}
-                            src={`http://localhost:7070/api/files/serve/${article.attachments[0].storageId}/${article.attachments[0].name}`}
                             alt="article attachment"
                             className="m-2 object-scale-down max-w-full max-h-[170px] rounded"
+                            storageId={article.attachments[0].storageId}
+                            size="SMALL"
                         />
                     )}
                 </Link>

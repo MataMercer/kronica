@@ -12,27 +12,23 @@ class NotificationService(
 ) {
     var clientMap: ConcurrentHashMap<Long, SseClient> = ConcurrentHashMap<Long, SseClient>()
 
-    fun send(notification: Notification){
+    fun send(notification: Notification) {
 
         notificationRepository.create(notification)
-
         val client = clientMap[notification.recipientId] ?: return
         val unreadCount = notificationRepository.getUnreadCount(notification.recipientId)
         client.sendEvent("$unreadCount")
 
     }
 
-    fun readAndMark(currentUser: CurrentUser, pageQuery: PageQuery): Page<NotificationDto> {
-        val page =  notificationRepository.readAndMark(currentUser.id, pageQuery)
-        return page.convert { toDto(it) }
-    }
+    fun readAndMark(currentUser: CurrentUser, pageQuery: PageQuery) =
+        notificationRepository.readAndMark(currentUser.id, pageQuery)
+            .convert { toDto(it) }
 
-    fun getUnreadCount(currentUser: CurrentUser): Long? {
-        return notificationRepository.getUnreadCount(currentUser.id)
-    }
+    fun getUnreadCount(currentUser: CurrentUser) = notificationRepository.getUnreadCount(currentUser.id)
 
-    fun toDto(notification: Notification): NotificationDto {
-        return NotificationDto(
+    fun toDto(notification: Notification): NotificationDto =
+        NotificationDto(
             id = notification.id,
             subject = notification.subject?.let {
                 UserDto(
@@ -48,5 +44,4 @@ class NotificationService(
             createdAt = notification.createdAt
 
         )
-    }
 }

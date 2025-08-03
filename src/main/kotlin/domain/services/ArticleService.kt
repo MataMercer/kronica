@@ -19,7 +19,7 @@ class ArticleService(
     private val notificationService: NotificationService
 ) {
     private val attachmentSizes = setOf(
-        ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.LARGE
+        ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.ORIGINAL
     )
 
     fun getById(id: Long?): Article {
@@ -29,11 +29,10 @@ class ArticleService(
         return article
     }
 
-    fun getAll(query: ArticleQuery, pageQuery: PageQuery, currentUser: CurrentUser?): Page<ArticleDto> {
-        val page = articleRepository.findAll(query, pageQuery)
-        return page.convert { toDto(it, currentUser) }
-    }
-
+    fun getAll(query: ArticleQuery, pageQuery: PageQuery, currentUser: CurrentUser?) =
+        articleRepository.findAll(query, pageQuery).let { page ->
+            page.convert { toDto(it, currentUser) }
+        }
 
     fun getByFollowing(userId: Long?, pageQuery: PageQuery): List<Article> {
         if (userId == null) throw BadRequestResponse()
@@ -43,6 +42,7 @@ class ArticleService(
     fun create(form: CreateArticleForm, currentUser: CurrentUser): Long {
         validateCreateForm(form)
         fileModelService.checkUserStorageLimit(currentUser, form.uploadedAttachments)
+
         val fileForms = fileModelService.zipUploadedFilesWithCaptions(
             form.uploadedAttachments,
             form.uploadedAttachmentsMetadata
@@ -62,12 +62,9 @@ class ArticleService(
             form.timelineId,
             form.characters
         )
-
         if (article?.id == null) throw InternalServerErrorResponse()
         notifyMentionedUsers(form.body, currentUser, article.id)
         notifyMentionedUsers(form.title, currentUser, article.id)
-
-
         return article.id
     }
 
@@ -88,9 +85,7 @@ class ArticleService(
                 uploadedFile = it,
                 caption = attachmentCaptions[index]!!
             )
-        }, setOf(
-            ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.LARGE
-        ), currentUser)
+        }, attachmentSizes, currentUser)
         val article = articleRepository.update(
             Article(
                 id = form.id,
@@ -104,10 +99,7 @@ class ArticleService(
             form.uploadedAttachmentsMetadata
         )
 
-
-
         if (article.id == null) throw InternalServerErrorResponse()
-
 
         val fileIdsToDelete =
             form.uploadedAttachmentsMetadata.filter { it.isExistingFile() && it.delete != null && it.delete }
@@ -120,11 +112,17 @@ class ArticleService(
 
     }
 
-    private fun validateCreateForm(createArticleForm: CreateArticleForm) =
-        if (createArticleForm.title == null && createArticleForm.body == null) {
-            throw BadRequestResponse()
-        } else {
+    private fun validateCreateForm(form: CreateArticleForm) {
+        if (form.title == null && form.body == null) {
+            throw BadRequestResponse("Title or body cannot be null or empty.")
         }
+        if (form.uploadedAttachmentsMetadata.any { it.isExistingFile() }) {
+            throw BadRequestResponse("Create article form should not contain existing file metadata.")
+        }
+        if (form.uploadedAttachments.size != form.uploadedAttachmentsMetadata.size && form.uploadedAttachmentsMetadata.isNotEmpty()) {
+            throw BadRequestResponse("If the uploadedAttachmentMetadata is not empty it must correspond to each attachment.")
+        }
+    }
 
     private fun validateUpdateForm(form: UpdateArticleForm, originalArticle: Article) {
         if (form.title == null && form.body == null) {
@@ -137,36 +135,32 @@ class ArticleService(
         )
     }
 
-    private fun getMentionedUsers(input: String): List<User> {
+    private fun getMentionedUsers(input: String) =
+        input.split(" ")
+            .filter { it.substring(0, 1) == "@" }.let { mentions ->
+                mentions.mapNotNull { userRepository.findByName(it) }
+            }
 
-        val mentions = input.split(" ")
-            .filter { it.substring(0, 1) == "@" }
-        val mentionedUsers = mentions.mapNotNull { userRepository.findByName(it) }
-        return mentionedUsers
-    }
-
-    private fun notifyMentionedUsers(input: String, currentUser: CurrentUser, articleId: Long) {
-        val mentionedUsers = getMentionedUsers(input)
-        mentionedUsers.forEach {
-            if (it.id == null) return@forEach
-            val n = Notification(
-                subject = currentUser.toUser(),
-                subjectId = currentUser.id,
-                notificationType = NotificationType.MENTIONED,
-                recipient = it,
-                objectId = articleId,
-                recipientId = it.id
-            )
-            notificationService.send(n)
+    private fun notifyMentionedUsers(input: String, currentUser: CurrentUser, articleId: Long) =
+        getMentionedUsers(input).let{ mentionedUsers ->
+            mentionedUsers.forEach { user ->
+                if (user.id == null) return@forEach
+                Notification(
+                    subject = currentUser.toUser(),
+                    subjectId = currentUser.id,
+                    notificationType = NotificationType.MENTIONED,
+                    recipient = user,
+                    objectId = articleId,
+                    recipientId = user.id
+                ).let {notificationService.send(it) }
+            }
         }
-    }
 
     fun deleteById(currentUser: CurrentUser, id: Long?) {
         if (id == null) throw BadRequestResponse()
         val article = articleRepository.findById(id) ?: throw NotFoundResponse()
         authCheck(currentUser, article)
         articleRepository.deleteById(id)
-
         fileModelService.deleteFiles(article.attachments)
     }
 

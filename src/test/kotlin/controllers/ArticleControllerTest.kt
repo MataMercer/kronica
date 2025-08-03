@@ -283,7 +283,7 @@ class ArticleControllerTest {
             .get()
             .build()
         val res = unauthClient.okHttp.newCall(request).execute()
-        assertThat(res.code == 200).isTrue()
+        assertThat(res.code).isEqualTo(200)
     }
 
     @Test

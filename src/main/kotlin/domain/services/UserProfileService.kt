@@ -1,38 +1,46 @@
 package org.matamercer.domain.services
 
-import io.javalin.http.BadRequestResponse
 import org.matamercer.domain.models.CurrentUser
 import org.matamercer.domain.models.Profile
-import org.matamercer.domain.repository.UserRepository
+import org.matamercer.domain.repository.UserProfileRepository
 import org.matamercer.domain.services.upload.image.ImagePresetSize
 import org.matamercer.web.FileUploadForm
 import org.matamercer.web.UpdateProfileForm
 
 class UserProfileService(
-    private val userService: UserService,
-    private val userRepository: UserRepository,
+    private val userProfileRepository: UserProfileRepository,
     private val fileModelService: FileModelService
 ) {
+    private val imagePresetSizes = setOf(
+        ImagePresetSize.SMALL,
+        ImagePresetSize.TINY
+    )
 
-    fun updateProfile(currentUser: CurrentUser, updateProfileForm: UpdateProfileForm) {
-        val foundUser = userService.getById(currentUser.id)
-
-        val avatar = fileModelService.uploadImages(forms = listOf(FileUploadForm(updateProfileForm.avatar)),
-            setOf(ImagePresetSize.SMALL, ImagePresetSize.TINY)
-            , currentUser = currentUser).first()
-
-        //TODO: DELETE OLD AVATAR IF EXISTS
-
-        val profile = updateProfileForm.description?.let {
-            Profile(
-                id = currentUser.id,
-                description = it,
-                avatar = avatar
-            )
+    fun updateProfile(currentUser: CurrentUser, form: UpdateProfileForm) {
+        val originalProfile = userProfileRepository.findProfileByUserId(currentUser.id)
+        val picture = form.picture?.let {
+            fileModelService.uploadImages(
+                forms = listOf(FileUploadForm(it)),
+                imagePresetSizes,
+                currentUser = currentUser
+            ).first()
         }
-        if (profile == null) {
-            throw BadRequestResponse()
+        if (picture != null || form.deletePicture == true) {
+            originalProfile?.picture?.let { originalPicture ->
+                fileModelService.deleteFiles(listOf(originalPicture))
+            }
         }
-        userRepository.updateProfile(profile)
+        Profile(
+            id = originalProfile?.id,
+            description = form.description ?: "",
+            picture =
+            if (form.deletePicture == true) {
+                null
+            } else {
+                picture ?: originalProfile?.picture
+            },
+        ).also {
+            userProfileRepository.updateProfile(it)
+        }
     }
 }

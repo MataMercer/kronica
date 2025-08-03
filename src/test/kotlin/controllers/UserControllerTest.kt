@@ -1,10 +1,13 @@
 package controllers
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import createAuthClient
 import io.javalin.Javalin
 import io.javalin.testtools.HttpClient
 import io.javalin.testtools.TestConfig
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody.Companion.asRequestBody
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -14,7 +17,10 @@ import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UsersDto
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
+import org.matamercer.web.FileMetadataForm
 import org.matamercer.web.LoginRequestForm
+import org.matamercer.web.UpdateProfileForm
+import java.io.File
 
 
 class UserControllerTest {
@@ -142,6 +148,19 @@ class UserControllerTest {
     fun `Deleting a user returns ok response`() {
         val deleteRes = authClient.delete("/api/users/${testUser.id}")
         assertThat(deleteRes.isSuccessful).isTrue()
+    }
+
+    @Test
+    fun `Updating a user profile returns ok response`() {
+        val uploadFile = File("resources/test/polarbear.jpg")
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("description", "Updated description")
+            .addFormDataPart("picture", "polarbear.jpg",uploadFile.asRequestBody())
+            .build()
+
+        val res = authClient.put("/api/users/${testUser.id}/profile", requestBody)
+        assertThat(res.isSuccessful).isTrue()
     }
 
 }

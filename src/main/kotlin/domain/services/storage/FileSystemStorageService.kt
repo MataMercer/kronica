@@ -20,7 +20,9 @@ class FileSystemStorageService() : StorageService {
         val fileDestPath = Paths.get(storageId)
         val filename = FilenameUtils.normalize(filename)
         var combinedFileDestPath = rootLocation.resolve(fileDestPath)
-        combinedFileDestPath = Files.createDirectory(combinedFileDestPath)
+        if (!Files.exists(combinedFileDestPath)) {
+            combinedFileDestPath = Files.createDirectory(combinedFileDestPath)
+        }
         Files.copy(
             inputStream, combinedFileDestPath.resolve(filename),
             StandardCopyOption.REPLACE_EXISTING
@@ -50,7 +52,9 @@ class FileSystemStorageService() : StorageService {
 
     override fun delete(filePath: Path) {
         try {
-            FileUtils.deleteDirectory(rootLocation.resolve(filePath).toAbsolutePath().parent.toFile())
+            val completePath =rootLocation.resolve(filePath).toAbsolutePath()
+            println("Deleting file at path: $completePath")
+            FileUtils.deleteDirectory(completePath.toFile())
         } catch (e: IOException) {
             e.printStackTrace()
             throw StorageFileNotFoundException("Could not delete file: " + filePath.fileName, e)
@@ -58,7 +62,13 @@ class FileSystemStorageService() : StorageService {
     }
 
     override fun deleteAll() {
-        FileUtils.deleteDirectory(rootLocation.toFile())
+        try {
+            println("Deleting all files in storage at: $rootLocation")
+            FileUtils.deleteDirectory(rootLocation.toFile())
+        } catch (e: IOException) {
+            e.printStackTrace()
+            throw StorageException("Could not delete all files in storage", e)
+        }
     }
 
     override fun init() {

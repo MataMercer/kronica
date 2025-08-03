@@ -42,9 +42,7 @@ class AuthController(
 
     @Route(HandlerType.POST, "/logout")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
-    fun logoutUser(ctx: Context){
-        ctx.req().session.invalidate()
-    }
+    fun logoutUser(ctx: Context) = ctx.req().session.invalidate()
 
     @Route(HandlerType.POST, "/register")
     fun registerUser(ctx: Context){
@@ -53,7 +51,8 @@ class AuthController(
             .check({ !it.email.isNullOrBlank() }, "Email is empty")
             .check({ !it.password.isNullOrBlank() }, "Password is empty")
             .get()
-        val user = userService.registerUser(registerUserForm)
-        loginUserToSession(ctx, user)
+        with(userService.registerUser(registerUserForm)) {
+            loginUserToSession(ctx, this)
+        }
     }
 }

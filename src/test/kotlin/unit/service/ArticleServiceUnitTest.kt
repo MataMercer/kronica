@@ -1,19 +1,12 @@
 package unit.service
 
 import fixtures.Fixtures
-import io.javalin.http.ForbiddenResponse
-import io.mockk.Called
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.matamercer.domain.dao.ArticleDao
 import org.matamercer.domain.dao.TransactionManager
@@ -22,7 +15,6 @@ import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.User
 import org.matamercer.domain.services.ArticleService
 import org.matamercer.web.CreateArticleForm
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 class ArticleServiceUnitTest {
