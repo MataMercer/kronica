@@ -16,7 +16,6 @@ class CharacterService(
     private val fileModelService: FileModelService
 
 ) {
-
     private val attachmentSizes = setOf(
         ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.ORIGINAL
     )
@@ -37,7 +36,7 @@ class CharacterService(
         val traits = getTraitsFromStringList(form.traits)
 
         val c = characterRepository.create(
-            Character(
+            NewCharacter(
                 name = form.name!!,
                 body = form.body!!,
                 author = currentUser.toUser(),
@@ -46,7 +45,6 @@ class CharacterService(
                 traits = traits
             )
         )
-        if (c?.id == null) throw InternalServerErrorResponse()
         return c.id
     }
 
@@ -111,17 +109,13 @@ class CharacterService(
         return c
     }
 
-    fun getAll(query: CharacterQuery): Page<CharacterDto> {
-        val page = characterRepository.findAll(query)
-        return page.convert { toDto(it) }
-    }
+    fun getAll(query: CharacterQuery): Page<CharacterDto> = characterRepository.findAll(query).convert { toDto(it) }
 
     fun deleteById(currentUser: CurrentUser, id: Long?) {
         if (id == null) {
             throw BadRequestResponse()
         }
         val c = characterRepository.findById(id)
-
         if (currentUser.id != c?.author?.id) {
             throw ForbiddenResponse()
         }
@@ -167,7 +161,7 @@ class CharacterService(
         traits = c.traits
     )
 
-    fun authCheck(currentUser: CurrentUser, character: Character) {
+    private fun authCheck(currentUser: CurrentUser, character: Character) {
         if (currentUser.id != character.author.id && !currentUser.role.isAdmin()) {
             throw ForbiddenResponse("You don't own this resource and you're not an admin.")
         }

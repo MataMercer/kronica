@@ -109,3 +109,37 @@ data class PageQuery(
     val size: Int,
 )
 
+data class CommentForm(
+    val body: String? = null,
+    val articleId: Long? = null,
+    val characterId: Long? = null,
+    val timelineId: Long? = null
+)
+
+data class UpdateCommentForm(
+    var id: Long? = null,
+    val articleId: Long? = null,
+    val characterId: Long? = null,
+    val body: String? = null,
+)
+
+data class CreateReportForm(
+    val reason: String? = null,
+    val category: String? = null,
+    val reportedContentId: Long? = null,
+)
+
+data class UpdateReportForm(
+    val id: Long? = null,
+    val reason: String? = null,
+    val category: String? = null,
+    val reportedContentId: Long? = null,
+    val resolved: Boolean? = null,
+)
+
+data class LikeForm(
+    val emoji: String? = null,
+    val contentId: Long? = null,
+)
+
+

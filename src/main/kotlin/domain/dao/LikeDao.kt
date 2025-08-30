@@ -2,7 +2,7 @@ package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.Like
 import org.matamercer.domain.models.User
-import java.sql.Connection
+import org.matamercer.web.PageQuery
 
 class LikeDao {
 
@@ -17,99 +17,90 @@ class LikeDao {
         )
     }
 
-    fun findByArticleId(conn: Connection, articleId: Long): List<Like> = mapper.queryForObjectList(
+    fun findByContentId(contentId: Long, pageQuery: PageQuery?) = mapper.queryForObjectPage(
         """
             SELECT
-                article_likes.id,
+                id,
         
                 users.id AS authors_id,
                 users.name AS authors_name,
                 users.role AS authors_role
-            FROM article_likes
-            INNER JOIN users ON article_likes.author_id=users.id
-            WHERE article_likes.article_id = ?
-        """.trimIndent(), conn
-    ) {
-        it.setLong(1, articleId)
+                
+                count(*) OVER() AS total_count
+            FROM likes
+            INNER JOIN users ON likes.author_id=users.id
+            WHERE likes.owning_content_id = ?
+            ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
+        """.trimIndent()
+    , pageQuery) {
+        it.setLong(1, contentId)
     }
 
-    fun findArticleLikesByUserId(conn: Connection, userId: Long): List<Like> = mapper.queryForObjectList(
+    fun findByUserId(userId: Long): List<Like> = mapper.queryForObjectList(
         """
             SELECT
-                article_likes.id,
+                likes.id,
         
                 users.id AS authors_id,
                 users.name AS authors_name,
                 users.role AS authors_role
-            FROM article_likes
-            INNER JOIN users ON article_likes.author_id=users.id
-            WHERE article_likes.author_id = ?
-        """.trimIndent(), conn
+            FROM likes
+            INNER JOIN users ON likes.author_id=users.id
+            WHERE likes.author_id = ?
+        """.trimIndent()
     ) {
         it.setLong(1, userId)
     }
 
-    fun likeArticle(conn: Connection, userId: Long, articleId: Long ): Long = mapper.updateForId(
+    fun like(userId: Long, contentId: Long ): Long = mapper.updateForId(
         """
-            INSERT INTO article_likes
+            INSERT INTO likes
                 (
                 author_id,
-                article_id
+                owning_content_id
                 )
             VALUES
                 (?, ?)
-        """.trimIndent(), conn
+        """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, userId)
-        it.setLong(++i, articleId)
+        it.setLong(++i, contentId)
     }
 
-    fun unlikeArticle(conn: Connection, userId: Long, articleId: Long): Long = mapper.updateForId(
+    fun unlike( userId: Long, contentId: Long): Long = mapper.updateForId(
         """
-            DELETE FROM article_likes
-            WHERE author_id = ? AND article_id = ?
-        """.trimIndent(), conn
+            DELETE FROM likes
+            WHERE author_id = ? AND owning_content_id = ?
+        """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, userId)
-        it.setLong(++i, articleId)
+        it.setLong(++i, contentId)
     }
 
-    fun checkIfArticlesAreLiked(conn: Connection, userId: Long, articleIdsToCheck: List<Long>): List<Long> = mapper.queryForLongList(
-        """
-            SELECT
-                article_likes.article_id
-            FROM article_likes
-            WHERE article_likes.author_id = ?
-            AND article_likes.article_id IN ?
-        """.trimIndent(), conn
-    ) {
-        it.setLong(1, userId)
-        it.setArray(2, conn.createArrayOf("BIGINT", articleIdsToCheck.toTypedArray()))
-    }
 
-    fun checkIfArticleIsLiked(conn: Connection, articleId: Long, userId: Long): Long? =  mapper.queryForLong(
+    fun checkLiked( userId: Long,contentId: Long): Long? =  mapper.queryForLong(
         """
             SELECT
-                article_likes.article_id
-            FROM article_likes
-            WHERE article_likes.article_id = ?
-            AND article_likes.author_id = ?
-        """.trimIndent(), conn
+                likes.owning_content_id
+            FROM likes
+            WHERE likes.owning_content_id = ?
+            AND likes.author_id = ?
+        """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, articleId)
+        it.setLong(++i, contentId)
         it.setLong(++i, userId)
     }
 
-    fun countArticleLikes(conn: Connection, articleId: Long): Long? = mapper.queryForLong(
+    fun countLikesByContentId(contentId: Long, pageQuery: PageQuery) = mapper.queryForLong(
         """
             SELECT COUNT(*) AS count
-            FROM article_likes
-            WHERE article_id = ?
-        """.trimIndent(), conn
+            FROM likes
+            WHERE owning_content_id = ?
+        """.trimIndent()
     ) {
-        it.setLong(1, articleId)
+        it.setLong(1, contentId)
     }
 }

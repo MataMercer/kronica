@@ -1,7 +1,15 @@
 package org.matamercer.domain.models
 
-data class Tag(
-    val id: Long?,
-    val category: String,
+
+data class NewTag(
     val name: String,
+    val description: String? = null,
+    val nsfw: Boolean = false,
+    )
+
+data class Tag(
+    val id: Long,
+    val name: String,
+    val description: String? = null,
+    val nsfw: Boolean = false,
 )

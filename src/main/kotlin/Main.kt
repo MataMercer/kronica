@@ -49,7 +49,7 @@ enum class AppMode {
 
 const val configFileName = "config.properties"
 const val defaultConfigFileName = "default-config.properties"
-fun configSetup(args: Array<String>){
+fun configSetup(args: Array<String>) {
     AppConfig.registerConfigReader(PropertiesReader(defaultConfigFileName))
     AppConfig.registerConfigReader(DotEnvReader())
     AppConfig.registerConfigReader(EnvReader())
@@ -71,18 +71,17 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     } else {
         migrate(dataSource)
     }
+    TransactionManager.init(dataSource)
 
-    val transactionManager = TransactionManager(dataSource)
 
     val app = createJavalinApp()
+
     val userDao = UserDao()
     val followDao = FollowDao()
     val notificationDao = NotificationDao()
     val notificationRepository = NotificationRepository(
         notificationDao = notificationDao,
-        userDao = userDao,
-        dataSource = dataSource,
-        transact = transactionManager
+        userDao = userDao
     )
     val notificationService = NotificationService(notificationRepository)
 
@@ -92,10 +91,10 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         userDao = userDao,
         followDao = followDao,
         userProfileDao = userProfileDao,
-        transactionManager = transactionManager,
-        dataSource = dataSource)
+    )
     val userService = UserService(userRepository, notificationService, httpClient)
 
+    val contentDao = ContentDao()
 
     val storageService = FileSystemStorageService()
 
@@ -110,19 +109,27 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         imageResizer = ImageResizer()
     )
     val fileModelDao = FileModelDao()
-    val fileModelRepository = FileModelRepository(fileModelDao = fileModelDao, dataSource = dataSource)
-    val fileModelService = FileModelService(uploadService = uploadService, fileModelRepository = fileModelRepository)
+    val fileModelRepository = FileModelRepository(fileModelDao = fileModelDao)
+    val fileModelService = FileModelService(
+        uploadService = uploadService,
+        fileModelRepository = fileModelRepository
+    )
 
     val userProfileRepository = UserProfileRepository(
         userProfileDao = userProfileDao,
         fileModelDao = fileModelDao,
-        transactionManager = transactionManager,
-        dataSource = dataSource
     )
     val userProfileService = UserProfileService(
         userProfileRepository = userProfileRepository,
         fileModelService = fileModelService
     )
+
+    val commentDao = CommentDao()
+    val commentRepository = CommentRepository(commentDao = commentDao, contentDao = contentDao)
+    val commentService = CommentService(
+        commentRepository = commentRepository
+    )
+    val commentController = CommentController(commentService)
 
 
     val seeder = Seeder(userService)
@@ -141,34 +148,47 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         timelineDao = timelineDao,
         articleDao = articleDao,
         fileModelDao = fileModelDao,
-        dataSource, transactionManager)
+        contentDao = contentDao,
+    )
     val timelineService = TimelineService(
-        fileModelService= fileModelService,
-        timelineRepository = timelineRepository)
+        fileModelService = fileModelService,
+        timelineRepository = timelineRepository
+    )
 
     if (appMode == AppMode.TEST || appMode == AppMode.DEV) {
         storageService.deleteAll()
     }
     storageService.init()
 
+
     val characterRepository = CharacterRepository(
         characterDao = characterDao,
         fileModelDao = fileModelDao,
-        transact = transactionManager,
-        dataSource = dataSource,
-        traitDao = traitDao
+        traitDao = traitDao,
+        contentDao = contentDao
     )
     val articleRepository = ArticleRepository(
         articleDao = articleDao,
         fileModelDao = fileModelDao,
-        transact = transactionManager,
-        dataSource = dataSource,
         timelineDao = timelineDao,
         characterDao = characterDao,
-        likeDao = likeDao
+        likeDao = likeDao,
+        contentDao
     )
     val characterService = CharacterService(characterRepository, fileModelService)
-    val articleService = ArticleService(articleRepository, fileModelService, characterService, userRepository, notificationService)
+    val articleService =
+        ArticleService(articleRepository, fileModelService, characterService, userRepository, notificationService)
+
+    val contentRepository = ContentRepository(contentDao = contentDao)
+    val reportDao = ReportDao()
+    val reportRepository = ReportRepository(reportDao)
+    val reportService = ReportService(
+        contentRepository = contentRepository,
+        reportRepository = reportRepository,
+    )
+
+    val likeRepository = LikeRepository(likeDao = likeDao)
+    val likeService = LikeService(likeRepository = likeRepository, contentRepository = contentRepository)
 
 
     val articleController = ArticleController(articleService, timelineService)
@@ -179,21 +199,26 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     val fileController = FileController(fileModelService = fileModelService, uploadService = uploadService)
     val notificationController = NotificationController(notificationService)
     val oAuthController = OAuthController(userService)
+    val reportController = ReportController(reportService = reportService )
+    val likeController = LikeController(likeService)
 
-    val router = Router(
+    Router(
         listOf(
-        articleController,
-        timelineController,
-        userController,
-        authController,
-        oAuthController,
-        characterController,
-        fileController,
-        notificationController,
+            articleController,
+            timelineController,
+            userController,
+            authController,
+            oAuthController,
+            characterController,
+            fileController,
+            notificationController,
+            commentController,
+            reportController,
+            likeController
         ),
         app
-    )
-    router.setupRoutes()
+    ).setupRoutes()
+
     app.error(404) { ctx ->
         ctx.result("Error 404: Not found")
     }
@@ -266,7 +291,7 @@ fun createJavalinApp(): Javalin {
         }
 
         val objectMapper = JavalinJackson()
-        config.validation.register(FileMetadataForm::class.java){
+        config.validation.register(FileMetadataForm::class.java) {
             return@register objectMapper.fromJsonString(it, FileMetadataForm::class.java)
         }
         config.jsonMapper(JavalinJackson().updateMapper { mapper ->

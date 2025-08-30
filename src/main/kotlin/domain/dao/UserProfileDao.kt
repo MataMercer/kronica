@@ -11,50 +11,50 @@ class UserProfileDao {
         )
     }
 
-    fun createProfile(conn: Connection, profile: Profile): Long {
+    fun createProfile( profile: Profile): Long {
         val sql = """
            INSERT INTO user_profiles
                (description)
               VALUES (?)
         """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql) {
             it.setString(1, profile.description)
         }
     }
 
-    fun updateProfile(conn: Connection, profile: Profile): Long {
+    fun updateProfile(profile: Profile): Long {
         val sql = """
             UPDATE user_profiles
             SET description = ?
             WHERE id = ?
         """.trimIndent()
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql) {
             var i = 0
             it.setString(++i, profile.description)
             profile.id?.let { id -> it.setLong(++i, id) }
         }
     }
 
-    fun findByUserId(conn: Connection, userId: Long): Profile? {
+    fun findByUserId(userId: Long): Profile? {
         val sql = """
             SELECT * 
             FROM user_profiles 
             JOIN users ON user_profiles.id=users.profile_id
             WHERE users.id = ?
         """.trimIndent()
-        return mapper.queryForObject(sql, conn) {
+        return mapper.queryForObject(sql) {
             it.setLong(1, userId)
         }
     }
 
-    fun findById(conn: Connection, id: Long): Profile? {
+    fun findById( id: Long): Profile? {
         val sql = """
             SELECT * 
             FROM user_profiles 
             WHERE user_profiles.id = ?
         """.trimIndent()
-        return mapper.queryForObject(sql, conn) {
+        return mapper.queryForObject(sql) {
             it.setLong(1, id)
         }
     }

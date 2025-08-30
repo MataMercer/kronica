@@ -2,21 +2,21 @@ package org.matamercer.domain.services
 
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.ForbiddenResponse
-import io.javalin.http.InternalServerErrorResponse
 import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
+import org.matamercer.domain.repository.LikeRepository
 import org.matamercer.domain.repository.UserRepository
 import org.matamercer.domain.services.upload.image.ImagePresetSize
 import org.matamercer.web.*
-import org.matamercer.web.dto.Page
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
     private val fileModelService: FileModelService,
     private val characterService: CharacterService,
     private val userRepository: UserRepository,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
+    private val likeRepository: LikeRepository
 ) {
     private val attachmentSizes = setOf(
         ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.ORIGINAL
@@ -24,10 +24,9 @@ class ArticleService(
 
     fun getById(id: Long?): Article {
         if (id == null) throw BadRequestResponse()
-        val article = articleRepository.findById(id)
-        article ?: throw NotFoundResponse()
-        return article
+        return articleRepository.findById(id) ?: throw NotFoundResponse("Article not found")
     }
+
 
     fun getAll(query: ArticleQuery, pageQuery: PageQuery, currentUser: CurrentUser?) =
         articleRepository.findAll(query, pageQuery).let { page ->
@@ -53,7 +52,7 @@ class ArticleService(
         )
 
         val article = articleRepository.create(
-            Article(
+            NewArticle(
                 title = form.title!!,
                 body = form.body!!,
                 author = currentUser.toUser(),
@@ -62,7 +61,6 @@ class ArticleService(
             form.timelineId,
             form.characters
         )
-        if (article?.id == null) throw InternalServerErrorResponse()
         notifyMentionedUsers(form.body, currentUser, article.id)
         notifyMentionedUsers(form.title, currentUser, article.id)
         return article.id
@@ -98,8 +96,6 @@ class ArticleService(
             form.characters,
             form.uploadedAttachmentsMetadata
         )
-
-        if (article.id == null) throw InternalServerErrorResponse()
 
         val fileIdsToDelete =
             form.uploadedAttachmentsMetadata.filter { it.isExistingFile() && it.delete != null && it.delete }
@@ -137,22 +133,22 @@ class ArticleService(
 
     private fun getMentionedUsers(input: String) =
         input.split(" ")
-            .filter { it.substring(0, 1) == "@" }.let { mentions ->
+            .filter { it[0] == '@' }.let { mentions ->
                 mentions.mapNotNull { userRepository.findByName(it) }
             }
 
     private fun notifyMentionedUsers(input: String, currentUser: CurrentUser, articleId: Long) =
-        getMentionedUsers(input).let{ mentionedUsers ->
+        getMentionedUsers(input).let { mentionedUsers ->
             mentionedUsers.forEach { user ->
-                if (user.id == null) return@forEach
                 Notification(
                     subject = currentUser.toUser(),
                     subjectId = currentUser.id,
                     notificationType = NotificationType.MENTIONED,
                     recipient = user,
-                    objectId = articleId,
-                    recipientId = user.id
-                ).let {notificationService.send(it) }
+                    targetContentId = articleId,
+                    recipientId = user.id,
+
+                ).let { notificationService.send(it) }
             }
         }
 
@@ -164,34 +160,7 @@ class ArticleService(
         fileModelService.deleteFiles(article.attachments)
     }
 
-    fun likeArticle(articleId: Long, currentUser: CurrentUser) {
-        val article = articleRepository.findById(articleId) ?: throw NotFoundResponse()
-
-        val youLiked = articleRepository.checkIfLiked(currentUser.id, articleId)
-        if (youLiked) {
-            throw BadRequestResponse("You have already liked this article.")
-        }
-        articleRepository.likeArticle(articleId, currentUser.id)
-    }
-
-    fun unlikeArticle(articleId: Long, currentUser: CurrentUser) {
-        val article = articleRepository.findById(articleId) ?: throw NotFoundResponse()
-        val youLiked = articleRepository.checkIfLiked(currentUser.id, articleId)
-        if (!youLiked) {
-            throw BadRequestResponse("You have not liked this article yet.")
-        }
-        articleRepository.unlikeArticle(articleId, currentUser.id)
-    }
-
-
-    fun toDto(article: Article, user: CurrentUser? = null): ArticleDto {
-
-        var youLiked: Boolean? = null
-        if (user != null && article.id != null) {
-            youLiked = articleRepository.checkIfLiked(user.id, article.id)
-        }
-
-        return ArticleDto(
+    fun toDto(article: Article, user: CurrentUser? = null) = ArticleDto(
             id = article.id,
             title = article.title,
             body = article.body,
@@ -213,7 +182,7 @@ class ArticleService(
             timelineIndex = article.timelineIndex,
             timeline = article.timeline?.let {
                 TimelineThumbDto(
-                    id = it.id!!,
+                    id = it.id,
                     name = it.name,
                 )
             },
@@ -221,9 +190,8 @@ class ArticleService(
                 characterService.toDto(it)
             },
             likeCount = article.likeCount,
-            youLiked = youLiked
+            youLiked = user?.let{likeRepository.checkLiked(it.id, article.id)}
         )
-    }
 
     private fun authCheck(currentUser: CurrentUser, article: Article) {
         if (currentUser.id != article.author.id && !currentUser.role.isAdmin()) {

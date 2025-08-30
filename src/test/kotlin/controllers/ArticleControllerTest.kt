@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
 import org.matamercer.domain.models.ArticleDto
+import org.matamercer.domain.models.NewUser
 import org.matamercer.domain.models.Notification
 import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
@@ -36,14 +37,13 @@ class ArticleControllerTest {
     private var userAId: Long = 0
     private var userBId: Long = 0
 
-    private val testUser = User(
+    private val testUser = NewUser(
         name = "Root",
         email = "example@gmail.com",
         role = UserRole.ROOT
     )
 
     private lateinit var fixtures: Fixtures
-    private lateinit var jsonUtils: JsonUtils
     @BeforeEach
     fun beforeEachTest() {
         fixtures = Fixtures()
@@ -55,7 +55,6 @@ class ArticleControllerTest {
         )
         authClient = createAuthClient(app, loginRequestForm)
         unauthClient = HttpClient(app, OkHttpClient())
-        jsonUtils = JsonUtils()
 
         val userARegisterForm = RegisterUserForm(
             name = "UserA",
@@ -94,7 +93,7 @@ class ArticleControllerTest {
             .get()
             .build()
         val res = client.okHttp.newCall(request).execute()
-        return jsonUtils.getIdFromResponse(res)
+        return JsonUtils.getIdFromResponse(res)
     }
 
     @Test
@@ -134,7 +133,7 @@ class ArticleControllerTest {
             .url("${getHostUrl(app)}/api/timelines")
             .post(requestBody).build()
         val res = authClient.okHttp.newCall(request).execute()
-        return jsonUtils.getIdFromResponse(res)
+        return JsonUtils.getIdFromResponse(res)
     }
 
     @Test
@@ -159,7 +158,7 @@ class ArticleControllerTest {
         val body = res.body
         assertThat(res.code == 200).isTrue()
         assertNotNull(body)
-        val resJson = jsonUtils.getJsonFromResponse(res)
+        val resJson = JsonUtils.getJsonFromResponse(res)
         val id = resJson["id"].toString()
         val resTimelineId = resJson["timelineId"].toString()
         assertThat(id=="1").isTrue()
@@ -210,7 +209,7 @@ class ArticleControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
-        return jsonUtils.getIdFromResponse(res)
+        return JsonUtils.getIdFromResponse(res)
     }
 
     @Test
@@ -228,7 +227,7 @@ class ArticleControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
-        val json = jsonUtils.getJsonFromResponse(res)
+        val json = JsonUtils.getJsonFromResponse(res)
         assertThat(res.code == 200).isTrue()
         assertThat(json["characters"]).isNotNull()
     }
@@ -241,7 +240,7 @@ class ArticleControllerTest {
             .url("${getHostUrl(app)}/api/articles")
             .get().build()
         val getAllArticlesResponse = unauthClient.okHttp.newCall(getAllArticlesRequest).execute()
-        print(jsonUtils.getJsonFromResponse(getAllArticlesResponse))
+        print(JsonUtils.getJsonFromResponse(getAllArticlesResponse))
 
 
     }
@@ -261,7 +260,7 @@ class ArticleControllerTest {
             .post(requestBody).build()
 
         val res = client.okHttp.newCall(request).execute()
-        return jsonUtils.getIdFromResponse(res)
+        return JsonUtils.getIdFromResponse(res)
     }
 
 
@@ -297,7 +296,7 @@ class ArticleControllerTest {
             .build()
         val res = userAClient.okHttp.newCall(request).execute()
         assertThat(res.code == 200).isTrue()
-        val articlesRes = jsonUtils.getJsonFromResponse(res)["content"]
+        val articlesRes = JsonUtils.getJsonFromResponse(res)["content"]
         val firstArticle = articlesRes[0]
         assertThat(firstArticle["id"].toString() == testArticleId.toString()).isTrue()
         assertThat(articlesRes.size()).isEqualTo(1)
@@ -309,7 +308,7 @@ class ArticleControllerTest {
             .build()
         val resAfterUnfollow = userAClient.okHttp.newCall(requestAfterUnfollow).execute()
         assertThat(resAfterUnfollow.code == 200).isTrue()
-        val articlesResAfter = jsonUtils.getJsonFromResponse(resAfterUnfollow)["content"]
+        val articlesResAfter = JsonUtils.getJsonFromResponse(resAfterUnfollow)["content"]
         assertThat(articlesResAfter.size()).isEqualTo(0)
 
         val requestBody = JavalinJackson().toJsonString("").toRequestBody()
@@ -320,7 +319,7 @@ class ArticleControllerTest {
             requestForNotifications
         ).execute()
         assertThat(notificationsRes.isSuccessful).isTrue()
-        val notificationsJsonRes = jsonUtils.getJsonFromResponse(notificationsRes)
+        val notificationsJsonRes = JsonUtils.getJsonFromResponse(notificationsRes)
         print(notificationsJsonRes.toString())
 
     }

@@ -22,7 +22,6 @@ class UserService(
 ) {
 
     fun toDto(user: User, currentUser: CurrentUser? = null): UserDto {
-        if (user.id == null) throw InternalServerErrorResponse("Cannot convert to Dto. User id is null")
 
         val followerCount = userRepository.findFollowerCount(user.id)
         var youFollowed: Boolean? = null
@@ -179,7 +178,7 @@ class UserService(
         }
 
         val id = userRepository.create(
-            User(
+            NewUser(
                 name = form.name,
                 email = form.email,
                 hashedPassword = hashPassword(form.password!!),
@@ -193,8 +192,7 @@ class UserService(
             recipientId = id,
             notificationType = NotificationType.INFO,
             subjectId = id,
-            objectId = 0,
-            message = "Welcome to Kronikart!"
+            message = "Welcome!"
         ))
         return getById(id)
     }
@@ -208,7 +206,7 @@ class UserService(
             hashedPassword = updateUserForm.hashedPassword,
             role = UserRole.valueOf(updateUserForm.role)
         )
-        authCheck(currentUser, user.id!!)
+        authCheck(currentUser, user.id)
         userRepository.update(user)
     }
 
@@ -232,7 +230,6 @@ class UserService(
             recipientId = id,
             notificationType = NotificationType.FOLLOWED,
             subjectId = currentUser.id,
-            objectId = 0
         ))
     }
 

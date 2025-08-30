@@ -18,31 +18,29 @@ class FileModelDao() {
         )
     }
 
-    fun findById(conn: Connection, id: Long): FileModel? {
-        val sql = """
+    fun findById( id: Long): FileModel? {
+        return mapper.queryForObject("""
             SELECT
                 files.*
             FROM files
             WHERE files.id = ?
-        """.trimIndent()
-        return mapper.queryForObject(sql, conn) {
+        """.trimIndent()) {
             it.setLong(1, id)
         }
     }
 
-    fun findByStorageId(conn: Connection, storageId: String): FileModel? {
-        val sql = """
+    fun findByStorageId( storageId: String): FileModel? {
+        return mapper.queryForObject("""
             SELECT
                 files.*
             FROM files
             WHERE files.storage_id = ?
-        """.trimIndent()
-        return mapper.queryForObject(sql, conn) {
+        """.trimIndent()) {
             it.setString(1, storageId)
         }
     }
 
-    fun findByOwningArticleId(conn: Connection, owningArticleId: Long): List<FileModel> {
+    fun findByOwningArticleId(owningArticleId: Long): List<FileModel> {
         val sql = """
             SELECT 
                 files.*
@@ -51,12 +49,12 @@ class FileModelDao() {
             WHERE files_to_articles.article_id = ?
             ORDER BY files_to_articles.index
         """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        return mapper.queryForObjectList(sql) {
             it.setLong(1, owningArticleId)
         }
     }
 
-    fun findCharacterAttachments(conn: Connection, id: Long): List<FileModel> {
+    fun findCharacterAttachments( id: Long): List<FileModel> {
         val sql = """
             SELECT 
                 files.*
@@ -65,12 +63,12 @@ class FileModelDao() {
             WHERE files_to_characters.character_id = ?
             ORDER BY files_to_characters.index
         """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        return mapper.queryForObjectList(sql) {
             it.setLong(1, id)
         }
     }
 
-    fun findCharacterProfilePictures(conn: Connection, id: Long): List<FileModel> {
+    fun findCharacterProfilePictures( id: Long): List<FileModel> {
         val sql = """
             SELECT 
                 files.*
@@ -79,12 +77,12 @@ class FileModelDao() {
             WHERE files_to_character_profiles.character_id = ?
             ORDER BY files_to_character_profiles.index
         """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        return mapper.queryForObjectList(sql) {
             it.setLong(1, id)
         }
     }
 
-    fun findUserProfilePicture(conn: Connection, profileId: Long): FileModel? {
+    fun findUserProfilePicture( profileId: Long): FileModel? {
         val sql = """
             SELECT 
                 files.*
@@ -93,12 +91,12 @@ class FileModelDao() {
             INNER JOIN user_profiles ON user_profile_pictures.profile_id = user_profiles.id
             WHERE user_profiles.id = ?
         """.trimIndent()
-        return mapper.queryForObject(sql, conn) {
+        return mapper.queryForObject(sql) {
             it.setLong(1, profileId)
         }
     }
 
-    fun joinArticle(conn: Connection, fileId: Long, articleId: Long, index: Int): Long {
+    fun joinArticle( fileId: Long, articleId: Long, index: Int): Long {
         val sql = """
             INSERT INTO files_to_articles
             (
@@ -109,7 +107,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql ) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, articleId)
@@ -117,14 +115,14 @@ class FileModelDao() {
         }
     }
 
-    fun updateJoinArticleIndex(conn: Connection, fileId: Long, articleId: Long, index: Int): Long {
+    fun updateJoinArticleIndex( fileId: Long, articleId: Long, index: Int): Long {
         val sql = """
             UPDATE files_to_articles
             SET index = ?
             WHERE file_id = ? AND article_id = ?
         """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql) {
             var i = 0
             it.setInt(++i, index)
             it.setLong(++i, fileId)
@@ -132,7 +130,7 @@ class FileModelDao() {
         }
     }
 
-    fun deleteJoinArticle(conn: Connection, fileId: Long, articleId: Long) {
+    fun deleteJoinArticle( fileId: Long, articleId: Long) {
         val sql = """
            WITH deleted AS (
                DELETE FROM files_to_articles
@@ -145,13 +143,13 @@ class FileModelDao() {
            AND index > (SELECT index FROM deleted); 
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.update(sql) {
             var i = 0
             it.setLong(++i, fileId)
         }
     }
 
-    fun joinCharacter(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
+    fun joinCharacter( fileId: Long, characterId: Long, index: Int): Long {
         val sql = """
             INSERT INTO files_to_characters
             (
@@ -162,7 +160,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql ) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
@@ -170,14 +168,14 @@ class FileModelDao() {
         }
     }
 
-    fun updateJoinCharacterIndex(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
+    fun updateJoinCharacterIndex( fileId: Long, characterId: Long, index: Int): Long {
         val sql = """
             UPDATE files_to_characters
             SET index = ?
             WHERE file_id = ? AND character_id = ?
         """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql) {
             var i = 0
             it.setInt(++i, index)
             it.setLong(++i, fileId)
@@ -185,7 +183,7 @@ class FileModelDao() {
         }
     }
 
-    fun deleteJoinCharacter(conn: Connection, fileId: Long, characterId: Long) {
+    fun deleteJoinCharacter( fileId: Long, characterId: Long) {
         val sql = """
            WITH deleted AS (
                DELETE FROM files_to_characters
@@ -198,7 +196,7 @@ class FileModelDao() {
            AND index > (SELECT index FROM deleted); 
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.update(sql) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
@@ -206,7 +204,7 @@ class FileModelDao() {
         }
     }
 
-    fun joinCharacterProfile(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
+    fun joinCharacterProfile( fileId: Long, characterId: Long, index: Int): Long {
         val sql = """
             INSERT INTO files_to_character_profiles
             (
@@ -217,7 +215,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
@@ -225,14 +223,14 @@ class FileModelDao() {
         }
     }
 
-    fun updateJoinCharacterProfileIndex(conn: Connection, fileId: Long, characterId: Long, index: Int): Long {
+    fun updateJoinCharacterProfileIndex( fileId: Long, characterId: Long, index: Int): Long {
         val sql = """
             UPDATE files_to_character_profiles
             SET index = ?
             WHERE file_id = ? AND character_id = ?
         """.trimIndent()
 
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql) {
             var i = 0
             it.setInt(++i, index)
             it.setLong(++i, fileId)
@@ -240,7 +238,7 @@ class FileModelDao() {
         }
     }
 
-    fun deleteJoinCharacterProfile(conn: Connection, fileId: Long, characterId: Long) {
+    fun deleteJoinCharacterProfile( fileId: Long, characterId: Long) {
         val sql = """
            WITH deleted AS (
                DELETE FROM files_to_character_profiles
@@ -253,7 +251,7 @@ class FileModelDao() {
            AND index > (SELECT index FROM deleted); 
         """.trimIndent()
 
-        return mapper.update(sql, conn) {
+        return mapper.update(sql ) {
             var i = 0
             it.setLong(++i, fileId)
             it.setLong(++i, characterId)
@@ -261,32 +259,32 @@ class FileModelDao() {
         }
     }
 
-    fun joinUserProfile(conn: Connection, fileId: Long, profileId: Long) = mapper.update(
+    fun joinUserProfile(fileId: Long, profileId: Long) = mapper.update(
         """INSERT INTO user_profile_pictures
             (
                 file_id,
                 profile_id,
             )
             VALUES (?, ? )
-        """.trimIndent(), conn
+        """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, fileId)
         it.setLong(++i, profileId)
     }
 
-    fun deleteJoinUserProfile(conn: Connection, fileId: Long, profileId: Long) = mapper.update(
+    fun deleteJoinUserProfile(fileId: Long, profileId: Long) = mapper.update(
         """
             DELETE FROM user_profile_pictures
             WHERE file_id = ? AND profile_id = ?
-        """.trimIndent(), conn
+        """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, fileId)
         it.setLong(++i, profileId)
     }
 
-    fun create(connection: Connection, fileModel: FileModel) =
+    fun create( fileModel: FileModel) =
         mapper.updateForId(
             """
                 INSERT INTO files
@@ -300,7 +298,7 @@ class FileModelDao() {
                     author_id
                     )
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-            """.trimIndent(), connection
+            """.trimIndent()
         ) {
             var i = 0
             it.setString(++i, fileModel.name)
@@ -316,31 +314,31 @@ class FileModelDao() {
             it.setLong(++i, fileModel.author.id)
         }
 
-    fun updateCaption(connection: Connection, fileId: Long, caption: String) =
+    fun updateCaption( fileId: Long, caption: String) =
         mapper.updateForId(
             """
                 UPDATE files
                 SET
                     caption = ?
                 WHERE files.id = ?
-            """.trimIndent(), connection
+            """.trimIndent()
         ) {
             var i = 0
             it.setString(++i, caption)
             it.setLong(++i, fileId)
         }
 
-    fun deleteById(connection: Connection, id: Long) = mapper.update(
+    fun deleteById( id: Long) = mapper.update(
         """
                 DELETE FROM files
                 WHERE files.id = ?
-            """.trimIndent(), connection
+            """.trimIndent()
     ) {
         it.setLong(1, id)
     }
 
 
-    fun findByTimeline(conn: Connection, timelineId: Long) =
+    fun findByTimeline( timelineId: Long) =
         mapper.queryForObjectList(
             """
             SELECT * FROM files 
@@ -353,33 +351,31 @@ class FileModelDao() {
                 WHERE timeline_id=?
             ;
 
-        """.trimIndent(), conn
+        """.trimIndent()
         ) {
             it.setLong(1, timelineId)
         }
 
-    fun findByUser(conn: Connection, userId: Long): List<FileModel> {
+    fun findByUser( userId: Long): List<FileModel> {
         val sql = """
             SELECT * FROM files 
                 WHERE author_id=?
                 
         """.trimIndent()
-        return mapper.queryForObjectList(sql, conn) {
+        return mapper.queryForObjectList(sql) {
             it.setLong(1, userId)
         }
     }
 
-    fun calcUserStorageUsed(conn: Connection, userId: Long): Long {
+    fun calcUserStorageUsed( userId: Long): Long {
         val sql = """
             SELECT SUM(size_bytes) AS total_size
             FROM files
             WHERE author_id = ?
         """.trimIndent()
 
-        return mapper.queryForLong(sql, conn) {
+        return mapper.queryForLong(sql) {
             it.setLong(1, userId)
         } ?: 0L
     }
-
-
 }

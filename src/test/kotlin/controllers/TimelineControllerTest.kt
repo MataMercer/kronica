@@ -33,7 +33,6 @@ class TimelineControllerTest {
     private lateinit var app: Javalin
     private lateinit var authClient: HttpClient
     private lateinit var unauthClient: HttpClient
-    private lateinit var jsonUtils: JsonUtils
     private val testUser = User(
         id = 1,
         name = "Root",
@@ -53,7 +52,6 @@ class TimelineControllerTest {
         )
         authClient = createAuthClient(app, loginRequestForm)
         unauthClient = HttpClient(app, OkHttpClient())
-        jsonUtils = JsonUtils()
     }
 
     @AfterEach
@@ -146,7 +144,7 @@ class TimelineControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
-        return jsonUtils.getIdFromResponse(res)
+        return JsonUtils.getIdFromResponse(res)
     }
 
 

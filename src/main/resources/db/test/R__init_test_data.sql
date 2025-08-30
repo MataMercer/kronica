@@ -24,18 +24,26 @@ INSERT INTO users (
         'LOCAL'
          );
 
-INSERT INTO articles
-    (title,
-    body,
+WITH inserted_content_id AS (INSERT INTO content (
+    author_id,
     created_at,
-    updated_at,
-    author_id
+    updated_at
+)
+VALUES(
+ (SELECT id FROM users WHERE name = 'testuser'),
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
+ ) RETURNING id)
+
+INSERT INTO articles
+    (
+    id,
+    title,
+    body
     )
 VALUES (
+    (SELECT id FROM inserted_content_id),
     'Example Title',
-    'Example Body Lorem ipsum...',
-     CURRENT_TIMESTAMP,
-     CURRENT_TIMESTAMP,
-    (SELECT id FROM users WHERE name = 'testuser')
+    'Example Body Lorem ipsum...'
     );
 

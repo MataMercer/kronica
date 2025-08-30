@@ -13,8 +13,17 @@ enum class AuthProvider{
     DISCORD
 }
 
+data class NewUser(
+    val name: String,
+    val email: String? = null,
+    val hashedPassword: String? = null,
+    val role: UserRole,
+    val authProvider: AuthProvider = AuthProvider.LOCAL,
+    val oAuthId: Long? = null
+)
+
 data class User(
-    val id: Long? = null,
+    val id: Long,
     val name: String,
     val email: String? = null,
     val hashedPassword: String? = null,
@@ -71,10 +80,21 @@ data class UserDto(
     val followingYou: Boolean? = null,
 )
 
-
 data class CurrentUserDto(
     val id: Long?,
     val name: String,
     val role: UserRole
 )
+
+data class UserSettings(
+    val id: Long? = null,
+    val interfaceColor: String? = null,
+    val showNsfwContent: Boolean? = null,
+    val markNsfw: Boolean? = null,
+    val invisible: Boolean? = null,
+    val muteNotifications: Boolean? = null,
+    val onlyFollowersCanComment: Boolean? = null,
+)
+
+
 

@@ -1,13 +1,12 @@
 package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.Article
+import org.matamercer.domain.models.NewArticle
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
 import org.matamercer.web.ArticleQuery
 import org.matamercer.web.PageQuery
 import org.matamercer.web.dto.Page
-import java.sql.Connection
-import java.sql.Types
 
 class ArticleDao {
 
@@ -44,7 +43,7 @@ class ArticleDao {
         )
     }
 
-    fun findAll(conn: Connection, query: ArticleQuery?, pageQuery: PageQuery? = null): Page<Article> {
+    fun findAll(query: ArticleQuery?, pageQuery: PageQuery? = null): Page<Article> {
         val sql = """
             SELECT
                 articles.*,
@@ -52,6 +51,10 @@ class ArticleDao {
                 users.id AS authors_id,
                 users.name AS authors_name,
                 users.role AS authors_role,
+                
+                content.created_at AS created_at,
+                content.updated_at AS updated_at,
+                
                 
                 timeline_entries.timeline_index AS timeline_entries_timeline_index,
                    
@@ -61,8 +64,10 @@ class ArticleDao {
                 
                 count(*) OVER() AS total_count
             FROM articles
+            INNER JOIN content 
+                ON articles.id=content.id
             INNER JOIN users 
-                ON articles.author_id=users.id
+                ON content.author_id=users.id
             LEFT JOIN timeline_entries 
                 ON articles.id=timeline_entries.article_id
             LEFT JOIN timelines
@@ -72,7 +77,7 @@ class ArticleDao {
             ${if (query?.timelineId != null) "ORDER BY timeline_entries_timeline_index ASC" else "" }
             ${if (pageQuery != null)  "LIMIT ? OFFSET ?" else ""}
             """.trimIndent()
-        return mapper.queryForObjectPage(sql, conn, pageQuery) {
+        return mapper.queryForObjectPage(sql, pageQuery) {
             var i = 0
             query?.authorId?.let { it1 -> it.setLong(++i, it1) }
             query?.timelineId?.let { it1 -> it.setLong(++i, it1) }
@@ -84,7 +89,7 @@ class ArticleDao {
         }
     }
 
-    fun findByFollowing(conn: Connection, userId: Long, pageQuery: PageQuery?): Page<Article> {
+    fun findByFollowing(userId: Long, pageQuery: PageQuery?): Page<Article> {
         val sql = """
             WITH followed_users AS (
                 SELECT 
@@ -101,6 +106,9 @@ class ArticleDao {
                 users.name AS authors_name,
                 users.role AS authors_role,
                 
+                content.created_at AS created_at,
+                content.updated_at AS updated_at,
+                
                 timeline_entries.timeline_index AS timeline_entries_timeline_index,
                    
                 timelines.id AS timelines_id,
@@ -109,8 +117,10 @@ class ArticleDao {
                 
                 count(*) OVER() AS total_count
             FROM articles
+            INNER JOIN content 
+                ON articles.id=content.id
             INNER JOIN users 
-                ON articles.author_id=users.id
+                ON content.author_id=users.id
             LEFT JOIN timeline_entries 
                 ON articles.id=timeline_entries.article_id
             LEFT JOIN timelines
@@ -118,7 +128,7 @@ class ArticleDao {
             WHERE users.id IN (SELECT * FROM followed_users)
             ${if (pageQuery != null)  "LIMIT ? OFFSET ?" else ""}
         """.trimIndent()
-        return mapper.queryForObjectPage(sql, conn, pageQuery) {
+        return mapper.queryForObjectPage(sql, pageQuery) {
             var i = 0
             it.setLong(++i, userId)
             if (pageQuery != null) {
@@ -128,7 +138,7 @@ class ArticleDao {
         }
     }
 
-    fun findById(conn: Connection, id: Long): Article? {
+    fun findById( id: Long): Article? {
         val sql = """
                SELECT 
                    articles.*,
@@ -137,6 +147,10 @@ class ArticleDao {
                    users.name AS authors_name,
                    users.role AS authors_role,
                    
+                   
+                   content.created_at AS created_at,
+                   content.updated_at AS updated_at,
+                   
                    timeline_entries.timeline_index AS timeline_entries_timeline_index,
                    
                    timelines.id AS timelines_id,
@@ -144,15 +158,17 @@ class ArticleDao {
                    timelines.description AS timelines_description
                    
                FROM articles
-               INNER JOIN users 
-                   ON articles.author_id=users.id
+               INNER JOIN content 
+                   ON articles.id=content.id
+                INNER JOIN users
+                ON content.author_id=users.id
                LEFT JOIN timeline_entries 
                 ON articles.id=timeline_entries.article_id
                LEFT JOIN timelines
                 ON timeline_entries.timeline_id=timelines.id    
                WHERE articles.id = ?
                """.trimIndent()
-        return mapper.queryForObject(sql, conn) {
+        return mapper.queryForObject(sql) {
             it.setLong(1, id)
         }
     }
@@ -190,27 +206,22 @@ class ArticleDao {
 //        }
 //    }
 
-    fun create(conn: Connection, article: Article): Long {
-        val sql = """
+    fun create(article: NewArticle, contentId: Long) =
+         mapper.update("""
                 INSERT INTO articles
-                    (title,
-                    body,
-                    created_at,
-                    updated_at,
-                    author_id
+                    (
+                    id,
+                    title,
+                    body
                     )
-                VALUES (?, ?, ?, ?, ?)
-                """.trimIndent()
-
-        return mapper.updateForId(sql, conn) {
+                VALUES (?, ?, ? )
+                """.trimIndent()) {
             var i = 0
+            it.setLong(++i, contentId)
             it.setString(++i, article.title)
             it.setString(++i, article.body)
-            it.setTimestamp(++i, genTimestamp())
-            it.setTimestamp(++i, genTimestamp())
-            article.author.id?.let { it1 -> it.setLong(++i, it1) }
         }
-    }
+
 //
 //    fun countAll(conn: Connection, query: ArticleQuery?): Long {
 //        val sql = """
@@ -237,7 +248,7 @@ class ArticleDao {
 //        }
 //    }
 
-    fun findLikedArticledByUserId(conn: Connection, id: Long, pageQuery: PageQuery): Page<Article> {
+    fun findLikedArticledByUserId( id: Long, pageQuery: PageQuery): Page<Article> {
         val sql = """
             SELECT 
                 articles.*, 
@@ -251,57 +262,55 @@ class ArticleDao {
             INNER JOIN article_likes ON articles.id=article_likes.article_id
             WHERE article_likes.author_id = ? 
           """.trimIndent()
-        return mapper.queryForObjectPage(sql, conn, pageQuery ) {
+        return mapper.queryForObjectPage(sql, pageQuery ) {
             it.setLong(1, id)
         }
     }
 
 
-    fun update(conn: Connection, article: Article): Long {
+    fun update(article: Article): Long {
         val sql = """
             UPDATE articles
             SET title = ?,
                 body = ?,
-                updated_at = ?
             WHERE id = ?
         """.trimIndent()
-        return mapper.updateForId(sql, conn) {
+        return mapper.updateForId(sql) {
             var i = 0
             it.setString(++i, article.title)
             it.setString(++i, article.body)
-            it.setTimestamp(++i, genTimestamp())
             it.setLong(++i, article.id ?: throw IllegalArgumentException("Article ID cannot be null"))
         }
     }
 
-    fun deleteById(conn: Connection, id: Long) {
+    fun deleteById( id: Long) {
         val sql = """
           DELETE FROM articles
           WHERE articles.id = ?
        """.trimIndent()
-        mapper.update(sql, conn) {
+        mapper.update(sql) {
             it.setLong(1, id)
         }
     }
 
-    fun deleteByTimelineId(conn: Connection, timelineId: Long) {
+    fun deleteByTimelineId( timelineId: Long) {
         val sql = """
             DELETE FROM articles
             USING timeline_entries
             WHERE articles.id = timeline_entries.article_id 
             AND timeline_entries.timeline_id = ?;
         """.trimIndent()
-        mapper.update(sql, conn) {
+        mapper.update(sql) {
             it.setLong(1, timelineId)
         }
     }
 
-    fun deleteByAuthorId(conn: Connection, authorId: Long) {
+    fun deleteByAuthorId( authorId: Long) {
         val sql = """
             DELETE FROM articles
             WHERE articles.author_id = ?
         """.trimIndent()
-        mapper.update(sql, conn) {
+        mapper.update(sql) {
             it.setLong(1, authorId)
         }
     }

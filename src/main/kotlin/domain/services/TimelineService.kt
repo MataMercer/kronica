@@ -3,11 +3,7 @@ package org.matamercer.domain.services
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
 import io.javalin.http.UnauthorizedResponse
-import org.matamercer.domain.models.CurrentUser
-import org.matamercer.domain.models.Timeline
-import org.matamercer.domain.models.TimelineDto
-import org.matamercer.domain.models.User
-import org.matamercer.domain.models.UserDto
+import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.TimelineRepository
 import org.matamercer.web.CreateTimelineForm
 import org.matamercer.web.UpdateTimelineForm
@@ -21,7 +17,7 @@ class TimelineService(
 
     fun createTimeline(timelineForm: CreateTimelineForm, currentUser: CurrentUser): Timeline? {
         validateForm(timelineForm)
-        val timeline = Timeline(
+        val timeline = NewTimeline(
             name = timelineForm.name,
             description = timelineForm.description!!,
             author = currentUser.toUser()
@@ -69,7 +65,7 @@ class TimelineService(
 
     fun updateOrder(timelineId: Long, updateTimelineOrderForm: UpdateTimelineOrderForm, currentUser: CurrentUser){
         checkAuth(currentUser, timelineId)
-        timelineRepository.updateOrder(timelineId, updateTimelineOrderForm.order.toTypedArray())
+        timelineRepository.updateOrder(updateTimelineOrderForm.order.toTypedArray())
     }
 
     fun getTimelineById(timelineId: Long): Timeline {

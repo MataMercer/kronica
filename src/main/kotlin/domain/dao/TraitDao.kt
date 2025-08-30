@@ -14,7 +14,7 @@ class TraitDao {
 
     }
 
-    fun createTrait(conn: Connection, name: String, value: String, characterId: Long): Long = mapper.updateForId(
+    fun createTrait(name: String, value: String, characterId: Long): Long = mapper.updateForId(
         """
             INSERT INTO traits
             (
@@ -23,37 +23,37 @@ class TraitDao {
                 character_id
             )
             VALUES (?, ?, ?)
-        """.trimIndent(), conn){
+        """.trimIndent()){
         var i = 0
         it.setString(++i, name)
         it.setString(++i, value)
         it.setLong(++i, characterId)
     }
 
-    fun deleteTrait(conn: Connection, name: String, characterId: Long) = mapper.update("""
+    fun deleteTrait(name: String, characterId: Long) = mapper.update("""
        DELETE FROM traits
         WHERE character_id = ?
         AND name = ?
-    """.trimIndent(), conn) {
+    """.trimIndent()) {
         var i = 0
         it.setLong(1, characterId)
         it.setString(2, name)
     }
 
-    fun updateTrait(conn: Connection, name: String, value: String, characterId: Long): Long = mapper.updateForId(
+    fun updateTrait( name: String, value: String, characterId: Long): Long = mapper.updateForId(
         """
             UPDATE traits
             SET val = ?
             WHERE name = ?
             AND character_id = ?
-        """.trimIndent(), conn){
+        """.trimIndent()){
         var i = 0
         it.setString(++i, value)
         it.setString(++i, name)
         it.setLong(++i, characterId)
     }
 
-    fun findTraitsByCharacter(conn: Connection, characterId: Long): List<Trait> = mapper.queryForObjectList(
+    fun findTraitsByCharacter( characterId: Long): List<Trait> = mapper.queryForObjectList(
         """
             SELECT 
                 id,
@@ -61,7 +61,7 @@ class TraitDao {
                 val
             FROM traits
             WHERE traits.character_id = ?
-        """.trimIndent(), conn){
+        """.trimIndent()){
         it.setLong(1, characterId)
     }
 }

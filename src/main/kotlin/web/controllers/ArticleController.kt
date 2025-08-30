@@ -25,9 +25,6 @@ class ArticleController(
         ctx.json(a)
     }
 
-    
-
-
     @Route(HandlerType.GET, "/")
     fun getArticles(ctx: Context) {
         val authorId = ctx.queryParam("author_id")?.toLongOrNull()
@@ -101,11 +98,7 @@ class ArticleController(
         ctx.json(dto)
     }
 
-    @Route(HandlerType.POST, "/like/{id}")
-    fun likeArticle(ctx: Context){
-        val author = getCurrentUser(ctx)
-        val articleId = ctx.pathParam("id").toLong()
-    }
+
 
     @Route(HandlerType.GET, "/following")
     @RequiredRole(UserRole.AUTHENTICATED_USER)
@@ -124,8 +117,4 @@ class ArticleController(
         )
         ctx.json(pagedArticles)
     }
-
-
-
-
 }

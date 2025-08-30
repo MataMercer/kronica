@@ -44,7 +44,6 @@ class UserControllerTest {
     private val testConfig = TestConfig(
         clearCookies = true
     )
-    private val jsonUtils = JsonUtils()
 
     @BeforeEach
     fun beforeEachTest() {
@@ -96,7 +95,7 @@ class UserControllerTest {
     @Test
     fun `When logged in getCurrentuser returns ok response`() {
         val res = authClient.get("/api/auth/currentuser")
-        val id = jsonUtils.getIdFromResponse(res)
+        val id = JsonUtils.getIdFromResponse(res)
         assertThat(id).isEqualTo(2)
         assertThat(res.isSuccessful).isTrue()
     }

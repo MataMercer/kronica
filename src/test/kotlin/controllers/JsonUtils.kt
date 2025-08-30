@@ -6,7 +6,7 @@ import okhttp3.Response
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.assertNotNull
 
-class JsonUtils {
+object JsonUtils {
     fun getIdFromResponse(res: Response): Long{
         val jsonRes = getJsonFromResponse(res)
         val id = jsonRes["id"].toString().toLong()

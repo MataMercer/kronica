@@ -87,5 +87,4 @@ class UploadSecurity(
             throw BadRequestResponse("File cannot be empty and must be under or equal to ${AppConfig.uploadSizeLimit}")
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.models.NewTimeline
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
 import java.sql.Connection
@@ -15,28 +16,31 @@ class TimelineDao {
                 id = rs.getLong("authors_id"),
                 name = rs.getString("authors_name"),
                 role = enumValueOf(rs.getString("authors_role"))
-            )
+            ),
+
         )
     }
 
-    fun findByAuthorId(conn: Connection, id: Long): List<Timeline> = mapper.queryForObjectList(
+    fun findByAuthorId( id: Long): List<Timeline> = mapper.queryForObjectList(
         """
                 SELECT
                     timelines.id,
                     timelines.name,
                     timelines.description,
+                    
                     users.id AS authors_id,
                     users.name AS authors_name,
                     users.role AS authors_role
                 FROM timelines
-                INNER JOIN users ON timelines.author_id=users.id
+                INNER JOIN content ON timelines.id=content.id
+                INNER JOIN users ON content.author_id=users.id
                 WHERE users.id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, id)
     }
 
-    fun findById(conn: Connection, id: Long): Timeline? = mapper.queryForObject(
+    fun findById( id: Long): Timeline? = mapper.queryForObject(
         """
                 SELECT
                     timelines.id,
@@ -46,14 +50,15 @@ class TimelineDao {
                     users.name AS authors_name,
                     users.role AS authors_role
                 FROM timelines
-                INNER JOIN users ON timelines.author_id=users.id
+                INNER JOIN content ON timelines.id=content.id
+                INNER JOIN users ON content.author_id=users.id
                 WHERE timelines.id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, id)
     }
 
-    fun findByName(conn: Connection, name: String): Timeline? = mapper.queryForObject(
+    fun findByName(name: String): Timeline? = mapper.queryForObject(
         """
                 SELECT
                     timelines.id,
@@ -63,47 +68,48 @@ class TimelineDao {
                     users.name AS authors_name,
                     users.role AS authors_role
                 FROM timelines
-                INNER JOIN users ON timelines.author_id=users.id
+                INNER JOIN content ON timelines.id=content.id
+                INNER JOIN users ON content.author_id=users.id
                 WHERE timelines.name = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setString(1, name)
     }
 
-    fun create(conn: Connection, timeline: Timeline): Long = mapper.updateForId(
+    fun create(timeline: NewTimeline, contentId: Long): Long = mapper.updateForId(
         """
                 INSERT INTO timelines
                     (
+                    id,
                     name,
                     description,
-                    author_id
                     )
                 VALUES (?, ?, ?)
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         var i = 0
+        it.setLong(++i, contentId)
         it.setString(++i, timeline.name)
         it.setString(++i, timeline.description)
-        timeline.author?.id?.let { it1 -> it.setLong(++i, it1) }
     }
 
-    fun update(conn: Connection, timeline: Timeline): Long = mapper.updateForId(
+    fun update(timeline: Timeline): Long = mapper.updateForId(
         """
                 UPDATE timelines
-                SET name = ?,
+                SET 
+                    name = ?,
                     description = ?
                 WHERE id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         var i = 0
         it.setString(++i, timeline.name)
         it.setString(++i, timeline.description)
-        if (timeline.id == null) throw IllegalArgumentException("Timeline ID cannot be null")
         it.setLong(++i, timeline.id)
     }
 
 
-    fun createTimelineEntry(conn: Connection, timelineId: Long, articleId: Long): Long = mapper.updateForId(
+    fun createTimelineEntry(timelineId: Long, articleId: Long): Long = mapper.updateForId(
         """
              INSERT INTO timeline_entries 
                  (timeline_id,
@@ -116,7 +122,7 @@ class TimelineDao {
                      WHERE timeline_id=?
                      ) + 1, ?  
                   ) 
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, timelineId)
@@ -145,7 +151,7 @@ class TimelineDao {
 //        it.setLong(1, gapIndex)
 //    }
 
-    fun deleteTimelineEntry(conn: Connection, articleId: Long) = mapper.update(
+    fun deleteTimelineEntry(articleId: Long) = mapper.update(
         """
                WITH deleted AS (
                    DELETE FROM timeline_entries
@@ -156,29 +162,29 @@ class TimelineDao {
                SET timeline_index = timeline_index - 1
                WHERE timeline_id = (SELECT timeline_id FROM deleted)
                AND timeline_index > (SELECT timeline_index FROM deleted); 
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, articleId)
     }
 
 
-    fun updateTimelineOrder(conn: Connection, articleId: Long, index: Int) = mapper.update(
+    fun updateTimelineOrder(articleId: Long, index: Int) = mapper.update(
         """
                 UPDATE timeline_entries
                 SET timeline_index = ?
                 WHERE article_id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         var i = 0
         it.setInt(++i, index)
         it.setLong(++i, articleId)
     }
 
-    fun delete(conn: Connection, id: Long) = mapper.update(
+    fun delete(id: Long) = mapper.update(
         """
                 DELETE FROM timelines
                 WHERE id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, id)
     }

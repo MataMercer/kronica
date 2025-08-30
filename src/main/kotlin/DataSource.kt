@@ -51,7 +51,6 @@ fun migrate(dataSource: HikariDataSource, appMode: AppMode? = AppMode.DEV){
        l.add("classpath:/db/test")
     }
 
-
     val flyway = Flyway.configure()
         .cleanDisabled(false)
         .dataSource(dataSource)
@@ -60,5 +59,6 @@ fun migrate(dataSource: HikariDataSource, appMode: AppMode? = AppMode.DEV){
 
     flyway.clean()
     flyway.migrate()
+
 
 }

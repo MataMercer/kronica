@@ -46,7 +46,7 @@ class ArticleServiceUnitTest {
         testArticleForm = CreateArticleForm(title = "title", body = "body")
 
         //make callbacks pass through transact
-        every { transactionManager.wrap({}) } answers { (firstArg<()->Unit>())()}
+//        every { transactionManager.wrap({}) } answers { (firstArg<()->Unit>())()}
     }
 
 

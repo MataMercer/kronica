@@ -2,8 +2,8 @@ package org.matamercer.domain.models
 
 import java.util.*
 
-data class Article(
-    val id: Long? = null,
+
+data class NewArticle(
     val title: String,
     val body: String,
     val author: User,
@@ -15,6 +15,20 @@ data class Article(
     var characters: List<Character> = listOf(),
     var likeCount : Long? = null,
 )
+
+data class Article(
+    override val id: Long,
+    val title: String,
+    val body: String,
+    override val author: User,
+    override val createdAt: Date? = null,
+    override val updatedAt: Date? = null,
+    var attachments: List<FileModel> = listOf(),
+    var timeline: Timeline? = null,
+    var timelineIndex: Long? = null,
+    var characters: List<Character> = listOf(),
+    var likeCount : Long? = null,
+): Content()
 
 data class ArticleDto(
     val id: Long? = null,

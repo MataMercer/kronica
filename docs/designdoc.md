@@ -105,4 +105,9 @@ The basic unit of articles on the website.
 
 ### Wiki Setting Articles
 
+### Tagging
+
+Tags are attached to content. They may only be created by admins.
+
+
 ### User

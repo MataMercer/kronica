@@ -2,8 +2,7 @@ package org.matamercer.domain.models
 
 import java.util.*
 
-data class Character(
-    val id: Long? = null,
+data class NewCharacter(
     val author: User,
     val name: String,
     val body: String,
@@ -12,7 +11,19 @@ data class Character(
     var traits: List<Trait> = listOf(),
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
-    )
+)
+
+data class Character(
+    override val id: Long,
+    override val author: User,
+    val name: String,
+    val body: String,
+    var attachments: List<FileModel> = listOf(),
+    var profilePictures: List<FileModel> = listOf(),
+    var traits: List<Trait> = listOf(),
+    override val createdAt: Date? = null,
+    override val updatedAt: Date? = null,
+    ): Content()
 
 data class CharacterDto(
     val id: Long? = null,

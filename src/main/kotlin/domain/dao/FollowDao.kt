@@ -17,7 +17,7 @@ class FollowDao() {
     }
 
 
-    fun follow(conn: Connection, followerId: Long, followeeId: Long) = mapper.update(
+    fun follow(followerId: Long, followeeId: Long) = mapper.update(
         """
             INSERT INTO follows
             (
@@ -26,7 +26,7 @@ class FollowDao() {
                 created_at
             )
             VALUES (?, ?, ?)
-        """.trimIndent(), conn
+        """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, followerId)
@@ -34,55 +34,55 @@ class FollowDao() {
         it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
     }
 
-    fun unfollow(conn: Connection, followerId: Long, followeeId: Long) = mapper.update(
+    fun unfollow(followerId: Long, followeeId: Long) = mapper.update(
         """
             DELETE FROM follows
             WHERE follower_id = ? AND followee_id = ?
-        """.trimIndent(), conn
+        """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, followerId)
         it.setLong(++i, followeeId)
     }
 
-    fun findFollow(conn: Connection, followerId: Long, followeeId: Long): Follow? = mapper.queryForObject(
+    fun findFollow( followerId: Long, followeeId: Long): Follow? = mapper.queryForObject(
         """
             SELECT * 
             FROM follows 
             WHERE follower_id = ? AND followee_id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         var i = 0
         it.setLong(++i, followerId)
         it.setLong(++i, followeeId)
     }
 
-    fun findFollowers(conn: Connection, followeeId: Long): List<Follow> = mapper.queryForObjectList(
+    fun findFollowers( followeeId: Long): List<Follow> = mapper.queryForObjectList(
         """
             SELECT * 
             FROM follows 
             WHERE followee_id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, followeeId)
     }
 
-    fun findFollowings(conn: Connection, followerId: Long): List<Follow> = mapper.queryForObjectList(
+    fun findFollowings( followerId: Long): List<Follow> = mapper.queryForObjectList(
         """
             SELECT * 
             FROM follows 
             WHERE follower_id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, followerId)
     }
 
-    fun findFollowerCount(conn: Connection, followeeId: Long): Long? = mapper.queryForLong(
+    fun findFollowerCount( followeeId: Long): Long? = mapper.queryForLong(
         """
             SELECT COUNT(*) 
             FROM follows 
             WHERE followee_id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, followeeId)
     }

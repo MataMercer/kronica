@@ -1,0 +1,82 @@
+package controllers
+
+import createAuthClient
+import fixtures.Fixtures
+import getHostUrl
+import io.javalin.Javalin
+import io.javalin.json.JavalinJackson
+import io.javalin.json.toJsonString
+import io.javalin.testtools.HttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.matamercer.AppMode
+import org.matamercer.setupApp
+import org.matamercer.web.CommentForm
+import org.matamercer.web.LoginRequestForm
+
+class CommentControllerTest {
+    private lateinit var app: Javalin
+    private lateinit var authClient: HttpClient
+    private lateinit var fixtures: Fixtures
+
+    @BeforeEach
+    fun beforeEach(){
+        fixtures = Fixtures()
+        app = setupApp(AppMode.TEST)
+        app.start(0)
+        val loginRequestForm = LoginRequestForm(
+            email = fixtures.rootUser.email,
+            password = "password"
+        )
+        authClient = createAuthClient(app, loginRequestForm)
+    }
+
+    @AfterEach
+    fun afterEach() {
+        app.stop()
+    }
+
+    @Test
+    fun `when creating a comment, it should return 201 Created`() {
+        fixtures.createArticle(app, authClient)
+        val req = Request.Builder().url("${getHostUrl(app)}/api/comments/create").post(
+            JavalinJackson().toJsonString(CommentForm(
+                body = "This is a test comment",
+                articleId = fixtures.testArticle.id
+            )).toRequestBody()
+        ).build()
+        val res = authClient.okHttp.newCall(req).execute()
+        assertThat(res.code).isEqualTo(200)
+    }
+
+    @Test
+    fun `delete comment should return 204 No Content`() {
+        val articleId = fixtures.createArticle(app, authClient)
+        val commentId = fixtures.createComment(app, authClient, articleId)
+        val req = Request.Builder().url("${getHostUrl(app)}/api/comments/$commentId").delete().build()
+        val res = authClient.okHttp.newCall(req).execute()
+        assertThat(res.code).isEqualTo(204)
+    }
+
+    @Test
+    fun `update comment should return 200 OK`() {
+        val articleId = fixtures.createArticle(app, authClient)
+        val commentId = fixtures.createComment(app, authClient, articleId)
+        val updateCommentForm = CommentForm(
+            body = "This is an updated comment",
+            articleId = articleId
+        )
+        val req = Request.Builder().url("${getHostUrl(app)}/api/comments/$commentId").put(
+            JavalinJackson().toJsonString(updateCommentForm).toRequestBody()
+        ).build()
+        val res = authClient.okHttp.newCall(req).execute()
+        assertThat(res.code).isEqualTo(204)
+
+    }
+
+
+}

@@ -35,7 +35,6 @@ class CharacterControllerTest {
 
     private lateinit var fixtures: Fixtures
     private lateinit var rootUser: User
-    private lateinit var jsonUtils:JsonUtils
 
     @BeforeEach
     fun beforeEachTest(){
@@ -50,7 +49,6 @@ class CharacterControllerTest {
 
         authClient = createAuthClient(app, loginRequestForm)
         unauthClient = HttpClient(app, OkHttpClient())
-        jsonUtils = JsonUtils()
     }
 
     @AfterEach()
@@ -106,7 +104,7 @@ class CharacterControllerTest {
             .post(requestBody).build()
 
         val res = authClient.okHttp.newCall(request).execute()
-        return jsonUtils.getIdFromResponse(res)
+        return JsonUtils.getIdFromResponse(res)
     }
 
     @Test

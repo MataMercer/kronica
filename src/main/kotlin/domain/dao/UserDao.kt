@@ -1,6 +1,7 @@
 package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.AuthProvider
+import org.matamercer.domain.models.NewUser
 import org.matamercer.domain.models.Profile
 import org.matamercer.domain.models.SocialMediaLink
 import org.matamercer.domain.models.User
@@ -22,57 +23,57 @@ class UserDao {
         )
     }
 
-    fun findAll(conn: Connection): List<User> = mapper.queryForObjectList(
-        "SELECT * FROM users", conn
+    fun findAll(): List<User> = mapper.queryForObjectList(
+        "SELECT * FROM users"
     ) {}
 
-    fun findByEmail(conn: Connection, email: String): User? {
+    fun findByEmail(email: String): User? {
         return mapper.queryForObject(
             """
                 SELECT * 
                 FROM users 
                 WHERE users.email = ?
-                """.trimIndent(), conn
+                """.trimIndent()
         ) {
             it.setString(1, email)
         }
 
     }
 
-    fun findById(conn: Connection, id: Long): User? = mapper.queryForObject(
+    fun findById(id: Long): User? = mapper.queryForObject(
         """
             SELECT * 
             FROM users 
             WHERE users.id = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setLong(1, id)
     }
 
-    fun findByOAuthIdAndAuthProvider(conn: Connection, oauthId: Long, authProvider: AuthProvider) = mapper.queryForObject(
+    fun findByOAuthIdAndAuthProvider(oauthId: Long, authProvider: AuthProvider) = mapper.queryForObject(
         """
             SELECT * 
             FROM users 
             WHERE users.oauth_id = ? AND users.auth_provider = ?     
-        """.trimIndent(), conn
-    ){
+        """.trimIndent()
+    ) {
         var i = 0
         it.setLong(++i, oauthId)
         it.setString(++i, authProvider.name)
     }
 
-    fun findByName(conn: Connection, name: String): User? = mapper.queryForObject(
+    fun findByName(name: String): User? = mapper.queryForObject(
         """
             SELECT * 
             FROM users 
             WHERE users.name = ?
-            """.trimIndent(), conn
+            """.trimIndent()
     ) {
         it.setString(1, name)
     }
 
 
-    fun create(conn: Connection, user: User, profileId: Long): Long = mapper.updateForId(
+    fun create(user: NewUser, profileId: Long): Long = mapper.updateForId(
         """
                 INSERT INTO users 
                     (name,
@@ -85,7 +86,7 @@ class UserDao {
                     oauth_id
                     ) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent(), conn
+                """.trimIndent()
     ) {
         var i = 0
         it.setString(++i, user.name)
@@ -95,34 +96,30 @@ class UserDao {
         it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
         it.setLong(++i, profileId)
         it.setString(++i, user.authProvider.name)
-        if (user.oAuthId == null){
+        if (user.oAuthId == null) {
             it.setNull(++i, java.sql.Types.NULL)
-        }else{
+        } else {
             it.setLong(++i, user.oAuthId)
         }
     }
 
-
-
-
-
-    fun createSocialMediaLink(conn: Connection, socialMediaLink: SocialMediaLink, profileId: Long): Long {
-        val sql = """
+    fun createSocialMediaLink(socialMediaLink: SocialMediaLink, profileId: Long) =
+        mapper.updateForId(
+            """
            INSERT INTO social_media_links
                (url, platform, profile_id)
               VALUES (?, ?)
         """.trimIndent()
-
-        return mapper.updateForId(sql, conn) {
+        ) {
             var i = 0
             it.setString(++i, socialMediaLink.url)
             it.setString(++i, socialMediaLink.platform)
             it.setLong(++i, profileId)
         }
-    }
 
-    fun update(conn: Connection, user: User): Long {
-        val sql = """
+    fun update(user: User) =
+        mapper.updateForId(
+            """
             UPDATE users
             SET name = ?,
                 email = ?,
@@ -130,26 +127,24 @@ class UserDao {
                 role = ?
             WHERE id = ?
         """.trimIndent()
-        return mapper.updateForId(sql, conn) {
+        ) {
             var i = 0
             it.setString(++i, user.name)
             it.setString(++i, user.email)
             it.setString(++i, user.hashedPassword)
             it.setString(++i, user.role.name)
-            user.id?.let { id -> it.setLong(++i, id) }
+            user.id.let { id -> it.setLong(++i, id) }
         }
-    }
 
 
-
-    fun delete(conn: Connection, id: Long) {
-        val sql = """
+    fun delete(id: Long) =
+        mapper.update(
+            """
             DELETE FROM users
             WHERE id = ?
         """.trimIndent()
-        mapper.update(sql, conn) {
+        ) {
             it.setLong(1, id)
         }
-    }
 
 }

@@ -1,7 +1,13 @@
 package org.matamercer.domain.models
 
+data class NewTimeline(
+    val name: String,
+    val description: String,
+    val author: User,
+)
+
 data class Timeline(
-    val id: Long? = null,
+    val id: Long,
     val name: String,
     val description: String,
     val author: User,

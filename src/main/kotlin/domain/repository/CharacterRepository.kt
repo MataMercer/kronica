@@ -1,11 +1,9 @@
 package org.matamercer.domain.repository
 
-import org.matamercer.domain.dao.CharacterDao
-import org.matamercer.domain.dao.FileModelDao
-import org.matamercer.domain.dao.TraitDao
-import org.matamercer.domain.dao.TransactionManager
+import org.matamercer.domain.dao.*
 import org.matamercer.domain.models.Character
 import org.matamercer.domain.models.CharacterQuery
+import org.matamercer.domain.models.NewCharacter
 import org.matamercer.web.FileMetadataForm
 import java.sql.Connection
 import javax.sql.DataSource
@@ -14,64 +12,64 @@ class CharacterRepository(
     private val characterDao: CharacterDao,
     private val fileModelDao: FileModelDao,
     private val traitDao: TraitDao,
-    private val transact: TransactionManager,
-    private val dataSource: DataSource
+    private val contentDao: ContentDao
 ) {
-    fun findById(id: Long) = transact.wrap { conn ->
-        val c = characterDao.findById(conn, id)
-        return@wrap c?.let { aggregate(conn, it) }
+    fun findById(id: Long) = txn {
+        characterDao.findById(id)?.let { aggregate(it) }
     }
 
-    fun findAll(query: CharacterQuery) = transact.wrap { conn ->
-        val page = characterDao.findAll(conn, query)
-        page.content.map {
-            aggregate(conn, it)
+    fun findAll(query: CharacterQuery) = txn {
+        characterDao.findAll(query).apply {
+            content = content.map { aggregate(it) }
         }
-        return@wrap page
     }
 
-    fun create(character: Character) = transact.wrap { conn ->
-        val newCharacterId = characterDao.create(conn, character)
-        val c = characterDao.findById(conn, newCharacterId)
+    fun create(character: NewCharacter) = txn {
+        val id = contentDao.create(character.author.id)
+        characterDao.create(character, id)
+        val c = characterDao.findById(id) ?: throw IllegalStateException("Character not found after creation")
         character.attachments.forEachIndexed { index, it ->
-            val id = fileModelDao.create(conn, it)
-            fileModelDao.joinCharacter(conn, id, newCharacterId, index)
-
+            with(fileModelDao.create(it)) {
+                fileModelDao.joinCharacter(this, c.id, index)
+            }
         }
         character.profilePictures.forEachIndexed { index, it ->
-            val id = fileModelDao.create(conn, it)
-            fileModelDao.joinCharacterProfile(conn, id, newCharacterId, index)
+            with(fileModelDao.create(it)) {
+                fileModelDao.joinCharacterProfile(this, c.id, index)
+            }
         }
-        character.traits.forEach {
-            val id = traitDao.createTrait(conn, it.name, it.value, newCharacterId)
-        }
-        return@wrap c?.let { aggregate(conn, it) }
+        character.traits.forEach { traitDao.createTrait(it.name, it.value, c.id) }
+        aggregate(c)
     }
 
-    fun update(character: Character, fileMetadataList: List<FileMetadataForm>, profilePicturesMetadata: List<FileMetadataForm>) = transact.wrap { conn ->
-        val updatedCharacterId = characterDao.update(conn, character)
-        var foundCharacter = characterDao.findById(conn, updatedCharacterId)
+    fun update(
+        character: Character,
+        fileMetadataList: List<FileMetadataForm>,
+        profilePicturesMetadata: List<FileMetadataForm>
+    ) = txn {
+        val updatedCharacterId = characterDao.update(character)
+        var foundCharacter = characterDao.findById(updatedCharacterId)
             ?: throw IllegalStateException("Character not found after update")
-        foundCharacter = aggregate(conn, foundCharacter)
+        foundCharacter = aggregate(foundCharacter)
 
 
         //update attachments
         //delete files that are marked for deletion first
         fileMetadataList.filter { it.delete != null && it.delete }.forEach {
-            fileModelDao.deleteById(conn, it.id!!)
-            fileModelDao.deleteJoinCharacter(conn, it.id, updatedCharacterId)
+            fileModelDao.deleteById(it.id!!)
+            fileModelDao.deleteJoinCharacter(it.id, updatedCharacterId)
         }
         //update existing files and create new ones
         var newFileCounter = 0
         fileMetadataList.filter { it.delete == null || !it.delete }.forEachIndexed { index, fileMetadata ->
             if (fileMetadata.isExistingFile()) {
                 if (fileMetadata.caption != null) {
-                    fileModelDao.updateCaption(conn, fileMetadata.id!!, fileMetadata.caption)
+                    fileModelDao.updateCaption(fileMetadata.id!!, fileMetadata.caption)
                 }
-                fileModelDao.updateJoinCharacterIndex(conn, fileMetadata.id!!, updatedCharacterId, index)
+                fileModelDao.updateJoinCharacterIndex(fileMetadata.id!!, updatedCharacterId, index)
             } else {
-                val newFile = fileModelDao.create(conn, character.attachments[newFileCounter])
-                fileModelDao.joinCharacter(conn, newFile, updatedCharacterId, index)
+                val newFile = fileModelDao.create(character.attachments[newFileCounter])
+                fileModelDao.joinCharacter(newFile, updatedCharacterId, index)
                 newFileCounter++
             }
         }
@@ -79,20 +77,20 @@ class CharacterRepository(
         //update profile pictures
         //delete files that are marked for deletion first
         profilePicturesMetadata.filter { it.delete != null && it.delete }.forEach {
-            fileModelDao.deleteById(conn, it.id!!)
-            fileModelDao.deleteJoinCharacterProfile(conn, it.id, updatedCharacterId)
+            fileModelDao.deleteById(it.id!!)
+            fileModelDao.deleteJoinCharacterProfile(it.id, updatedCharacterId)
         }
         //update existing files and create new ones
         var newProfilePictureCounter = 0
         profilePicturesMetadata.filter { it.delete == null || !it.delete }.forEachIndexed { index, fileMetadata ->
             if (fileMetadata.isExistingFile()) {
                 if (fileMetadata.caption != null) {
-                    fileModelDao.updateCaption(conn, fileMetadata.id!!, fileMetadata.caption)
+                    fileModelDao.updateCaption(fileMetadata.id!!, fileMetadata.caption)
                 }
-                fileModelDao.updateJoinCharacterProfileIndex(conn, fileMetadata.id!!, updatedCharacterId, index)
+                fileModelDao.updateJoinCharacterProfileIndex(fileMetadata.id!!, updatedCharacterId, index)
             } else {
-                val newFile = fileModelDao.create(conn, character.profilePictures[newProfilePictureCounter])
-                fileModelDao.joinCharacterProfile(conn, newFile, updatedCharacterId, index)
+                val newFile = fileModelDao.create(character.profilePictures[newProfilePictureCounter])
+                fileModelDao.joinCharacterProfile(newFile, updatedCharacterId, index)
                 newProfilePictureCounter++
             }
         }
@@ -102,28 +100,24 @@ class CharacterRepository(
         val traitSet = character.traits.associate { it.name to it.value }
         val foundTraitSet = foundCharacter.traits.associate { it.name to it.value }
         foundCharacter.traits.forEach {
-            if (traitSet[it.name] == null) {
-                traitDao.deleteTrait(conn, it.name, updatedCharacterId)
-            }
+            if (traitSet[it.name] == null) traitDao.deleteTrait(it.name, updatedCharacterId)
+
         }
         character.traits.forEach {
-            if (foundTraitSet[it.name] != null){
-                traitDao.updateTrait(conn, it.name, it.value, updatedCharacterId)
-            }else{
-                traitDao.createTrait(conn, it.name, it.value, updatedCharacterId)
+            if (foundTraitSet[it.name] != null) {
+                traitDao.updateTrait(it.name, it.value, updatedCharacterId)
+            } else {
+                traitDao.createTrait(it.name, it.value, updatedCharacterId)
             }
         }
+        contentDao.update(character.id)
     }
 
-    fun deleteById(id: Long) = dataSource.connection.use { conn ->
-        characterDao.deleteById(conn, id)
-    }
+    fun deleteById(id: Long) = characterDao.deleteById(id)
 
-    private fun aggregate(conn: Connection, c: Character): org.matamercer.domain.models.Character {
-        if (c.id == null) return c
-        c.attachments = fileModelDao.findCharacterAttachments(conn, c.id)
-        c.profilePictures = fileModelDao.findCharacterProfilePictures(conn, c.id)
-        c.traits = traitDao.findTraitsByCharacter(conn, c.id)
-        return c
+    private fun aggregate(c: Character) = c.apply {
+        attachments = fileModelDao.findCharacterAttachments(c.id)
+        profilePictures = fileModelDao.findCharacterProfilePictures(c.id)
+        traits = traitDao.findTraitsByCharacter(c.id)
     }
 }

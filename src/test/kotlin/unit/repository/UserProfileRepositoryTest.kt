@@ -9,10 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.matamercer.domain.dao.FileModelDao
 import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.dao.UserProfileDao
+import org.matamercer.domain.dao.txn
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.Profile
 import org.matamercer.domain.repository.UserProfileRepository
-import java.sql.Connection
 
 @ExtendWith(MockKExtension::class)
 class UserProfileRepositoryTest {
@@ -21,20 +21,18 @@ class UserProfileRepositoryTest {
     @MockK(relaxUnitFun = true)
     private lateinit var userProfileRepository: UserProfileRepository
 
-    @MockK(relaxUnitFun = true)
-    private lateinit var transactionManager: TransactionManager
-
 
     @BeforeEach
     fun beforeEach() {
         clearAllMocks()
-        every { transactionManager.wrap<Any>(any()) } answers { firstArg<(conn: Connection) -> Any>().invoke(mockk(relaxed = true)) }
+        mockkStatic("org.matamercer.domain.dao.TransactionManagerKt")
+        every { txn<Any>(any()) } answers { firstArg<() -> Any>().invoke() }
     }
 
     @Test
     fun `test update user profile repository with no picture`() {
         val userProfileDao = mockk<UserProfileDao>(relaxed = true)
-        every { userProfileDao.findById(any(), any()) } returns Profile(
+        every { userProfileDao.findById(any()) } returns Profile(
             id = 1L,
             description = "Test User",
             picture = null
@@ -43,8 +41,6 @@ class UserProfileRepositoryTest {
         userProfileRepository = UserProfileRepository(
             userProfileDao = userProfileDao,
             fileModelDao = fileModelDao,
-            transactionManager = transactionManager,
-            dataSource = mockk(relaxed = true)
         )
         val profile = Profile(
             id = 1L,
@@ -53,15 +49,15 @@ class UserProfileRepositoryTest {
         )
         userProfileRepository.updateProfile(profile)
         verify {
-            userProfileDao.findById(any(), profile.id!!)
-            userProfileDao.updateProfile(any(), profile)
+            userProfileDao.findById(profile.id!!)
+            userProfileDao.updateProfile(profile)
 
         }
         verify(exactly = 0) {
-            fileModelDao.deleteById(any(), any())
-            fileModelDao.deleteJoinUserProfile(any(), any(), any())
-            fileModelDao.create(any(), any())
-            fileModelDao.joinUserProfile(any(), any(), any())
+            fileModelDao.deleteById(any())
+            fileModelDao.deleteJoinUserProfile(any(), any())
+            fileModelDao.create(any())
+            fileModelDao.joinUserProfile(any(), any())
         }
         confirmVerified(userProfileDao)
 
@@ -70,7 +66,7 @@ class UserProfileRepositoryTest {
     @Test
     fun `test update user profile repository with picture`() {
         val userProfileDao = mockk<UserProfileDao>(relaxed = true)
-        every { userProfileDao.findById(any(), any()) } returns Profile(
+        every { userProfileDao.findById(any()) } returns Profile(
             id = 1L,
             description = "Test User",
             picture = null
@@ -79,8 +75,6 @@ class UserProfileRepositoryTest {
         userProfileRepository = UserProfileRepository(
             userProfileDao = userProfileDao,
             fileModelDao = fileModelDao,
-            transactionManager = transactionManager,
-            dataSource = mockk(relaxed = true)
         )
         val profile = Profile(
             id = 1L,
@@ -89,17 +83,17 @@ class UserProfileRepositoryTest {
         )
         userProfileRepository.updateProfile(profile)
         verify {
-            userProfileDao.findById(any(), profile.id!!)
-            userProfileDao.updateProfile(any(), profile)
-            fileModelDao.create(any(), any())
-            fileModelDao.joinUserProfile(any(), any(), any())
+            userProfileDao.findById(profile.id!!)
+            userProfileDao.updateProfile(profile)
+            fileModelDao.create(any())
+            fileModelDao.joinUserProfile(any(), any())
         }
         confirmVerified(userProfileDao, fileModelDao)
     }
 
     @Test
     fun `test update user profile repository with picture and delete existing picture`() {
-       val userProfileDao = mockk<UserProfileDao>(relaxed = true)
+        val userProfileDao = mockk<UserProfileDao>(relaxed = true)
         val existingPicture = FileModel(
             id = 2L,
             name = "existing_picture.jpg",
@@ -114,7 +108,7 @@ class UserProfileRepositoryTest {
             mimeType = "image/jpeg",
             storageId = "new-storage-id",
         )
-        every { userProfileDao.findById(any(), any()) } returns Profile(
+        every { userProfileDao.findById(any()) } returns Profile(
             id = 1L,
             description = "Test User",
             picture = existingPicture
@@ -123,8 +117,6 @@ class UserProfileRepositoryTest {
         userProfileRepository = UserProfileRepository(
             userProfileDao = userProfileDao,
             fileModelDao = fileModelDao,
-            transactionManager = transactionManager,
-            dataSource = mockk(relaxed = true)
         )
         val profile = Profile(
             id = 1L,
@@ -133,12 +125,12 @@ class UserProfileRepositoryTest {
         )
         userProfileRepository.updateProfile(profile)
         verify {
-            userProfileDao.findById(any(), profile.id!!)
-            userProfileDao.updateProfile(any(), profile)
-            fileModelDao.deleteById(any(), any())
-            fileModelDao.deleteJoinUserProfile(any(), any(), any())
-            fileModelDao.create(any(), any())
-            fileModelDao.joinUserProfile(any(), any(), any())
+            userProfileDao.findById(profile.id!!)
+            userProfileDao.updateProfile(profile)
+            fileModelDao.deleteById(any())
+            fileModelDao.deleteJoinUserProfile(any(), any())
+            fileModelDao.create(any())
+            fileModelDao.joinUserProfile(any(), any())
         }
         confirmVerified(userProfileDao, fileModelDao)
     }
