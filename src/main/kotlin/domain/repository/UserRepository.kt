@@ -11,7 +11,6 @@ import javax.sql.DataSource
 class UserRepository(
     private val userDao: UserDao,
     private val userProfileDao: UserProfileDao,
-    private val followDao: FollowDao,
 ) {
     fun findAll(): List<User> = userDao.findAll()
     fun findByEmail(email: String) = userDao.findByEmail(email)
@@ -29,10 +28,4 @@ class UserRepository(
 
     fun update(user: User) = userDao.update(user)
     fun delete(id: Long) = userDao.delete(id)
-    fun follow(followerId: Long, followeeId: Long) = followDao.follow(followerId, followeeId)
-    fun unfollow(followerId: Long, followeeId: Long) = followDao.unfollow(followerId, followeeId)
-    fun findFollow(followerId: Long, followeeId: Long) = followDao.findFollow(followerId, followeeId)
-    fun findFollowers(followeeId: Long) = followDao.findFollowers(followeeId)
-    fun findFollowings(followerId: Long) = followDao.findFollowings(followerId)
-    fun findFollowerCount(followeeId: Long) = followDao.findFollowerCount(followeeId)
 }

@@ -6,11 +6,11 @@ import io.javalin.http.HandlerType
 import io.javalin.http.NoContentResponse
 import io.javalin.http.bodyValidator
 import org.matamercer.domain.services.ReportService
-import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.PageQuery
 import org.matamercer.web.CreateReportForm
 import org.matamercer.web.UpdateReportForm
+import org.matamercer.web.getCurrentUser
 
 @Controller("/api/reports")
 class ReportController(

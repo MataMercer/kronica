@@ -19,7 +19,7 @@ class TagDao {
             WHERE id = ?
         """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
     fun findByContentId(contentId: Long): List<Tag> = mapper.queryForObjectList(
@@ -30,7 +30,7 @@ class TagDao {
             WHERE content_tags.content_id = ?
         """.trimIndent()
     ) {
-        it.setLong(1, contentId)
+        setLong(1, contentId)
     }
 
     fun create(tag: NewTag) = mapper.updateForId(
@@ -40,9 +40,9 @@ class TagDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setString(++i, tag.name)
-        it.setString(++i, tag.description)
-        it.setBoolean(++i, tag.nsfw)
+        setString(++i, tag.name)
+        setString(++i, tag.description)
+        setBoolean(++i, tag.nsfw)
     }
 
     fun update(tag: Tag) = mapper.update(
@@ -53,10 +53,10 @@ class TagDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setString(++i, tag.name)
-        it.setString(++i, tag.description)
-        it.setBoolean(++i, tag.nsfw)
-        it.setLong(++i, tag.id)
+        setString(++i, tag.name)
+        setString(++i, tag.description)
+        setBoolean(++i, tag.nsfw)
+        setLong(++i, tag.id)
     }
 
     fun delete(id: Long) = mapper.update(
@@ -65,7 +65,7 @@ class TagDao {
             WHERE id = ?
         """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
 }

@@ -24,10 +24,9 @@ import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
 import org.matamercer.web.CreateTimelineForm
-import org.matamercer.web.LoginRequestForm
+import org.matamercer.web.Forms.LoginRequestForm
 import org.matamercer.web.UpdateTimelineOrderForm
 import java.io.File
-import kotlin.test.assertNotNull
 
 class TimelineControllerTest {
     private lateinit var app: Javalin

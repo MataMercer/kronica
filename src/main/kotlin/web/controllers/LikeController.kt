@@ -7,9 +7,10 @@ import io.javalin.http.HandlerType
 import io.javalin.http.NoContentResponse
 import io.javalin.http.bodyValidator
 import org.matamercer.domain.services.LikeService
-import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.LikeForm
+import org.matamercer.web.getCurrentUser
+import org.matamercer.web.getPageQuery
 
 @Controller("/api/likes")
 class LikeController(
@@ -37,7 +38,7 @@ class LikeController(
     fun getLikes(ctx: Context) {
         val contentId = ctx.pathParam("id").toLongOrNull()
             ?: throw BadRequestResponse("Invalid content ID")
-        val likePage = likeService.findByContentId(contentId)
+        val likePage = likeService.findByContentId(contentId, getPageQuery(ctx))
         ctx.json(likePage)
     }
 }

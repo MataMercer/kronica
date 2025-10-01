@@ -1,6 +1,5 @@
 package controllers
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import createAuthClient
 import io.javalin.Javalin
 import io.javalin.testtools.HttpClient
@@ -17,9 +16,7 @@ import org.matamercer.domain.models.User
 import org.matamercer.domain.models.UsersDto
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
-import org.matamercer.web.FileMetadataForm
-import org.matamercer.web.LoginRequestForm
-import org.matamercer.web.UpdateProfileForm
+import org.matamercer.web.Forms.LoginRequestForm
 import java.io.File
 
 

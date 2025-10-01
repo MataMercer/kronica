@@ -16,6 +16,10 @@ object AppConfig {
     var maxAttachmentCount: Int? = null
     var maxImageWidth: Int? = null
     var maxImageHeight: Int? = null
+
+    var maxNotificationCapacity: Int? = null
+    var maxNotificationAgeDays: Int? = null
+
     var appMode: String? = null
 
     private fun calcMB(size: Int) = size * 1024 * 1024
@@ -34,6 +38,9 @@ object AppConfig {
         maxAttachmentCount = resolveInt(AppConfig::maxAttachmentCount.name, true)
         maxImageWidth = resolveInt(AppConfig::maxImageWidth.name, true)
         maxImageHeight = resolveInt(AppConfig::maxImageHeight.name, true)
+
+        maxNotificationCapacity = resolveInt(AppConfig::maxNotificationCapacity.name, true)
+        maxNotificationAgeDays = resolveInt(AppConfig::maxNotificationAgeDays.name, true)
         appMode = resolve(AppConfig::appMode.name, true)
     }
 
@@ -50,15 +57,13 @@ object AppConfig {
     }
 
     private fun resolve(key: String, required: Boolean = false):String?{
-        for (reader in configReaders) {
+        configReaders.forEach { reader ->
             val value = reader.get(key)
             if (value != null) {
                 return value
             }
         }
-        if (required){
-            throw IllegalStateException("Required config setting '$key' not found in any config reader.")
-        }
+        if (required){ throw IllegalStateException("Required config setting '$key' not found in any config reader.") }
         return null
     }
 }

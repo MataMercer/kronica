@@ -5,7 +5,7 @@ import org.matamercer.domain.models.Profile
 import org.matamercer.domain.repository.UserProfileRepository
 import org.matamercer.domain.services.upload.image.ImagePresetSize
 import org.matamercer.web.FileUploadForm
-import org.matamercer.web.UpdateProfileForm
+import org.matamercer.web.Forms.UpdateProfileForm
 
 class UserProfileService(
     private val userProfileRepository: UserProfileRepository,

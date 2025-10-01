@@ -2,22 +2,30 @@ package org.matamercer.domain.models
 
 import java.util.*
 
-class Notification(
-    val id: Long? = null,
+class NewNotification(
     val notificationType: NotificationType,
     var subject: User? = null,
     val subjectId: Long,
     val targetContentId: Long? = null,
-    var recipient: User? = null,
-    val recipientId: Long,
     val message: String? = null,
-    val isRead: Boolean = false,
+    var recipients: List<Long> = listOf(),
+)
+
+class Notification(
+    val id: Long,
+    val notificationType: NotificationType,
+    var subject: User? = null,
+    val subjectId: Long,
+    val targetContentId: Long? = null,
+    val message: String? = null,
     val createdAt: Date? = null,
+    val recipients: List<User> = listOf(),
 )
 
 data class NotificationDto(
     val id: Long? = null,
     val notificationType: NotificationType,
+    val targetContentId: Long?,
     val message: String? = null,
     val isRead: Boolean = false,
     val createdAt: Date? = null,
@@ -32,8 +40,7 @@ enum class NotificationType {
     FOLLOWED,
     MENTIONED,
     REPLIED,
-    SHARED,
+    POSTED,
     SYSTEM,
     INFO,
-    UNKNOWN
 }

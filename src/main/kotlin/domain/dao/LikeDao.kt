@@ -33,7 +33,7 @@ class LikeDao {
             ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
         """.trimIndent()
     , pageQuery) {
-        it.setLong(1, contentId)
+        setLong(1, contentId)
     }
 
     fun findByUserId(userId: Long): List<Like> = mapper.queryForObjectList(
@@ -49,7 +49,7 @@ class LikeDao {
             WHERE likes.author_id = ?
         """.trimIndent()
     ) {
-        it.setLong(1, userId)
+        setLong(1, userId)
     }
 
     fun like(userId: Long, contentId: Long ): Long = mapper.updateForId(
@@ -64,8 +64,8 @@ class LikeDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, userId)
-        it.setLong(++i, contentId)
+        setLong(++i, userId)
+        setLong(++i, contentId)
     }
 
     fun unlike( userId: Long, contentId: Long): Long = mapper.updateForId(
@@ -75,8 +75,8 @@ class LikeDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, userId)
-        it.setLong(++i, contentId)
+        setLong(++i, userId)
+        setLong(++i, contentId)
     }
 
 
@@ -90,17 +90,17 @@ class LikeDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, contentId)
-        it.setLong(++i, userId)
+        setLong(++i, contentId)
+        setLong(++i, userId)
     }
 
-    fun countLikesByContentId(contentId: Long, pageQuery: PageQuery) = mapper.queryForLong(
+    fun countLikesByContentId(contentId: Long) = mapper.queryForLong(
         """
             SELECT COUNT(*) AS count
             FROM likes
             WHERE owning_content_id = ?
         """.trimIndent()
     ) {
-        it.setLong(1, contentId)
+        setLong(1, contentId)
     }
 }

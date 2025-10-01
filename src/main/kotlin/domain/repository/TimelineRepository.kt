@@ -13,17 +13,14 @@ class TimelineRepository(
     private val contentDao: ContentDao,
 ) {
     fun createTimeline(timeline: NewTimeline) =
-        contentDao.create(timeline.author.id).let { id->
+        contentDao.create(timeline.author.id, timeline.nsfw).let { id->
             timelineDao.create( timeline, id).let {
                 timelineDao.findById( it)
             }
         }
 
-
     fun findByAuthorId(id: Long) = timelineDao.findByAuthorId( id)
-
     fun findById(id: Long) = timelineDao.findById(id)
-
     fun findByName(name: String) = timelineDao.findByName(name)
 
     fun update(timeline: Timeline) =  txn {

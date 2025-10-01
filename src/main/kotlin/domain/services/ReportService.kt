@@ -39,6 +39,7 @@ class ReportService(
         if (form.category == null) {
             throw BadRequestResponse("Category must not be null")
         }
+
         try {
             enumValueOf<ReportCategory>(form.category)
         } catch (e: IllegalArgumentException) {

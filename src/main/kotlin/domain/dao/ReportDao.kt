@@ -46,8 +46,8 @@ class ReportDao {
     """.trimIndent(), pageQuery){
         var i = 0
         if (pageQuery!=null){
-            it.setInt(++i, pageQuery.size)
-            it.setInt(++i, pageQuery.number * pageQuery.size)
+            setInt(++i, pageQuery.size)
+            setInt(++i, pageQuery.number * pageQuery.size)
         }
     }
 
@@ -69,7 +69,7 @@ class ReportDao {
         ON reports.resolver_id = resolvers.id
         WHERE reports.id = ?
     """.trimIndent()) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
     fun create(report: NewReport) = mapper.updateForId("""
@@ -78,11 +78,11 @@ class ReportDao {
         VALUES (?, ?, ?, ?, ?)
     """.trimIndent()) {
         var i = 0
-        it.setString(++i, report.reason)
-        it.setString(++i, report.category.name)
-        it.setTimestamp(++i, genTimestamp())
-        it.setLong(++i, report.reportedContentId)
-        it.setLong(++i, report.author.id)
+        setString(++i, report.reason)
+        setString(++i, report.category.name)
+        setTimestamp(++i, genTimestamp())
+        setLong(++i, report.reportedContentId)
+        setLong(++i, report.author.id)
     }
 
     fun update(report: Report) = mapper.update("""
@@ -92,16 +92,16 @@ class ReportDao {
     """.trimIndent()) {
         requireNotNull(report.resolver) { "Resolver must not be null" }
         var i = 0
-        it.setString(++i, report.reason)
-        it.setString(++i, report.category.name)
-        it.setLong(++i, report.resolver.id)
-        it.setLong(++i, report.id)
+        setString(++i, report.reason)
+        setString(++i, report.category.name)
+        setLong(++i, report.resolver.id)
+        setLong(++i, report.id)
     }
 
     fun delete(id: Long) = mapper.update("""
         DELETE FROM reports
         WHERE id = ?
     """.trimIndent()) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 }

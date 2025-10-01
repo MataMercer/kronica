@@ -15,11 +15,11 @@ class CommentService(
 
     fun create(form: CommentForm, currentUser: CurrentUser): Long {
         validateForm(form)
-
         return commentRepository.create(
             NewComment(
                 body = form.body ?: "",
                 author = currentUser.toUser(),
+                nsfw = form.nsfw
             ),
             (form.articleId ?: form.characterId ?: form.timelineId)!!
         )

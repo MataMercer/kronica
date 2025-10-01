@@ -7,23 +7,28 @@ import io.javalin.json.toJsonString
 import okhttp3.*
 import org.matamercer.config.AppConfig
 import org.matamercer.domain.models.*
+import org.matamercer.domain.repository.FollowRepository
 import org.matamercer.domain.repository.UserRepository
+import org.matamercer.domain.workers.NotificationWorker
 import org.matamercer.security.UserRole
 import org.matamercer.security.hashPassword
 import org.matamercer.security.verifyPassword
-import org.matamercer.web.LoginRequestForm
-import org.matamercer.web.RegisterUserForm
-import org.matamercer.web.UpdateUserForm
+import org.matamercer.web.CreateFollowForm
+import org.matamercer.web.Forms.LoginRequestForm
+import org.matamercer.web.Forms.RegisterUserForm
+import org.matamercer.web.UpdateFollowForm
+import org.matamercer.web.Forms.UpdateUserForm
 
 class UserService(
     private val userRepository: UserRepository,
-    private val notificationService: NotificationService,
+    private val followRepository: FollowRepository,
+    private val notificationWorker: NotificationWorker,
     private val httpClient: OkHttpClient
 ) {
 
     fun toDto(user: User, currentUser: CurrentUser? = null): UserDto {
 
-        val followerCount = userRepository.findFollowerCount(user.id)
+        val followerCount = followRepository.findFollowerCount(user.id)
         var youFollowed: Boolean? = null
         var followingYou: Boolean? = null
         if (currentUser != null && currentUser.id != user.id) {
@@ -188,8 +193,8 @@ class UserService(
             )
         )
 
-        notificationService.send(Notification(
-            recipientId = id,
+        notificationWorker.dispatch(NewNotification(
+            recipients = listOf(id),
             notificationType = NotificationType.INFO,
             subjectId = id,
             message = "Welcome!"
@@ -216,20 +221,39 @@ class UserService(
         userRepository.delete(id)
     }
 
-    fun follow(currentUser: CurrentUser, id: Long) {
-        if (currentUser.id == id) {
-            throw BadRequestResponse()
+    fun follow(form: CreateFollowForm, currentUser: CurrentUser) {
+        if (currentUser.id == form.followeeId) {
+            throw BadRequestResponse("You cannot follow yourself.")
         }
-        val follow = userRepository.findFollow(currentUser.id, id)
+        val follow = followRepository.findFollow(currentUser.id, form.followeeId)
         if (follow != null) {
             throw BadRequestResponse()
         }
-
-        userRepository.follow(currentUser.id, id)
-        notificationService.send(Notification(
-            recipientId = id,
+        followRepository.follow(NewFollow(
+            followerId = currentUser.id,
+            followeeId = form.followeeId,
+            notificationsEnabled = form.notificationsEnabled,
+            muted = form.muted,
+        ))
+        notificationWorker.dispatch(NewNotification(
             notificationType = NotificationType.FOLLOWED,
             subjectId = currentUser.id,
+            recipients = listOf(form.followeeId)
+        ))
+    }
+
+    fun updateFollow(form: UpdateFollowForm, currentUser: CurrentUser) {
+        val follow = followRepository.findFollow(form.id) ?: throw BadRequestResponse()
+        if (follow.followerId != currentUser.id) {
+            throw ForbiddenResponse()
+        }
+        followRepository.updateFollow(Follow(
+            id = follow.id,
+            followerId = follow.followerId,
+            followeeId = follow.followeeId,
+            createdAt = follow.createdAt,
+            notificationsEnabled = form.notificationsEnabled ?: false,
+            muted = form.muted ?: false,
         ))
     }
 
@@ -237,14 +261,14 @@ class UserService(
         if (currentUser.id == id) {
             throw BadRequestResponse()
         }
-        val follow = userRepository.findFollow(currentUser.id, id) ?: throw BadRequestResponse()
-        userRepository.unfollow(currentUser.id, id)
+        followRepository.findFollow(currentUser.id, id) ?: throw BadRequestResponse()
+        followRepository.unfollow(currentUser.id, id)
     }
 
-    fun getFollowers(id: Long): List<Follow> = userRepository.findFollowers(id)
-    fun getFollowings(id: Long): List<Follow> = userRepository.findFollowings(id)
+    fun getFollowers(id: Long): List<Follow> = followRepository.findFollowers(id)
+    fun getFollowings(id: Long): List<Follow> = followRepository.findFollowings(id)
 
-    private fun isFollowing(userIdA: Long, userIdB: Long): Boolean = userRepository.findFollow(userIdA, userIdB) != null
+    private fun isFollowing(userIdA: Long, userIdB: Long): Boolean = followRepository.findFollow(userIdA, userIdB) != null
     private fun checkUserExistsByEmail(email: String): Boolean = userRepository.findByEmail(email) != null
     private fun checkUserExistsByName(name: String): Boolean = userRepository.findByName(name) != null
 

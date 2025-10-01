@@ -17,6 +17,7 @@ class TimelineDao {
                 name = rs.getString("authors_name"),
                 role = enumValueOf(rs.getString("authors_role"))
             ),
+            nsfw = rs.getBoolean("nsfw"),
 
         )
     }
@@ -27,6 +28,7 @@ class TimelineDao {
                     timelines.id,
                     timelines.name,
                     timelines.description,
+                    timelines.nsfw,
                     
                     users.id AS authors_id,
                     users.name AS authors_name,
@@ -37,7 +39,7 @@ class TimelineDao {
                 WHERE users.id = ?
             """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
     fun findById( id: Long): Timeline? = mapper.queryForObject(
@@ -46,6 +48,7 @@ class TimelineDao {
                     timelines.id,
                     timelines.name,
                     timelines.description,
+                    timelines.nsfw,
                     users.id AS authors_id,
                     users.name AS authors_name,
                     users.role AS authors_role
@@ -55,7 +58,7 @@ class TimelineDao {
                 WHERE timelines.id = ?
             """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
     fun findByName(name: String): Timeline? = mapper.queryForObject(
@@ -64,6 +67,7 @@ class TimelineDao {
                     timelines.id,
                     timelines.name,
                     timelines.description,
+                    timelines.nsfw,
                     users.id AS authors_id,
                     users.name AS authors_name,
                     users.role AS authors_role
@@ -73,7 +77,7 @@ class TimelineDao {
                 WHERE timelines.name = ?
             """.trimIndent()
     ) {
-        it.setString(1, name)
+        setString(1, name)
     }
 
     fun create(timeline: NewTimeline, contentId: Long): Long = mapper.updateForId(
@@ -83,14 +87,16 @@ class TimelineDao {
                     id,
                     name,
                     description,
+                    nsfw
                     )
-                VALUES (?, ?, ?)
+                VALUES (?, ?, ?, ?)
             """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, contentId)
-        it.setString(++i, timeline.name)
-        it.setString(++i, timeline.description)
+        setLong(++i, contentId)
+        setString(++i, timeline.name)
+        setString(++i, timeline.description)
+        setBoolean(++i, timeline.nsfw)
     }
 
     fun update(timeline: Timeline): Long = mapper.updateForId(
@@ -98,14 +104,16 @@ class TimelineDao {
                 UPDATE timelines
                 SET 
                     name = ?,
-                    description = ?
+                    description = ?,
+                    nsfw = ?
                 WHERE id = ?
             """.trimIndent()
     ) {
         var i = 0
-        it.setString(++i, timeline.name)
-        it.setString(++i, timeline.description)
-        it.setLong(++i, timeline.id)
+        setString(++i, timeline.name)
+        setString(++i, timeline.description)
+        setBoolean(++i, timeline.nsfw)
+        setLong(++i, timeline.id)
     }
 
 
@@ -125,9 +133,9 @@ class TimelineDao {
             """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, timelineId)
-        it.setLong(++i, timelineId)
-        it.setLong(++i, articleId)
+        setLong(++i, timelineId)
+        setLong(++i, timelineId)
+        setLong(++i, articleId)
     }
 
 
@@ -138,7 +146,7 @@ class TimelineDao {
 //                WHERE article_id = ?
 //            """.trimIndent(), conn
 //    ) {
-//        it.setLong(1, articleId)
+//        setLong(1, articleId)
 //    }
 //
 //    fun closeGap(conn: Connection, gapIndex: Long ,articleId: Long): Long = mapper.update(
@@ -148,7 +156,7 @@ class TimelineDao {
 //                WHERE timeline_index > ?
 //            """.trimIndent(), conn
 //    ) {
-//        it.setLong(1, gapIndex)
+//        setLong(1, gapIndex)
 //    }
 
     fun deleteTimelineEntry(articleId: Long) = mapper.update(
@@ -164,7 +172,7 @@ class TimelineDao {
                AND timeline_index > (SELECT timeline_index FROM deleted); 
             """.trimIndent()
     ) {
-        it.setLong(1, articleId)
+        setLong(1, articleId)
     }
 
 
@@ -176,8 +184,8 @@ class TimelineDao {
             """.trimIndent()
     ) {
         var i = 0
-        it.setInt(++i, index)
-        it.setLong(++i, articleId)
+        setInt(++i, index)
+        setLong(++i, articleId)
     }
 
     fun delete(id: Long) = mapper.update(
@@ -186,6 +194,6 @@ class TimelineDao {
                 WHERE id = ?
             """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 }

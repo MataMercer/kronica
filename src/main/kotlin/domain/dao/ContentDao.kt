@@ -4,28 +4,31 @@ package org.matamercer.domain.dao
 class ContentDao {
     private val mapper = RowMapper{}
 
-    fun create(authorId: Long) = mapper.updateForId(
+    fun create(authorId: Long, nsfw: Boolean) = mapper.updateForId(
         """
-        INSERT INTO content (author_id, created_at, updated_at)
-        VALUES (?, ?, ?)
+        INSERT INTO content (author_id, created_at, updated_at, nsfw)
+        VALUES (?, ?, ?, ?)
     """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, authorId)
-        it.setTimestamp(++i, genTimestamp())
-        it.setTimestamp(++i, genTimestamp())
+        setLong(++i, authorId)
+        setTimestamp(++i, genTimestamp())
+        setTimestamp(++i, genTimestamp())
+        setBoolean(++i, nsfw)
     }
 
-    fun update(contentId: Long) = mapper.update(
+    fun update(contentId: Long, nsfw: Boolean) = mapper.update(
         """
         UPDATE content
-        SET updated_at = ?
+        SET updated_at = ?,
+        nsfw = ?
         WHERE id = ?
     """.trimIndent()
     ) {
         var i = 0
-        it.setTimestamp(++i, genTimestamp())
-        it.setLong(++i, contentId)
+        setTimestamp(++i, genTimestamp())
+        setBoolean(++i, nsfw)
+        setLong(++i, contentId)
     }
 
     fun findAuthorId(id: Long) = mapper.queryForLong(
@@ -35,6 +38,6 @@ class ContentDao {
         WHERE id = ?
     """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 }

@@ -19,7 +19,7 @@ class UserProfileDao {
         """.trimIndent()
 
         return mapper.updateForId(sql) {
-            it.setString(1, profile.description)
+            setString(1, profile.description)
         }
     }
 
@@ -31,8 +31,8 @@ class UserProfileDao {
         """.trimIndent()
         return mapper.updateForId(sql) {
             var i = 0
-            it.setString(++i, profile.description)
-            profile.id?.let { id -> it.setLong(++i, id) }
+            setString(++i, profile.description)
+            profile.id?.let { id -> setLong(++i, id) }
         }
     }
 
@@ -44,7 +44,7 @@ class UserProfileDao {
             WHERE users.id = ?
         """.trimIndent()
         return mapper.queryForObject(sql) {
-            it.setLong(1, userId)
+            setLong(1, userId)
         }
     }
 
@@ -55,7 +55,7 @@ class UserProfileDao {
             WHERE user_profiles.id = ?
         """.trimIndent()
         return mapper.queryForObject(sql) {
-            it.setLong(1, id)
+            setLong(1, id)
         }
     }
 }

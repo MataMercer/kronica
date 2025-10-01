@@ -15,12 +15,13 @@ class TimelineService(
 ) {
 
 
-    fun createTimeline(timelineForm: CreateTimelineForm, currentUser: CurrentUser): Timeline? {
-        validateForm(timelineForm)
+    fun createTimeline(form: CreateTimelineForm, currentUser: CurrentUser): Timeline? {
+        validateForm(form)
         val timeline = NewTimeline(
-            name = timelineForm.name,
-            description = timelineForm.description!!,
-            author = currentUser.toUser()
+            name = form.name,
+            description = form.description!!,
+            author = currentUser.toUser(),
+            nsfw = form.nsfw
         )
         val res = timelineRepository.createTimeline(timeline)
         return res
@@ -33,7 +34,8 @@ class TimelineService(
             id = form.id,
             name = form.name!!,
             description = form.description ?: "",
-            author = currentUser.toUser()
+            author = currentUser.toUser(),
+            nsfw = form.nsfw
         )
         val res = timelineRepository.update(timeline)
     }
@@ -97,7 +99,8 @@ class TimelineService(
                 name = timeline.author.name,
                 role = timeline.author.role,
                 createdAt = timeline.author.createdAt
-            )
+            ),
+            nsfw = timeline.nsfw
         )
     }
 }

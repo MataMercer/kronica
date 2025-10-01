@@ -18,7 +18,7 @@ class CommentRepository(
         commentDao.findByContentId(contentId)
 
     fun create(comment: NewComment, contentId: Long) = txn {
-        contentDao.create(comment.author.id).also { commentId ->
+        contentDao.create(comment.author.id, comment.nsfw).also { commentId ->
             commentDao.create(comment, commentId)
             commentDao.joinContent(commentId, contentId)
         }
@@ -26,7 +26,7 @@ class CommentRepository(
 
     fun update(comment: Comment) = txn {
         commentDao.update(comment)
-        contentDao.update(comment.id)
+        contentDao.update(comment.id, comment.nsfw)
     }
 
     fun delete(id: Long) =

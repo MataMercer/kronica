@@ -5,11 +5,11 @@ import io.javalin.http.HandlerType
 import io.javalin.http.bodyValidator
 import org.matamercer.domain.models.CurrentUserDto
 import org.matamercer.domain.services.UserService
-import org.matamercer.getCurrentUserRole
 import org.matamercer.loginUserToSession
 import org.matamercer.security.UserRole
-import org.matamercer.web.LoginRequestForm
-import org.matamercer.web.RegisterUserForm
+import org.matamercer.web.Forms.LoginRequestForm
+import org.matamercer.web.Forms.RegisterUserForm
+import org.matamercer.web.getCurrentUserRole
 
 @Controller("/api/auth")
 class AuthController(

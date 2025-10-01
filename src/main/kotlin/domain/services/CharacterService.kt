@@ -2,13 +2,12 @@ package org.matamercer.domain.services
 
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.ForbiddenResponse
-import io.javalin.http.InternalServerErrorResponse
 import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.CharacterRepository
 import org.matamercer.domain.services.upload.image.ImagePresetSize
-import org.matamercer.web.CreateCharacterForm
-import org.matamercer.web.UpdateCharacterForm
+import org.matamercer.web.Forms.CreateCharacterForm
+import org.matamercer.web.Forms.UpdateCharacterForm
 import org.matamercer.web.dto.Page
 
 class CharacterService(
@@ -42,7 +41,8 @@ class CharacterService(
                 author = currentUser.toUser(),
                 attachments = attachments,
                 profilePictures = profilePictures,
-                traits = traits
+                traits = traits,
+                nsfw = form.nsfw
             )
         )
         return c.id
@@ -71,7 +71,8 @@ class CharacterService(
                 author = currentUser.toUser(),
                 attachments = attachments,
                 profilePictures = profilePictures,
-                traits = getTraitsFromStringList(form.traits)
+                traits = getTraitsFromStringList(form.traits),
+                nsfw = form.nsfw,
             ),
             form.uploadedAttachmentsMetadata,
             form.profilePicturesMetadata

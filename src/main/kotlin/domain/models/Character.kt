@@ -11,18 +11,20 @@ data class NewCharacter(
     var traits: List<Trait> = listOf(),
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
+    val nsfw: Boolean,
 )
 
 data class Character(
     override val id: Long,
     override val author: User,
+    override val nsfw: Boolean,
+    override val createdAt: Date? = null,
+    override val updatedAt: Date? = null,
     val name: String,
     val body: String,
     var attachments: List<FileModel> = listOf(),
     var profilePictures: List<FileModel> = listOf(),
     var traits: List<Trait> = listOf(),
-    override val createdAt: Date? = null,
-    override val updatedAt: Date? = null,
     ): Content()
 
 data class CharacterDto(

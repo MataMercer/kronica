@@ -3,18 +3,16 @@ package org.matamercer.web.controllers
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import io.javalin.http.sse.SseClient
-import org.matamercer.domain.models.ArticleDto
-import org.matamercer.domain.models.NotificationDto
 import org.matamercer.domain.services.NotificationService
-import org.matamercer.getCurrentUser
+import org.matamercer.domain.workers.NotificationWorker
 import org.matamercer.security.UserRole
 import org.matamercer.web.PageQuery
-import org.matamercer.web.dto.Page
-import java.util.concurrent.ConcurrentHashMap
+import org.matamercer.web.getCurrentUser
 
 @Controller("/api/notifications")
 class NotificationController(
     private val notificationService: NotificationService,
+    private val notificationWorker: NotificationWorker
 ) {
 
 
@@ -40,10 +38,10 @@ class NotificationController(
         val currentUser = getCurrentUser(ctx)
 
 
-        client.sendEvent("notify",notificationService.getUnreadCount(currentUser).toString())
+        client.sendEvent("notify",notificationService.getUnreadCount(currentUser.id).toString())
         client.keepAlive()
-        client.onClose{notificationService.clientMap.remove(currentUser.id)}
-        notificationService.clientMap[currentUser.id] = client
+        client.onClose{notificationWorker.removeClient(currentUser.id)}
+        notificationWorker.addClient(currentUser.id, client)
     }
 
     @Route(HandlerType.PUT,"/read")

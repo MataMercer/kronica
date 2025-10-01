@@ -26,14 +26,14 @@ class ArticleRepository(
             }
     }
 
-    fun findByFollowing(userId: Long, pageQuery: PageQuery) = txn {
+    fun findByFollowing(userId: Long, pageQuery: PageQuery?) = txn {
         articleDao.findByFollowing(userId, pageQuery).content.map { aggregate(it) }
     }
 
     fun deleteById(id: Long) = articleDao.deleteById(id)
 
     fun create(article: NewArticle, timelineId: Long?, characters: List<Long>) = txn {
-        val id = contentDao.create(article.author.id)
+        val id = contentDao.create(article.author.id, article.nsfw)
         articleDao.create(article, id)
         val res = articleDao.findById(id) ?: throw IllegalStateException("Article not found after creation")
         if (timelineId != null) timelineDao.createTimelineEntry(timelineId, res.id)
@@ -96,7 +96,7 @@ class ArticleRepository(
         foundArticle.characters.filter { it.id !in characters }.forEach { character ->
             characterDao.deleteJoinArticle(character.id, articleId)
         }
-        contentDao.update(articleId)
+        contentDao.update(articleId, article.nsfw)
         aggregate(article)
     }
 

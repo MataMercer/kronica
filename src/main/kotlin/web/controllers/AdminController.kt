@@ -4,9 +4,9 @@ import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import io.javalin.http.bodyValidator
 import org.matamercer.domain.services.UserService
-import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
-import org.matamercer.web.UpdateUserForm
+import org.matamercer.web.Forms.UpdateUserForm
+import org.matamercer.web.getCurrentUser
 
 class AdminController(
     private val userService: UserService

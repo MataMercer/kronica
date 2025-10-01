@@ -1,47 +1,57 @@
 package org.matamercer.domain.services
 
-import io.javalin.http.sse.SseClient
+import org.matamercer.config.AppConfig
+import org.matamercer.domain.dao.NotificationDao
+import org.matamercer.domain.dao.txn
 import org.matamercer.domain.models.*
+import org.matamercer.domain.repository.FollowRepository
 import org.matamercer.domain.repository.NotificationRepository
 import org.matamercer.web.PageQuery
-import org.matamercer.web.dto.Page
-import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.plus
 
 class NotificationService(
-    private val notificationRepository: NotificationRepository
+    private val notificationRepository: NotificationRepository,
+    private val followerRepository: FollowRepository,
 ) {
-    var clientMap: ConcurrentHashMap<Long, SseClient> = ConcurrentHashMap<Long, SseClient>()
-
-    fun send(notification: Notification) {
-
-        notificationRepository.create(notification)
-        val client = clientMap[notification.recipientId] ?: return
-        val unreadCount = notificationRepository.getUnreadCount(notification.recipientId)
-        client.sendEvent("$unreadCount")
-
+    fun create(n: NewNotification) = txn {
+        n.recipients += getRecipientIds(n)
+        notificationRepository.create(n).let { id ->
+            println(id)
+            n.recipients.forEach { recipientId ->
+                notificationRepository.deleteToRecent(recipientId, AppConfig.maxNotificationCapacity!!)
+            }
+        }
     }
 
+    fun getRecipientIds(n: NewNotification): List<Long> =
+        when (n.notificationType) {
+            NotificationType.POSTED -> followerRepository.findFollowers(n.subjectId).map { it.followerId }
+            else -> emptyList()
+        }
+
     fun readAndMark(currentUser: CurrentUser, pageQuery: PageQuery) =
-        notificationRepository.readAndMark(currentUser.id, pageQuery)
-            .convert { toDto(it) }
+        notificationRepository
+            .readAndMark(currentUser.id, pageQuery)
+            .convert { toDto(it, currentUser) }
 
-    fun getUnreadCount(currentUser: CurrentUser) = notificationRepository.getUnreadCount(currentUser.id)
+    fun getUnreadCount(userId: Long) = notificationRepository.getUnreadCount(userId)
 
-    fun toDto(notification: Notification): NotificationDto =
+    fun toDto(n: Notification, currentUser: CurrentUser)=
         NotificationDto(
-            id = notification.id,
-            subject = notification.subject?.let {
+            id = n.id,
+            subject = n.subject?.let {
                 UserDto(
-                    id = notification.subject?.id,
+                    id = n.subject?.id,
                     name = it.name,
-                    role = notification.subject!!.role,
-                    createdAt = notification.createdAt
+                    role = n.subject!!.role,
+                    createdAt = n.createdAt
                 )
             },
-            notificationType = notification.notificationType,
-            message = notification.message,
-            isRead = notification.isRead,
-            createdAt = notification.createdAt
-
+            notificationType = n.notificationType,
+            message = n.message,
+            targetContentId = n.targetContentId,
+            //TODO: IMPLEMENT this
+            isRead = false,
+            createdAt = n.createdAt
         )
 }

@@ -39,7 +39,7 @@ class RowMapper<T>(private val mapper: (resultSet: ResultSet) -> T) {
         return rs.getInt("total_count")
     }
 
-    fun queryForObjectList(sql: String, statementSetter: (st: PreparedStatement) -> Unit): List<T> {
+    fun queryForObjectList(sql: String, statementSetter: PreparedStatement.() -> Unit): List<T> {
         val conn = TransactionManager.getAvailableConnection()
         val st = conn.prepareStatement(sql)
         st.apply(statementSetter)
@@ -54,7 +54,7 @@ class RowMapper<T>(private val mapper: (resultSet: ResultSet) -> T) {
     fun queryForObjectPage(
         sql: String,
         pageQuery: PageQuery?,
-        statementSetter: (st: PreparedStatement) -> Unit
+        statementSetter: PreparedStatement.() -> Unit
     ): Page<T> {
         val conn = TransactionManager.getAvailableConnection()
         val st = conn.prepareStatement(sql)
@@ -84,8 +84,7 @@ class RowMapper<T>(private val mapper: (resultSet: ResultSet) -> T) {
         )
     }
 
-
-    fun queryForObject(sql: String, statementSetter: (st: PreparedStatement) -> Unit): T? {
+    fun queryForObject(sql: String, statementSetter: PreparedStatement.() -> Unit): T? {
         val conn = TransactionManager.getAvailableConnection()
         val st = conn.prepareStatement(sql)
         st.apply(statementSetter)
@@ -97,7 +96,7 @@ class RowMapper<T>(private val mapper: (resultSet: ResultSet) -> T) {
         return obj
     }
 
-    fun queryForLong(sql: String, statementSetter: (st: PreparedStatement) -> Unit): Long? {
+    fun queryForLong(sql: String, statementSetter: PreparedStatement.() -> Unit): Long? {
         val conn = TransactionManager.getAvailableConnection()
         val st = conn.prepareStatement(sql)
         st.apply(statementSetter)
@@ -128,7 +127,7 @@ class RowMapper<T>(private val mapper: (resultSet: ResultSet) -> T) {
         return list
     }
 
-    fun updateForId(sql: String, statementSetter: (st: PreparedStatement) -> Unit): Long {
+    fun updateForId(sql: String, statementSetter:PreparedStatement.() -> Unit): Long {
         val conn =TransactionManager.getAvailableConnection()
         val st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         st.apply(statementSetter)
@@ -147,7 +146,7 @@ class RowMapper<T>(private val mapper: (resultSet: ResultSet) -> T) {
         return id
     }
 
-    fun update(sql: String, statementSetter: (st: PreparedStatement) -> Unit) {
+    fun update(sql: String, statementSetter: PreparedStatement.() -> Unit) {
         val conn =TransactionManager.getAvailableConnection()
         val st = conn.prepareStatement(sql)
         st.apply(statementSetter)
@@ -157,6 +156,4 @@ class RowMapper<T>(private val mapper: (resultSet: ResultSet) -> T) {
     }
 }
 
-fun genTimestamp(): Timestamp {
-    return Timestamp.valueOf(LocalDateTime.now())
-}
+fun genTimestamp(): Timestamp =Timestamp.valueOf(LocalDateTime.now())

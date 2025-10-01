@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.zaxxer.hikari.HikariDataSource
 import io.javalin.Javalin
 import io.javalin.http.Context
-import io.javalin.http.InternalServerErrorResponse
 import io.javalin.json.JavalinJackson
 import io.javalin.security.RouteRole
-import io.javalin.websocket.WsConnectContext
 import okhttp3.OkHttpClient
 import org.eclipse.jetty.http.HttpCookie
 import org.eclipse.jetty.server.session.DatabaseAdaptor
@@ -21,7 +19,6 @@ import org.matamercer.config.reader.DotEnvReader
 import org.matamercer.config.reader.EnvReader
 import org.matamercer.config.reader.PropertiesReader
 import org.matamercer.domain.dao.*
-import org.matamercer.domain.models.CurrentUser
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.*
 import org.matamercer.domain.services.*
@@ -29,6 +26,7 @@ import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.domain.services.upload.UploadService
 import org.matamercer.domain.services.upload.image.ImageResizer
 import org.matamercer.domain.services.upload.security.*
+import org.matamercer.domain.workers.NotificationWorker
 import org.matamercer.security.UserRole
 import org.matamercer.security.generateCsrfToken
 import org.matamercer.web.FileMetadataForm
@@ -36,7 +34,7 @@ import org.matamercer.web.Router
 import org.matamercer.web.controllers.*
 
 
-fun main(args: Array<String>) {
+fun main(args: Array<String>):Unit {
     setupApp(args = args)
         .start(7070)
 }
@@ -47,9 +45,9 @@ enum class AppMode {
     TEST
 }
 
-const val configFileName = "config.properties"
-const val defaultConfigFileName = "default-config.properties"
-fun configSetup(args: Array<String>) {
+fun setupConfig(args: Array<String>) {
+    val configFileName = "config.properties"
+    val defaultConfigFileName = "default-config.properties"
     AppConfig.registerConfigReader(PropertiesReader(defaultConfigFileName))
     AppConfig.registerConfigReader(DotEnvReader())
     AppConfig.registerConfigReader(EnvReader())
@@ -58,41 +56,53 @@ fun configSetup(args: Array<String>) {
     AppConfig.reload()
 }
 
-fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<String>()): Javalin {
-    configSetup(args)
+fun setupDatabase(appMode: AppMode?) {
     val dataSource: HikariDataSource = if (appMode == AppMode.TEST) {
         initTestDataSource()
     } else {
         initDataSource()
     }
-
-    if (appMode == AppMode.TEST) {
-        migrate(dataSource, appMode)
-    } else {
-        migrate(dataSource)
-    }
+    if (appMode == AppMode.TEST) migrate(dataSource, appMode) else migrate(dataSource)
     TransactionManager.init(dataSource)
+}
 
-
+fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<String>()): Javalin {
+    setupConfig(args)
+    setupDatabase(appMode)
     val app = createJavalinApp()
 
     val userDao = UserDao()
     val followDao = FollowDao()
+    val followRepository = FollowRepository(followDao = followDao)
     val notificationDao = NotificationDao()
     val notificationRepository = NotificationRepository(
         notificationDao = notificationDao,
         userDao = userDao
     )
-    val notificationService = NotificationService(notificationRepository)
+
+    val notificationService = NotificationService(
+        notificationRepository = notificationRepository,
+        followerRepository = followRepository,
+    )
+    val notificationWorker = NotificationWorker(
+        notificationDao = notificationDao,
+        notificationService = notificationService
+
+    )
+    notificationWorker.start()
 
     val httpClient = OkHttpClient()
     val userProfileDao = UserProfileDao()
     val userRepository = UserRepository(
         userDao = userDao,
-        followDao = followDao,
         userProfileDao = userProfileDao,
     )
-    val userService = UserService(userRepository, notificationService, httpClient)
+    val userService = UserService(
+        userRepository = userRepository,
+        notificationWorker = notificationWorker,
+        httpClient = httpClient,
+        followRepository = followRepository
+    )
 
     val contentDao = ContentDao()
 
@@ -131,11 +141,11 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     )
     val commentController = CommentController(commentService)
 
-
     val seeder = Seeder(userService)
     seeder.initRootUser()
-    seeder.initTestUser()
-
+    if (appMode== AppMode.TEST){
+        seeder.initTestUser()
+    }
 
     val articleDao = ArticleDao()
     val characterDao = CharacterDao()
@@ -155,11 +165,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         timelineRepository = timelineRepository
     )
 
-    if (appMode == AppMode.TEST || appMode == AppMode.DEV) {
-        storageService.deleteAll()
-    }
+    if (appMode == AppMode.TEST || appMode == AppMode.DEV) storageService.deleteAll()
     storageService.init()
-
 
     val characterRepository = CharacterRepository(
         characterDao = characterDao,
@@ -176,30 +183,35 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         contentDao
     )
     val characterService = CharacterService(characterRepository, fileModelService)
-    val articleService =
-        ArticleService(articleRepository, fileModelService, characterService, userRepository, notificationService)
 
     val contentRepository = ContentRepository(contentDao = contentDao)
+    val likeRepository = LikeRepository(likeDao = likeDao)
+    val likeService = LikeService(likeRepository = likeRepository, contentRepository = contentRepository)
+
+    val articleService = ArticleService(
+        articleRepository,
+        fileModelService,
+        characterService,
+        userRepository = userRepository,
+        likeService = likeService,
+        notificationWorker = notificationWorker
+    )
+
     val reportDao = ReportDao()
     val reportRepository = ReportRepository(reportDao)
     val reportService = ReportService(
         contentRepository = contentRepository,
         reportRepository = reportRepository,
     )
-
-    val likeRepository = LikeRepository(likeDao = likeDao)
-    val likeService = LikeService(likeRepository = likeRepository, contentRepository = contentRepository)
-
-
-    val articleController = ArticleController(articleService, timelineService)
+    val articleController = ArticleController(articleService)
     val timelineController = TimelineController(timelineService)
     val userController = UserController(userService, userProfileService)
     val authController = AuthController(userService)
     val characterController = CharacterController(characterService)
     val fileController = FileController(fileModelService = fileModelService, uploadService = uploadService)
-    val notificationController = NotificationController(notificationService)
+    val notificationController = NotificationController(notificationService, notificationWorker)
     val oAuthController = OAuthController(userService)
-    val reportController = ReportController(reportService = reportService )
+    val reportController = ReportController(reportService = reportService)
     val likeController = LikeController(likeService)
 
     Router(
@@ -218,15 +230,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         ),
         app
     ).setupRoutes()
-
-    app.error(404) { ctx ->
-        ctx.result("Error 404: Not found")
-    }
-    app.sse("/sse") { client ->
-        client.sendEvent("connected", "Hello, SSE")
-        client.onClose { println("Client disconnected") }
-        client.close() // close the client
-    }
     return app
 }
 
@@ -238,67 +241,33 @@ fun loginUserToSession(ctx: Context, user: User) {
     ctx.sessionAttribute("flashed_messages", mutableListOf<String>())
 }
 
-
-fun getCurrentUser(ctx: Context): CurrentUser {
-    val id = ctx.sessionAttribute<String>("current_user_id")
-    val role = ctx.sessionAttribute<String>("current_user_role")
-    val name = ctx.sessionAttribute<String>("current_user_name")
-    if (id.isNullOrBlank() || role.isNullOrBlank() || name.isNullOrBlank()) {
-        throw InternalServerErrorResponse("Could not find user")
-    }
-    return CurrentUser(id = id.toLong(), role = enumValueOf(role), name = name)
+fun authorizeCheck(currentUserRole: UserRole, routeRoles: Set<RouteRole>): Boolean = routeRoles.all { role ->
+    currentUserRole.authLevel >= enumValueOf<UserRole>(role.toString()).authLevel
 }
 
-fun getCurrentUser(ctx: WsConnectContext): CurrentUser {
-    val id = ctx.sessionAttribute<String>("current_user_id")
-    val role = ctx.sessionAttribute<String>("current_user_role")
-    val name = ctx.sessionAttribute<String>("current_user_name")
-    if (id.isNullOrBlank() || role.isNullOrBlank() || name.isNullOrBlank()) {
-        throw InternalServerErrorResponse("Could not find user")
-    }
-    return CurrentUser(id = id.toLong(), role = enumValueOf(role), name = name)
-}
-
-
-fun getCurrentUserRole(ctx: Context): UserRole {
-    val roleString = ctx.sessionAttribute<String>("current_user_role")
-    return if (roleString != null) {
-        enumValueOf<UserRole>(roleString)
-    } else {
-        UserRole.UNAUTHENTICATED_USER
-    }
-}
-
-fun authorizeCheck(currentUserRole: UserRole, routeRoles: Set<RouteRole>): Boolean {
-    return routeRoles.all { role ->
-        currentUserRole.authLevel >= enumValueOf<UserRole>(role.toString()).authLevel
-    }
-}
-
-fun createJavalinApp(): Javalin {
-    val app = Javalin.create { config ->
-        config.jetty.modifyServletContextHandler {
+fun createJavalinApp(): Javalin = Javalin.create { config ->
+    config.apply {
+        jetty.modifyServletContextHandler {
             it.sessionHandler = sqlSessionHandler(
                 "org.postgresql.Driver",
                 "jdbc:postgresql://127.0.0.1:5432/wikiapi?user=postgres&password=password"
             )
         }
-        config.bundledPlugins.enableCors { cors ->
+        bundledPlugins.enableCors { cors ->
             cors.addRule { it ->
                 it.allowHost("http://localhost:3000")
                 it.allowCredentials = true;
             }
         }
-
         val objectMapper = JavalinJackson()
-        config.validation.register(FileMetadataForm::class.java) {
+        validation.register(FileMetadataForm::class.java) {
             return@register objectMapper.fromJsonString(it, FileMetadataForm::class.java)
         }
-        config.jsonMapper(JavalinJackson().updateMapper { mapper ->
+        jsonMapper(JavalinJackson().updateMapper { mapper ->
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         })
     }
-    return app
+
 }
 
 fun sqlSessionHandler(driver: String, url: String) = SessionHandler().apply {

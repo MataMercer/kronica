@@ -4,7 +4,7 @@ import io.javalin.json.toJsonString
 import io.javalin.testtools.HttpClient
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.matamercer.web.LoginRequestForm
+import org.matamercer.web.Forms.LoginRequestForm
 
 
 class MyCookieJar : CookieJar {

@@ -1,12 +1,13 @@
 package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.LikeDao
+import org.matamercer.web.PageQuery
 
 class LikeRepository(
     private val likeDao: LikeDao
 ) {
-    fun findByContentId(contentId: Long) =
-        likeDao.findByContentId(contentId)
+    fun findByContentId(contentId: Long, pageQuery: PageQuery?) =
+        likeDao.findByContentId(contentId, pageQuery)
     fun findByUserId(userId: Long) =
         likeDao.findByUserId(userId)
     fun like(userId: Long, contentId: Long) =

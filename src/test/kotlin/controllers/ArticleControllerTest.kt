@@ -20,11 +20,12 @@ import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
 import org.matamercer.domain.models.ArticleDto
 import org.matamercer.domain.models.NewUser
-import org.matamercer.domain.models.Notification
-import org.matamercer.domain.models.User
 import org.matamercer.security.UserRole
 import org.matamercer.setupApp
 import org.matamercer.web.*
+import org.matamercer.web.Forms.CreateArticleForm
+import org.matamercer.web.Forms.LoginRequestForm
+import org.matamercer.web.Forms.RegisterUserForm
 import java.io.File
 import kotlin.test.assertNotNull
 
@@ -59,11 +60,13 @@ class ArticleControllerTest {
         val userARegisterForm = RegisterUserForm(
             name = "UserA",
             email = "a@gmail.com",
-            password = "password")
+            password = "password"
+        )
         val userBRegisterForm = RegisterUserForm(
             name = "UserB",
             email = "b@gmail.com",
-            password = "password")
+            password = "password"
+        )
         userAClient = createTestUser(userARegisterForm)
         userBClient = createTestUser(userBRegisterForm)
         userAId = getUserId(userAClient)
@@ -186,7 +189,7 @@ class ArticleControllerTest {
         val createArticleForm = CreateArticleForm(
             title = null,
             body = null,
-                    timelineId = null
+            timelineId = null
 
         )
         val res = authClient.post("/api/articles", createArticleForm)

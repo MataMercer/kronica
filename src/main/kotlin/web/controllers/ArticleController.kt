@@ -3,19 +3,15 @@ package org.matamercer.web.controllers
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
-import io.javalin.validation.Validator
 import org.matamercer.domain.services.ArticleService
-import org.matamercer.domain.services.TimelineService
-import org.matamercer.getCurrentUser
-import org.matamercer.getCurrentUserRole
 import org.matamercer.security.UserRole
 import org.matamercer.web.*
-import org.matamercer.web.dto.Page
+import org.matamercer.web.Forms.CreateArticleForm
+import org.matamercer.web.Forms.UpdateArticleForm
 
 @Controller("/api/articles")
 class ArticleController(
-    private val articleService: ArticleService,
-    private val timelineService: TimelineService
+    private val articleService: ArticleService
 ) {
 
     @Route(HandlerType.GET, "/id/{id}")
@@ -65,8 +61,12 @@ class ArticleController(
             body = ctx.formParam("body"),
             timelineId = ctx.formParam("timelineId")?.toLongOrNull(),
             uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
-            characters = ctx.formParams("characters").map { it.toLong() } ,
-            uploadedAttachmentsMetadata = ctx.formParamsAsClass("uploadedAttachmentsMetadata", FileMetadataForm::class.java).get(),
+            characters = ctx.formParams("characters").map { it.toLong() },
+            uploadedAttachmentsMetadata = ctx.formParamsAsClass(
+                "uploadedAttachmentsMetadata",
+                FileMetadataForm::class.java
+            ).get(),
+            nsfw = ctx.formParam("nsfw").toBoolean()
         )
         val author = getCurrentUser(ctx)
         val articleId = articleService.create(createArticleForm, author)
@@ -88,8 +88,12 @@ class ArticleController(
             body = ctx.formParam("body"),
             timelineId = ctx.formParam("timelineId")?.toLongOrNull(),
             uploadedAttachments = ctx.uploadedFiles("uploadedAttachments"),
-            characters = ctx.formParams("characters").map { it.toLong() } ,
-            uploadedAttachmentsMetadata = ctx.formParamsAsClass("uploadedAttachmentsMetadata", FileMetadataForm::class.java).get(),
+            characters = ctx.formParams("characters").map { it.toLong() },
+            uploadedAttachmentsMetadata = ctx.formParamsAsClass(
+                "uploadedAttachmentsMetadata",
+                FileMetadataForm::class.java
+            ).get(),
+            nsfw = ctx.formParam("nsfw").toBoolean()
         )
         val author = getCurrentUser(ctx)
         val articleId = articleService.update(updateArticleForm, author)
@@ -104,17 +108,8 @@ class ArticleController(
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun getByFollowing(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
-        val pageQuery = PageQuery(
-            number = ctx.queryParam("page")?.toIntOrNull() ?: 0,
-            size = ctx.queryParam("size")?.toIntOrNull() ?: 10
-        )
-        val foundArticles = articleService.getByFollowing(currentUser.id, pageQuery)
-        val pagedArticles = Page(
-            content = foundArticles.map { articleService.toDto(it) },
-            number = pageQuery.number,
-            size = pageQuery.size,
-            pages = 69
-        )
-        ctx.json(pagedArticles)
+        val pageQuery = getPageQuery(ctx)
+        val articles = articleService.getByFollowing(currentUser.id, pageQuery)
+        ctx.json(articles)
     }
 }

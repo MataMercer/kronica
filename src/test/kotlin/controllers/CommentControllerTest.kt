@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
 import org.matamercer.setupApp
 import org.matamercer.web.CommentForm
-import org.matamercer.web.LoginRequestForm
+import org.matamercer.web.Forms.LoginRequestForm
 
 class CommentControllerTest {
     private lateinit var app: Javalin

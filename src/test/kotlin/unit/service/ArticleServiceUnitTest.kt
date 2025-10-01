@@ -2,7 +2,6 @@ package unit.service
 
 import fixtures.Fixtures
 import io.mockk.clearAllMocks
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -14,7 +13,7 @@ import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.User
 import org.matamercer.domain.services.ArticleService
-import org.matamercer.web.CreateArticleForm
+import org.matamercer.web.Forms.CreateArticleForm
 
 @ExtendWith(MockKExtension::class)
 class ArticleServiceUnitTest {

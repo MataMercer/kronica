@@ -7,7 +7,6 @@ import org.matamercer.domain.models.User
 import org.matamercer.web.PageQuery
 
 class CharacterDao {
-
     private val mapper = RowMapper { rs ->
         Character(
             id = rs.getLong("id"),
@@ -20,12 +19,12 @@ class CharacterDao {
                 name = rs.getString("authors_name"),
                 role = enumValueOf(rs.getString("authors_role"))
             ),
+            nsfw = rs.getBoolean("nsfw"),
         )
     }
 
-    fun findById(id: Long) =
-        mapper.queryForObject(
-            """
+    fun findById(id: Long) = mapper.queryForObject(
+        """
            SELECT
                 characters.*, 
                 users.id AS authors_id,
@@ -38,13 +37,10 @@ class CharacterDao {
                ON content.author_id=users.id
            WHERE characters.id = ?
        """.trimIndent()
-        ) {
-            it.setLong(1, id)
-        }
+    ) { setLong(1, id) }
 
-    fun findAll(query: CharacterQuery?, pageQuery: PageQuery? = null) =
-        mapper.queryForObjectPage(
-            """
+    fun findAll(query: CharacterQuery?, pageQuery: PageQuery? = null) = mapper.queryForObjectPage(
+        """
             SELECT
                 characters.*,
                 
@@ -66,15 +62,14 @@ class CharacterDao {
             AND ${if (query?.articleId != null) "articles_to_characters.article_id = ?" else "TRUE"}
             AND ${if (query?.timelineId != null) "timeline_entries.timeline_id = ?" else "TRUE"}
             """.trimIndent(), pageQuery
-        ) {
-            var i = 0
-            query?.authorId?.let { it1 -> it.setLong(++i, it1) }
-            query?.articleId?.let { it1 -> it.setLong(++i, it1) }
-            query?.timelineId?.let { it1 -> it.setLong(++i, it1) }
-        }
+    ) {
+        var i = 0
+        query?.authorId?.let { it1 -> setLong(++i, it1) }
+        query?.articleId?.let { it1 -> setLong(++i, it1) }
+        query?.timelineId?.let { it1 -> setLong(++i, it1) }
+    }
 
-    fun create(character: NewCharacter, contentId: Long) =
-        mapper.update(
+    fun create(character: NewCharacter, contentId: Long) = mapper.update(
             """
                 INSERT INTO characters
                     (
@@ -87,30 +82,28 @@ class CharacterDao {
                 """.trimIndent()
         ) {
             var i = 0
-            it.setLong(++i, contentId)
-            it.setString(++i, character.name)
-            it.setString(++i, character.body)
-            it.setLong(++i, character.author.id)
+            setLong(++i, contentId)
+            setString(++i, character.name)
+            setString(++i, character.body)
+            setLong(++i, character.author.id)
         }
 
-    fun update(character: Character) =
-        mapper.updateForId(
-            """
+    fun update(character: Character) = mapper.updateForId(
+        """
             UPDATE characters
             SET name = ?,
                 body = ?,
             WHERE id = ?
         """.trimIndent()
-        ) {
-            var i = 0
-            it.setString(++i, character.name)
-            it.setString(++i, character.body)
-            it.setLong(++i, character.id ?: throw IllegalArgumentException("Character ID cannot be null"))
-        }
+    ) {
+        var i = 0
+        setString(++i, character.name)
+        setString(++i, character.body)
+        setLong(++i, character.id)
+    }
 
-    fun joinArticle(characterId: Long, articleId: Long) =
-        mapper.updateForId(
-            """
+    fun joinArticle(characterId: Long, articleId: Long) = mapper.updateForId(
+        """
             INSERT INTO articles_to_characters
             (
                 article_id,
@@ -118,55 +111,50 @@ class CharacterDao {
             )
             VALUES (?, ?)
         """.trimIndent()
-        ) {
-            var i = 0
-            it.setLong(++i, articleId)
-            it.setLong(++i, characterId)
-        }
+    ) {
+        var i = 0
+        setLong(++i, articleId)
+        setLong(++i, characterId)
+    }
 
 
-    fun deleteJoinArticle(characterId: Long, articleId: Long) =
-        mapper.updateForId(
-            """
+    fun deleteJoinArticle(characterId: Long, articleId: Long) = mapper.updateForId(
+        """
             DELETE FROM articles_to_characters
             WHERE article_id = ? AND character_id = ?
         """.trimIndent()
-        ) {
-            var i = 0
-            it.setLong(++i, articleId)
-            it.setLong(++i, characterId)
-        }
+    ) {
+        var i = 0
+        setLong(++i, articleId)
+        setLong(++i, characterId)
+    }
 
-    fun deleteById(id: Long) =
-        mapper.update(
-            """
+    fun deleteById(id: Long) = mapper.update(
+        """
            DELETE FROM characters
             WHERE characters.id = ?
         """.trimIndent()
-        ) {
-            it.setLong(1, id)
-        }
+    ) {
+        setLong(1, id)
+    }
 
-    fun deleteByAuthorId(authorId: Long) =
-        mapper.update(
-            """
+    fun deleteByAuthorId(authorId: Long) = mapper.update(
+        """
             DELETE FROM characters
             WHERE author_id = ?
         """.trimIndent()
-        ) {
-            it.setLong(1, authorId)
-        }
+    ) {
+        setLong(1, authorId)
+    }
 
-    fun findCharacterCountByAuthorId(id: Long): Long? =
-        mapper.queryForLong(
-            """
+    fun findCharacterCountByAuthorId(id: Long): Long? = mapper.queryForLong(
+        """
             SELECT COUNT(*) AS count
             FROM characters
             WHERE author_id = ?
         """.trimIndent()
-        ) {
-            it.setLong(1, id)
-        }
-
+    ) {
+        setLong(1, id)
+    }
 
 }

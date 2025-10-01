@@ -5,18 +5,20 @@ import io.javalin.http.ForbiddenResponse
 import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
-import org.matamercer.domain.repository.LikeRepository
 import org.matamercer.domain.repository.UserRepository
 import org.matamercer.domain.services.upload.image.ImagePresetSize
+import org.matamercer.domain.workers.NotificationWorker
 import org.matamercer.web.*
+import org.matamercer.web.Forms.CreateArticleForm
+import org.matamercer.web.Forms.UpdateArticleForm
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
     private val fileModelService: FileModelService,
     private val characterService: CharacterService,
     private val userRepository: UserRepository,
-    private val notificationService: NotificationService,
-    private val likeRepository: LikeRepository
+    private val likeService: LikeService,
+    private val notificationWorker: NotificationWorker
 ) {
     private val attachmentSizes = setOf(
         ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.ORIGINAL
@@ -27,13 +29,14 @@ class ArticleService(
         return articleRepository.findById(id) ?: throw NotFoundResponse("Article not found")
     }
 
-
     fun getAll(query: ArticleQuery, pageQuery: PageQuery, currentUser: CurrentUser?) =
-        articleRepository.findAll(query, pageQuery).let { page ->
-            page.convert { toDto(it, currentUser) }
+        articleRepository
+            .findAll(query, pageQuery)
+            .let { page ->
+                page.convert { toDto(it, currentUser) }
         }
 
-    fun getByFollowing(userId: Long?, pageQuery: PageQuery): List<Article> {
+    fun getByFollowing(userId: Long?, pageQuery: PageQuery?): List<Article> {
         if (userId == null) throw BadRequestResponse()
         return articleRepository.findByFollowing(userId, pageQuery)
     }
@@ -57,12 +60,14 @@ class ArticleService(
                 body = form.body!!,
                 author = currentUser.toUser(),
                 attachments = attachments,
+                nsfw = form.nsfw
             ),
             form.timelineId,
             form.characters
         )
         notifyMentionedUsers(form.body, currentUser, article.id)
         notifyMentionedUsers(form.title, currentUser, article.id)
+        notifyNotifiedFollowers(currentUser, article.id)
         return article.id
     }
 
@@ -71,8 +76,11 @@ class ArticleService(
         authCheck(currentUser, originalArticle)
         validateUpdateForm(form, originalArticle)
         fileModelService.checkUserStorageLimit(currentUser, form.uploadedAttachments)
-        val existingFilesId = form.uploadedAttachmentsMetadata.filter { it.isExistingFile() }.map { it.id }.toSet()
-        val originalArticleFiles = originalArticle.attachments.map { it.id }.toSet()
+        val existingFilesId = form.uploadedAttachmentsMetadata
+            .filter { it.isExistingFile() }
+            .map { it.id }.toSet()
+        val originalArticleFiles = originalArticle.attachments
+            .map { it.id }.toSet()
         if (!originalArticleFiles.containsAll(existingFilesId)) {
             throw BadRequestResponse("File metadata entries for existing files have ids that don't belong to the original article.")
         }
@@ -91,6 +99,7 @@ class ArticleService(
                 body = form.body!!,
                 author = currentUser.toUser(),
                 attachments = attachments,
+                nsfw = form.nsfw,
             ),
             form.timelineId,
             form.characters,
@@ -98,14 +107,14 @@ class ArticleService(
         )
 
         val fileIdsToDelete =
-            form.uploadedAttachmentsMetadata.filter { it.isExistingFile() && it.delete != null && it.delete }
+            form.uploadedAttachmentsMetadata
+                .filter { it.isExistingFile() && it.delete != null && it.delete }
                 .map { it.id }
         fileModelService.deleteFiles(originalArticle.attachments.filter { it.id in fileIdsToDelete })
 
         notifyMentionedUsers(form.body, currentUser, article.id)
         notifyMentionedUsers(form.title, currentUser, article.id)
         return article.id
-
     }
 
     private fun validateCreateForm(form: CreateArticleForm) {
@@ -132,25 +141,27 @@ class ArticleService(
     }
 
     private fun getMentionedUsers(input: String) =
-        input.split(" ")
-            .filter { it[0] == '@' }.let { mentions ->
-                mentions.mapNotNull { userRepository.findByName(it) }
-            }
+        input
+            .split(" ")
+            .filter { it[0] == '@' }
+            .toSet()
+            .mapNotNull { userRepository.findByName(it) }
 
-    private fun notifyMentionedUsers(input: String, currentUser: CurrentUser, articleId: Long) =
+    private fun notifyMentionedUsers(input: String, currentUser: CurrentUser, contentId: Long) =
         getMentionedUsers(input).let { mentionedUsers ->
-            mentionedUsers.forEach { user ->
-                Notification(
-                    subject = currentUser.toUser(),
-                    subjectId = currentUser.id,
-                    notificationType = NotificationType.MENTIONED,
-                    recipient = user,
-                    targetContentId = articleId,
-                    recipientId = user.id,
-
-                ).let { notificationService.send(it) }
-            }
+            NewNotification(
+                subject = currentUser.toUser(),
+                subjectId = currentUser.id,
+                notificationType = NotificationType.MENTIONED,
+                targetContentId = contentId,
+                recipients = mentionedUsers.map { it.id }
+            ).let { notificationWorker.dispatch(it) }
         }
+
+    private fun notifyNotifiedFollowers(currentUser: CurrentUser, contentId: Long){
+
+
+    }
 
     fun deleteById(currentUser: CurrentUser, id: Long?) {
         if (id == null) throw BadRequestResponse()
@@ -161,37 +172,38 @@ class ArticleService(
     }
 
     fun toDto(article: Article, user: CurrentUser? = null) = ArticleDto(
-            id = article.id,
-            title = article.title,
-            body = article.body,
-            author = UserDto(
-                id = article.author.id,
-                name = article.author.name,
-                role = article.author.role,
-                createdAt = article.author.createdAt
-            ),
-            createdAt = article.createdAt,
-            updatedAt = article.updatedAt,
-            attachments = article.attachments.map {
-                FileModelDto(
-                    id = it.id,
-                    name = it.name,
-                    storageId = it.storageId,
-                )
-            },
-            timelineIndex = article.timelineIndex,
-            timeline = article.timeline?.let {
-                TimelineThumbDto(
-                    id = it.id,
-                    name = it.name,
-                )
-            },
-            characters = article.characters.map {
-                characterService.toDto(it)
-            },
-            likeCount = article.likeCount,
-            youLiked = user?.let{likeRepository.checkLiked(it.id, article.id)}
-        )
+        id = article.id,
+        title = article.title,
+        body = article.body,
+        author = UserDto(
+            id = article.author.id,
+            name = article.author.name,
+            role = article.author.role,
+            createdAt = article.author.createdAt
+        ),
+        createdAt = article.createdAt,
+        updatedAt = article.updatedAt,
+        attachments = article.attachments.map {
+            FileModelDto(
+                id = it.id,
+                name = it.name,
+                storageId = it.storageId,
+            )
+        },
+        timelineIndex = article.timelineIndex,
+        timeline = article.timeline?.let {
+            TimelineThumbDto(
+                id = it.id,
+                name = it.name,
+                nsfw = it.nsfw,
+            )
+        },
+        characters = article.characters.map {
+            characterService.toDto(it)
+        },
+        likeCount = article.likeCount,
+        youLiked = user?.let { likeService.checkLiked(it.id, article.id) }
+    )
 
     private fun authCheck(currentUser: CurrentUser, article: Article) {
         if (currentUser.id != article.author.id && !currentUser.role.isAdmin()) {

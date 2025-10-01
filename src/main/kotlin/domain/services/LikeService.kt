@@ -6,6 +6,7 @@ import org.matamercer.domain.models.Like
 import org.matamercer.domain.repository.ContentRepository
 import org.matamercer.domain.repository.LikeRepository
 import org.matamercer.web.LikeForm
+import org.matamercer.web.PageQuery
 import org.matamercer.web.dto.Page
 
 class LikeService(
@@ -23,8 +24,12 @@ class LikeService(
         likeRepository.unlike(currentUser.id, contentId)
     }
 
-    fun findByContentId(contentId: Long): Page<Like>{
-        return likeRepository.findByContentId(contentId)
+    fun findByContentId(contentId: Long, pageQuery: PageQuery?): Page<Like>{
+        return likeRepository.findByContentId(contentId, pageQuery)
+    }
+
+    fun checkLiked(userId: Long,contentId: Long ): Boolean{
+        return likeRepository.checkLiked(userId, contentId)
     }
 
     private fun validate(form: LikeForm, currentUser: CurrentUser) {

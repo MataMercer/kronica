@@ -2,10 +2,19 @@ package org.matamercer.domain.models
 
 import java.util.*
 
-class Follow(
-    val id: Long? = null,
+
+data class NewFollow(
     val followerId: Long,
     val followeeId: Long,
-    val createdAt: Date? = null,
-) {
-}
+    val notificationsEnabled: Boolean,
+    val muted: Boolean,
+)
+
+data class Follow(
+    val id: Long,
+    val followerId: Long,
+    val followeeId: Long,
+    val createdAt: Date,
+    val notificationsEnabled: Boolean,
+    val muted: Boolean,
+)

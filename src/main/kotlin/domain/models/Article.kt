@@ -13,7 +13,7 @@ data class NewArticle(
     var timeline: Timeline? = null,
     var timelineIndex: Long? = null,
     var characters: List<Character> = listOf(),
-    var likeCount : Long? = null,
+    val nsfw: Boolean,
 )
 
 data class Article(
@@ -23,6 +23,7 @@ data class Article(
     override val author: User,
     override val createdAt: Date? = null,
     override val updatedAt: Date? = null,
+    override val nsfw: Boolean,
     var attachments: List<FileModel> = listOf(),
     var timeline: Timeline? = null,
     var timelineIndex: Long? = null,

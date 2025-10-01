@@ -25,7 +25,7 @@ class CharacterRepository(
     }
 
     fun create(character: NewCharacter) = txn {
-        val id = contentDao.create(character.author.id)
+        val id = contentDao.create(character.author.id, character.nsfw)
         characterDao.create(character, id)
         val c = characterDao.findById(id) ?: throw IllegalStateException("Character not found after creation")
         character.attachments.forEachIndexed { index, it ->
@@ -110,7 +110,7 @@ class CharacterRepository(
                 traitDao.createTrait(it.name, it.value, updatedCharacterId)
             }
         }
-        contentDao.update(character.id)
+        contentDao.update(character.id, character.nsfw)
     }
 
     fun deleteById(id: Long) = characterDao.deleteById(id)

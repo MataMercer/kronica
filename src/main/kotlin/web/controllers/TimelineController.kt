@@ -5,11 +5,11 @@ import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import io.javalin.http.bodyValidator
 import org.matamercer.domain.services.TimelineService
-import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
 import org.matamercer.web.CreateTimelineForm
 import org.matamercer.web.UpdateTimelineForm
 import org.matamercer.web.UpdateTimelineOrderForm
+import org.matamercer.web.getCurrentUser
 
 
 @Controller("/api/timelines")

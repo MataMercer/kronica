@@ -6,11 +6,10 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.matamercer.configSetup
+import org.matamercer.setupConfig
 import org.matamercer.domain.services.upload.security.ImageFileValidator
 import org.matamercer.domain.services.upload.security.MimeTypeDetector
 import org.matamercer.domain.services.upload.security.TextFileValidator
@@ -24,7 +23,7 @@ class UploadSecurityTest {
 
     @Test
     fun `test upload security`() {
-        configSetup(emptyArray())
+        setupConfig(emptyArray())
         val mockDetector = mockk<MimeTypeDetector>()
         val imageFileValidator = mockk<ImageFileValidator>()
         val textFileValidator = mockk<TextFileValidator>()

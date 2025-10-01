@@ -9,7 +9,7 @@ import java.io.InputStream
 import javax.imageio.ImageIO
 
 class ImageResizer() {
-    fun resize(originalImage: BufferedImage, presetSize: ImagePresetSize): InputStream{
+    fun resize(originalImage: BufferedImage, presetSize: ImagePresetSize): InputStream {
         val outputStream = ByteArrayOutputStream()
         Thumbnails.of(originalImage)
             .imageType(BufferedImage.TYPE_INT_RGB)
@@ -21,11 +21,6 @@ class ImageResizer() {
         return ByteArrayInputStream(data)
     }
 
-    fun getWidth(originalImage: BufferedImage): Int {
-
-        return originalImage.width
-    }
-
-    fun canScale(mimeType:String)=ThumbnailatorUtils.isSupportedOutputFormat(mimeType)
-
+    fun getWidth(originalImage: BufferedImage) = originalImage.width
+    fun canScale(mimeType: String) = ThumbnailatorUtils.isSupportedOutputFormat(mimeType)
 }

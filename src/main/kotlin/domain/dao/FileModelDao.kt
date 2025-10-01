@@ -25,7 +25,7 @@ class FileModelDao() {
             FROM files
             WHERE files.id = ?
         """.trimIndent()) {
-            it.setLong(1, id)
+            setLong(1, id)
         }
     }
 
@@ -36,7 +36,7 @@ class FileModelDao() {
             FROM files
             WHERE files.storage_id = ?
         """.trimIndent()) {
-            it.setString(1, storageId)
+            setString(1, storageId)
         }
     }
 
@@ -50,7 +50,7 @@ class FileModelDao() {
             ORDER BY files_to_articles.index
         """.trimIndent()
         return mapper.queryForObjectList(sql) {
-            it.setLong(1, owningArticleId)
+            setLong(1, owningArticleId)
         }
     }
 
@@ -64,7 +64,7 @@ class FileModelDao() {
             ORDER BY files_to_characters.index
         """.trimIndent()
         return mapper.queryForObjectList(sql) {
-            it.setLong(1, id)
+            setLong(1, id)
         }
     }
 
@@ -78,7 +78,7 @@ class FileModelDao() {
             ORDER BY files_to_character_profiles.index
         """.trimIndent()
         return mapper.queryForObjectList(sql) {
-            it.setLong(1, id)
+            setLong(1, id)
         }
     }
 
@@ -92,7 +92,7 @@ class FileModelDao() {
             WHERE user_profiles.id = ?
         """.trimIndent()
         return mapper.queryForObject(sql) {
-            it.setLong(1, profileId)
+            setLong(1, profileId)
         }
     }
 
@@ -109,9 +109,9 @@ class FileModelDao() {
 
         return mapper.updateForId(sql ) {
             var i = 0
-            it.setLong(++i, fileId)
-            it.setLong(++i, articleId)
-            it.setInt(++i, index)
+            setLong(++i, fileId)
+            setLong(++i, articleId)
+            setInt(++i, index)
         }
     }
 
@@ -124,9 +124,9 @@ class FileModelDao() {
 
         return mapper.updateForId(sql) {
             var i = 0
-            it.setInt(++i, index)
-            it.setLong(++i, fileId)
-            it.setLong(++i, articleId)
+            setInt(++i, index)
+            setLong(++i, fileId)
+            setLong(++i, articleId)
         }
     }
 
@@ -145,7 +145,7 @@ class FileModelDao() {
 
         return mapper.update(sql) {
             var i = 0
-            it.setLong(++i, fileId)
+            setLong(++i, fileId)
         }
     }
 
@@ -162,9 +162,9 @@ class FileModelDao() {
 
         return mapper.updateForId(sql ) {
             var i = 0
-            it.setLong(++i, fileId)
-            it.setLong(++i, characterId)
-            it.setInt(++i, index)
+            setLong(++i, fileId)
+            setLong(++i, characterId)
+            setInt(++i, index)
         }
     }
 
@@ -177,9 +177,9 @@ class FileModelDao() {
 
         return mapper.updateForId(sql) {
             var i = 0
-            it.setInt(++i, index)
-            it.setLong(++i, fileId)
-            it.setLong(++i, characterId)
+            setInt(++i, index)
+            setLong(++i, fileId)
+            setLong(++i, characterId)
         }
     }
 
@@ -198,9 +198,9 @@ class FileModelDao() {
 
         return mapper.update(sql) {
             var i = 0
-            it.setLong(++i, fileId)
-            it.setLong(++i, characterId)
-            it.setLong(++i, characterId)
+            setLong(++i, fileId)
+            setLong(++i, characterId)
+            setLong(++i, characterId)
         }
     }
 
@@ -217,9 +217,9 @@ class FileModelDao() {
 
         return mapper.updateForId(sql) {
             var i = 0
-            it.setLong(++i, fileId)
-            it.setLong(++i, characterId)
-            it.setInt(++i, index)
+            setLong(++i, fileId)
+            setLong(++i, characterId)
+            setInt(++i, index)
         }
     }
 
@@ -232,9 +232,9 @@ class FileModelDao() {
 
         return mapper.updateForId(sql) {
             var i = 0
-            it.setInt(++i, index)
-            it.setLong(++i, fileId)
-            it.setLong(++i, characterId)
+            setInt(++i, index)
+            setLong(++i, fileId)
+            setLong(++i, characterId)
         }
     }
 
@@ -253,9 +253,9 @@ class FileModelDao() {
 
         return mapper.update(sql ) {
             var i = 0
-            it.setLong(++i, fileId)
-            it.setLong(++i, characterId)
-            it.setLong(++i, characterId)
+            setLong(++i, fileId)
+            setLong(++i, characterId)
+            setLong(++i, characterId)
         }
     }
 
@@ -269,8 +269,8 @@ class FileModelDao() {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, fileId)
-        it.setLong(++i, profileId)
+        setLong(++i, fileId)
+        setLong(++i, profileId)
     }
 
     fun deleteJoinUserProfile(fileId: Long, profileId: Long) = mapper.update(
@@ -280,8 +280,8 @@ class FileModelDao() {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, fileId)
-        it.setLong(++i, profileId)
+        setLong(++i, fileId)
+        setLong(++i, profileId)
     }
 
     fun create( fileModel: FileModel) =
@@ -301,17 +301,17 @@ class FileModelDao() {
             """.trimIndent()
         ) {
             var i = 0
-            it.setString(++i, fileModel.name)
-            it.setString(++i, fileModel.storageId)
-            it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
-            it.setString(++i, fileModel.caption)
-            it.setLong(++i, fileModel.sizeBytes)
-            it.setString(++i, fileModel.mimeType)
+            setString(++i, fileModel.name)
+            setString(++i, fileModel.storageId)
+            setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
+            setString(++i, fileModel.caption)
+            setLong(++i, fileModel.sizeBytes)
+            setString(++i, fileModel.mimeType)
 
             if (fileModel.author?.id == null) {
                 throw IllegalArgumentException("Author ID cannot be null")
             }
-            it.setLong(++i, fileModel.author.id)
+            setLong(++i, fileModel.author.id)
         }
 
     fun updateCaption( fileId: Long, caption: String) =
@@ -324,8 +324,8 @@ class FileModelDao() {
             """.trimIndent()
         ) {
             var i = 0
-            it.setString(++i, caption)
-            it.setLong(++i, fileId)
+            setString(++i, caption)
+            setLong(++i, fileId)
         }
 
     fun deleteById( id: Long) = mapper.update(
@@ -334,7 +334,7 @@ class FileModelDao() {
                 WHERE files.id = ?
             """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
 
@@ -353,7 +353,7 @@ class FileModelDao() {
 
         """.trimIndent()
         ) {
-            it.setLong(1, timelineId)
+            setLong(1, timelineId)
         }
 
     fun findByUser( userId: Long): List<FileModel> {
@@ -363,7 +363,7 @@ class FileModelDao() {
                 
         """.trimIndent()
         return mapper.queryForObjectList(sql) {
-            it.setLong(1, userId)
+            setLong(1, userId)
         }
     }
 
@@ -375,7 +375,7 @@ class FileModelDao() {
         """.trimIndent()
 
         return mapper.queryForLong(sql) {
-            it.setLong(1, userId)
+            setLong(1, userId)
         } ?: 0L
     }
 }

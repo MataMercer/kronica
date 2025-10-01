@@ -7,4 +7,5 @@ abstract class Content {
     abstract val author: User
     abstract val createdAt: Date?
     abstract val updatedAt: Date?
+    abstract val nsfw: Boolean
 }

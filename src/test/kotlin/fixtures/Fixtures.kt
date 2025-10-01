@@ -43,7 +43,8 @@ class Fixtures() {
         title = "title",
         body = "body",
         author = rootUser,
-        attachments = emptyList()
+        attachments = emptyList(),
+        nsfw = false,
     )
 
     val testCharacter = Character(
@@ -52,14 +53,16 @@ class Fixtures() {
         body = "lorem ipsum",
         author = rootUser,
         attachments = emptyList(),
-        traits = listOf(Trait(name = "mobile suit", value = "gundam"), Trait(name = "allegiance", value = "londo bell"))
+        traits = listOf(Trait(name = "mobile suit", value = "gundam"), Trait(name = "allegiance", value = "londo bell")),
+        nsfw = false,
     )
 
     val testTimeline = Timeline(
         id = 1,
         name = "First Timeline",
         description = "This is a timeline about aliens.",
-        author = rootUser
+        author = rootUser,
+        nsfw = false,
     )
 
     fun createCharacter(app: Javalin, authClient: HttpClient): Long {

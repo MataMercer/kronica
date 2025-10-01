@@ -4,9 +4,9 @@ import io.javalin.http.HandlerType
 import io.javalin.http.Context
 import io.javalin.http.bodyValidator
 import org.matamercer.domain.services.CommentService
-import org.matamercer.getCurrentUser
 import org.matamercer.web.CommentForm
 import org.matamercer.web.UpdateCommentForm
+import org.matamercer.web.getCurrentUser
 
 @Controller("/api/comments")
 class CommentController(

@@ -25,9 +25,9 @@ class TraitDao {
             VALUES (?, ?, ?)
         """.trimIndent()){
         var i = 0
-        it.setString(++i, name)
-        it.setString(++i, value)
-        it.setLong(++i, characterId)
+        setString(++i, name)
+        setString(++i, value)
+        setLong(++i, characterId)
     }
 
     fun deleteTrait(name: String, characterId: Long) = mapper.update("""
@@ -36,8 +36,8 @@ class TraitDao {
         AND name = ?
     """.trimIndent()) {
         var i = 0
-        it.setLong(1, characterId)
-        it.setString(2, name)
+        setLong(1, characterId)
+        setString(2, name)
     }
 
     fun updateTrait( name: String, value: String, characterId: Long): Long = mapper.updateForId(
@@ -48,9 +48,9 @@ class TraitDao {
             AND character_id = ?
         """.trimIndent()){
         var i = 0
-        it.setString(++i, value)
-        it.setString(++i, name)
-        it.setLong(++i, characterId)
+        setString(++i, value)
+        setString(++i, name)
+        setLong(++i, characterId)
     }
 
     fun findTraitsByCharacter( characterId: Long): List<Trait> = mapper.queryForObjectList(
@@ -62,6 +62,6 @@ class TraitDao {
             FROM traits
             WHERE traits.character_id = ?
         """.trimIndent()){
-        it.setLong(1, characterId)
+        setLong(1, characterId)
     }
 }

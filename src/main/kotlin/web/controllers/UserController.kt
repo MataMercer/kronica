@@ -5,10 +5,11 @@ import io.javalin.http.HandlerType
 import io.javalin.http.bodyValidator
 import org.matamercer.domain.services.UserProfileService
 import org.matamercer.domain.services.UserService
-import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
-import org.matamercer.web.UpdateProfileForm
-import org.matamercer.web.UpdateUserForm
+import org.matamercer.web.CreateFollowForm
+import org.matamercer.web.UpdateFollowForm
+import org.matamercer.web.Forms.UpdateProfileForm
+import org.matamercer.web.getCurrentUser
 
 @Controller("/api/users")
 class UserController(
@@ -45,8 +46,17 @@ class UserController(
     @RequiredRole(UserRole.AUTHENTICATED_USER)
     fun followUser(ctx: Context){
         val currentUser = getCurrentUser(ctx)
-        val id = ctx.pathParam("id").toLong()
-        userService.follow(currentUser, id)
+        val form = ctx.bodyValidator<CreateFollowForm>().get()
+        userService.follow(form, currentUser)
+        ctx.json("User followed")
+    }
+
+    @Route(HandlerType.PUT,"/{id}/follow")
+    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    fun updateFollowUser(ctx: Context){
+        val currentUser = getCurrentUser(ctx)
+        val form = ctx.bodyValidator<UpdateFollowForm>().get()
+        userService.updateFollow(form, currentUser)
         ctx.json("User followed")
     }
 

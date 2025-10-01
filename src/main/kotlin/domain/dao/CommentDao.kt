@@ -36,7 +36,7 @@ class CommentDao {
             WHERE c.id = ?
         """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
     fun findByContentId(contentId: Long) = mapper.queryForObjectList(
@@ -54,7 +54,7 @@ class CommentDao {
             WHERE comments_to_content.content_id = ?
         """.trimIndent()
     ) {
-        it.setLong(1, contentId)
+        setLong(1, contentId)
     }
 
     fun create(comment: NewComment, contentId: Long) = mapper.update(
@@ -66,20 +66,19 @@ class CommentDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, contentId)
-        it.setString(++i, comment.body)
+        setLong(++i, contentId)
+        setString(++i, comment.body)
     }
 
-    fun joinContent(commentId: Long, contentId: Long) =
-        mapper.update(
+    fun joinContent(commentId: Long, contentId: Long) = mapper.update(
             """
                 INSERT INTO comments_to_content (comment_id, article_id)
                 VALUES (?, ?)
             """.trimIndent()
         ) {
             var i = 0
-            it.setLong(++i, commentId)
-            it.setLong(++i, contentId)
+            setLong(++i, commentId)
+            setLong(++i, contentId)
         }
 
     fun joinComment(replyToId: Long, replyId: Long) = mapper.update(
@@ -89,8 +88,8 @@ class CommentDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, replyToId)
-        it.setLong(++i, replyId)
+        setLong(++i, replyToId)
+        setLong(++i, replyId)
     }
 
     fun update(comment: Comment) = mapper.updateForId(
@@ -101,8 +100,8 @@ class CommentDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setString(++i, comment.body)
-        it.setLong(++i, comment.id)
+        setString(++i, comment.body)
+        setLong(++i, comment.id)
     }
 
     fun delete(id: Long) = mapper.update(
@@ -111,7 +110,7 @@ class CommentDao {
                 WHERE id = ?
             """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
 }

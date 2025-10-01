@@ -27,17 +27,14 @@ class UserDao {
         "SELECT * FROM users"
     ) {}
 
-    fun findByEmail(email: String): User? {
-        return mapper.queryForObject(
-            """
+    fun findByEmail(email: String): User? = mapper.queryForObject(
+        """
                 SELECT * 
                 FROM users 
                 WHERE users.email = ?
                 """.trimIndent()
-        ) {
-            it.setString(1, email)
-        }
-
+    ) {
+        setString(1, email)
     }
 
     fun findById(id: Long): User? = mapper.queryForObject(
@@ -47,7 +44,7 @@ class UserDao {
             WHERE users.id = ?
             """.trimIndent()
     ) {
-        it.setLong(1, id)
+        setLong(1, id)
     }
 
     fun findByOAuthIdAndAuthProvider(oauthId: Long, authProvider: AuthProvider) = mapper.queryForObject(
@@ -58,8 +55,8 @@ class UserDao {
         """.trimIndent()
     ) {
         var i = 0
-        it.setLong(++i, oauthId)
-        it.setString(++i, authProvider.name)
+        setLong(++i, oauthId)
+        setString(++i, authProvider.name)
     }
 
     fun findByName(name: String): User? = mapper.queryForObject(
@@ -69,7 +66,7 @@ class UserDao {
             WHERE users.name = ?
             """.trimIndent()
     ) {
-        it.setString(1, name)
+        setString(1, name)
     }
 
 
@@ -89,17 +86,17 @@ class UserDao {
                 """.trimIndent()
     ) {
         var i = 0
-        it.setString(++i, user.name)
-        it.setString(++i, user.email)
-        it.setString(++i, user.hashedPassword)
-        it.setString(++i, user.role.name)
-        it.setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
-        it.setLong(++i, profileId)
-        it.setString(++i, user.authProvider.name)
+        setString(++i, user.name)
+        setString(++i, user.email)
+        setString(++i, user.hashedPassword)
+        setString(++i, user.role.name)
+        setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
+        setLong(++i, profileId)
+        setString(++i, user.authProvider.name)
         if (user.oAuthId == null) {
-            it.setNull(++i, java.sql.Types.NULL)
+            setNull(++i, java.sql.Types.NULL)
         } else {
-            it.setLong(++i, user.oAuthId)
+            setLong(++i, user.oAuthId)
         }
     }
 
@@ -108,13 +105,13 @@ class UserDao {
             """
            INSERT INTO social_media_links
                (url, platform, profile_id)
-              VALUES (?, ?)
+              VALUES (?, ?, ?)
         """.trimIndent()
         ) {
             var i = 0
-            it.setString(++i, socialMediaLink.url)
-            it.setString(++i, socialMediaLink.platform)
-            it.setLong(++i, profileId)
+            setString(++i, socialMediaLink.url)
+            setString(++i, socialMediaLink.platform)
+            setLong(++i, profileId)
         }
 
     fun update(user: User) =
@@ -129,11 +126,11 @@ class UserDao {
         """.trimIndent()
         ) {
             var i = 0
-            it.setString(++i, user.name)
-            it.setString(++i, user.email)
-            it.setString(++i, user.hashedPassword)
-            it.setString(++i, user.role.name)
-            user.id.let { id -> it.setLong(++i, id) }
+            setString(++i, user.name)
+            setString(++i, user.email)
+            setString(++i, user.hashedPassword)
+            setString(++i, user.role.name)
+            setLong(++i, user.id)
         }
 
 
@@ -144,7 +141,7 @@ class UserDao {
             WHERE id = ?
         """.trimIndent()
         ) {
-            it.setLong(1, id)
+            setLong(1, id)
         }
 
 }

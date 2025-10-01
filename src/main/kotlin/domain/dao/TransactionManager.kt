@@ -27,21 +27,14 @@ object TransactionManager {
     }
 
     fun start(){
-        if (nestedDepth.get()==null){
-            nestedDepth.set(0)
-        }
+        if (nestedDepth.get()==null) nestedDepth.set(0)
         nestedDepth.set(nestedDepth.get()+1)
-        if (dataSource == null) {
-            throw IllegalStateException("DataSource is not initialized. Call init() first.")
-        }
-        if (currentTransaction() != null){
-            return
-        }
+        if (dataSource == null) throw IllegalStateException("DataSource is not initialized. Call init() first.")
+        if (currentTransaction() != null) return
         val transaction = Transaction()
         transaction.begin(dataSource!!)
         currentTransaction.set(transaction)
     }
-
 
     fun end(){
         nestedDepth.set(nestedDepth.get() - 1)

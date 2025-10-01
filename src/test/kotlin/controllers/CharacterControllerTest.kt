@@ -24,7 +24,7 @@ import org.matamercer.domain.models.User
 import org.matamercer.setupApp
 import org.matamercer.web.CreateTimelineForm
 import org.matamercer.web.FileMetadataForm
-import org.matamercer.web.LoginRequestForm
+import org.matamercer.web.Forms.LoginRequestForm
 import java.io.File
 
 class CharacterControllerTest {

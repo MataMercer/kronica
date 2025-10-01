@@ -5,11 +5,11 @@ import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import org.matamercer.domain.models.CharacterQuery
 import org.matamercer.domain.services.CharacterService
-import org.matamercer.getCurrentUser
 import org.matamercer.security.UserRole
-import org.matamercer.web.CreateCharacterForm
+import org.matamercer.web.Forms.CreateCharacterForm
 import org.matamercer.web.FileMetadataForm
-import org.matamercer.web.UpdateCharacterForm
+import org.matamercer.web.Forms.UpdateCharacterForm
+import org.matamercer.web.getCurrentUser
 
 @Controller("/api/characters")
 class CharacterController(
@@ -43,8 +43,6 @@ class CharacterController(
         characterService.deleteById(currentUser, articleId)
     }
 
-
-
     @Route(HandlerType.POST, "/")
     @RequiredRole(UserRole.CONTRIBUTOR_USER)
     fun createCharacter(ctx: Context) {
@@ -55,7 +53,8 @@ class CharacterController(
             uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
             profilePicturesMetadata = ctx.formParamsAsClass("uploadedProfilePicturesMetadata", FileMetadataForm::class.java).get(),
             uploadedAttachmentsMetadata = ctx.formParamsAsClass("uploadedAttachmentsMetadata", FileMetadataForm::class.java).get(),
-            traits = ctx.formParam("traits")?.split(",") ?: emptyList()
+            traits = ctx.formParam("traits")?.split(",") ?: emptyList(),
+            nsfw = ctx.formParam("nsfw").toBoolean()
         )
 //        ctx.uploadedFileMap()
 //        val createCharacterForm = formMapper<CreateCharacterForm>(ctx.formParamMap(), ctx.uploadedFileMap())
@@ -77,7 +76,8 @@ class CharacterController(
             uploadedProfilePictures = ctx.uploadedFiles("uploadedProfilePictures"),
             profilePicturesMetadata = ctx.formParamsAsClass("uploadedProfilePicturesMetadata", FileMetadataForm::class.java).get(),
             uploadedAttachmentsMetadata = ctx.formParamsAsClass("uploadedAttachmentsMetadata", FileMetadataForm::class.java).get(),
-            traits = ctx.formParam("traits")?.split(",") ?: emptyList()
+            traits = ctx.formParam("traits")?.split(",") ?: emptyList(),
+            nsfw = ctx.formParam("nsfw").toBoolean()
         )
         val author = getCurrentUser(ctx)
         characterService.update(updateCharacterForm, author)
