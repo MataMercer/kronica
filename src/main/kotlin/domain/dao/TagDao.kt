@@ -2,6 +2,7 @@ package org.matamercer.domain.dao
 
 import org.matamercer.domain.models.NewTag
 import org.matamercer.domain.models.Tag
+import org.matamercer.web.PageQuery
 
 class TagDao {
     private val mapper = RowMapper{rs ->
@@ -68,4 +69,21 @@ class TagDao {
         setLong(1, id)
     }
 
+    fun findBySnippet(snippet: String, pageQuery: PageQuery?) = mapper.queryForObjectPage("""
+       SELECT 
+        id,
+        name,
+        description
+       ${SqlSnip.countCol}
+        FROM tags
+        WHERE name like '?%'
+        ${SqlSnip.pageLimiter(pageQuery)}
+    """.trimIndent(), pageQuery){
+        var i = 0
+        setString(++i, snippet)
+        if (pageQuery != null) {
+            setInt(++i, pageQuery.size)
+            setInt(++i, pageQuery.number * pageQuery.size)
+        }
+    }
 }

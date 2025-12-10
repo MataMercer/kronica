@@ -39,10 +39,8 @@ class TimelineControllerTest {
         role = UserRole.ROOT
     )
 
-    private lateinit var fixtures: Fixtures
     @BeforeEach
     fun beforeEachTest() {
-        fixtures = Fixtures()
         app = setupApp(AppMode.TEST)
         app.start(0)
         val loginRequestForm = LoginRequestForm(
@@ -60,8 +58,8 @@ class TimelineControllerTest {
 
     private fun createTimeline(): Long {
         val createTimelineForm = CreateTimelineForm(
-            name = fixtures.testTimeline.name,
-            description = fixtures.testTimeline.description
+            name = Fixtures.testTimeline.name,
+            description = Fixtures.testTimeline.description
         )
 
         val requestBody = JavalinJackson().toJsonString(createTimelineForm).toRequestBody()
@@ -79,8 +77,8 @@ class TimelineControllerTest {
     @Test
     fun `when Create Timeline returns ok`(){
         val createTimelineForm = CreateTimelineForm(
-            name = fixtures.testTimeline.name,
-            description = fixtures.testTimeline.description
+            name = Fixtures.testTimeline.name,
+            description = Fixtures.testTimeline.description
         )
 
         val requestBody = JavalinJackson().toJsonString(createTimelineForm).toRequestBody()
@@ -95,8 +93,8 @@ class TimelineControllerTest {
     fun `when get timelines by author returns ok`(){
 
         val createTimelineForm = CreateTimelineForm(
-            name = fixtures.testTimeline.name,
-            description = fixtures.testTimeline.description
+            name = Fixtures.testTimeline.name,
+            description = Fixtures.testTimeline.description
         )
 
         val requestBody = JavalinJackson().toJsonString(createTimelineForm).toRequestBody()
@@ -110,7 +108,7 @@ class TimelineControllerTest {
         assertThat(createRequestRes.code == 200).isTrue()
 
         val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/timelines/?author_id=${fixtures.rootUser.id}")
+            .url("${getHostUrl(app)}/api/timelines/?author_id=${Fixtures.rootUser.id}")
             .get()
             .build()
 
@@ -131,8 +129,8 @@ class TimelineControllerTest {
         val uploadFile = File("resources/test/polarbear.jpg")
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .addFormDataPart("timelineId", timelineId.toString())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())

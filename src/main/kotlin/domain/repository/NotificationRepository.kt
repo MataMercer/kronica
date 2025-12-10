@@ -15,7 +15,7 @@ class NotificationRepository(
     fun readAndMark(userId: Long, pageQuery: PageQuery): Page<Notification> = txn {
         notificationDao.findByRecipient(userId, pageQuery).apply {
             content = content.map {
-                notificationDao.markRead(it.id)
+                notificationDao.markRead(it.id, userId)
                 aggregate(it)
             }
         }

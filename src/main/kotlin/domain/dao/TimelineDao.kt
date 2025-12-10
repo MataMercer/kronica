@@ -28,7 +28,8 @@ class TimelineDao {
                     timelines.id,
                     timelines.name,
                     timelines.description,
-                    timelines.nsfw,
+                    
+                    content.nsfw,
                     
                     users.id AS authors_id,
                     users.name AS authors_name,
@@ -48,7 +49,9 @@ class TimelineDao {
                     timelines.id,
                     timelines.name,
                     timelines.description,
-                    timelines.nsfw,
+                    
+                    content.nsfw,
+                    
                     users.id AS authors_id,
                     users.name AS authors_name,
                     users.role AS authors_role
@@ -67,7 +70,9 @@ class TimelineDao {
                     timelines.id,
                     timelines.name,
                     timelines.description,
-                    timelines.nsfw,
+                    
+                    content.nsfw,
+                    
                     users.id AS authors_id,
                     users.name AS authors_name,
                     users.role AS authors_role
@@ -86,17 +91,15 @@ class TimelineDao {
                     (
                     id,
                     name,
-                    description,
-                    nsfw
+                    description
                     )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?)
             """.trimIndent()
     ) {
         var i = 0
         setLong(++i, contentId)
         setString(++i, timeline.name)
         setString(++i, timeline.description)
-        setBoolean(++i, timeline.nsfw)
     }
 
     fun update(timeline: Timeline): Long = mapper.updateForId(
@@ -104,15 +107,13 @@ class TimelineDao {
                 UPDATE timelines
                 SET 
                     name = ?,
-                    description = ?,
-                    nsfw = ?
+                    description = ?
                 WHERE id = ?
             """.trimIndent()
     ) {
         var i = 0
         setString(++i, timeline.name)
         setString(++i, timeline.description)
-        setBoolean(++i, timeline.nsfw)
         setLong(++i, timeline.id)
     }
 
@@ -174,7 +175,6 @@ class TimelineDao {
     ) {
         setLong(1, articleId)
     }
-
 
     fun updateTimelineOrder(articleId: Long, index: Int) = mapper.update(
         """

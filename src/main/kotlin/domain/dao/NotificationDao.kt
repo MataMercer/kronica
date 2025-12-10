@@ -57,7 +57,9 @@ class NotificationDao {
         SELECT *,
         count(*) OVER() AS total_count
         FROM notifications
-        WHERE notifications.recipient_id=?
+        JOIN notifications_to_recipients
+        ON notifications.id=notifications_to_recipients.notification_id
+        WHERE notifications_to_recipients.user_id=?
         ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
     """.trimIndent(), pageQuery
     ) {
@@ -69,16 +71,18 @@ class NotificationDao {
         }
     }
 
-    fun markRead(notificationId: Long) = mapper.update(
+    fun markRead(notificationId: Long, userId: Long) = mapper.update(
         """
-       UPDATE notifications
+       UPDATE notifications_to_recipients
        SET is_read = ?
-       WHERE id = ?
+       WHERE notification_id = ?
+       AND user_id = ?
     """.trimIndent()
     ) {
         var i = 0
         setBoolean(++i, true)
         setLong(++i, notificationId)
+        setLong(++i, userId)
     }
 
     fun findUnreadCount(userId: Long) = mapper.queryForLong(

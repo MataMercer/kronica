@@ -56,6 +56,7 @@ class ArticleDao {
                 
                 content.created_at AS created_at,
                 content.updated_at AS updated_at,
+                content.nsfw AS nsfw,
                 
                 
                 timeline_entries.timeline_index AS timeline_entries_timeline_index,
@@ -108,6 +109,7 @@ class ArticleDao {
                 
                 content.created_at AS created_at,
                 content.updated_at AS updated_at,
+                content.nsfw AS nsfw,
                 
                 timeline_entries.timeline_index AS timeline_entries_timeline_index,
                    
@@ -149,6 +151,7 @@ class ArticleDao {
                    
                    content.created_at AS created_at,
                    content.updated_at AS updated_at,
+                   content.nsfw AS nsfw,
                    
                    timeline_entries.timeline_index AS timeline_entries_timeline_index,
                    

@@ -27,11 +27,16 @@ class CharacterDao {
         """
            SELECT
                 characters.*, 
+                
+                content.created_at AS created_at,
+                content.updated_at AS updated_at,
+                content.nsfw AS nsfw,
+                
                 users.id AS authors_id,
                 users.name AS authors_name,
                 users.role AS authors_role
            FROM characters
-           INNER JOIN content
+           JOIN content
                ON characters.id=content.id
            INNER JOIN users 
                ON content.author_id=users.id
@@ -48,6 +53,10 @@ class CharacterDao {
                 users.name AS authors_name,
                 users.role AS authors_role,
                 
+                content.created_at AS created_at,
+                content.updated_at AS updated_at,
+                content.nsfw AS nsfw,
+ 
                 count(*) OVER() AS total_count
             FROM characters
             INNER JOIN content
@@ -75,17 +84,15 @@ class CharacterDao {
                     (
                     id,
                     name,
-                    body,
-                    author_id
+                    body
                     )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?)
                 """.trimIndent()
         ) {
             var i = 0
             setLong(++i, contentId)
             setString(++i, character.name)
             setString(++i, character.body)
-            setLong(++i, character.author.id)
         }
 
     fun update(character: Character) = mapper.updateForId(

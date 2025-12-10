@@ -32,8 +32,6 @@ export default function Callback() {
 
     return (
         <div title="Logging in...">
-            <div>error goes herel lol</div>
-            <h1>Logging in...</h1>
             <p>Logging in. You will be redirected shortly...</p>
         </div>
     );

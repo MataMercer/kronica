@@ -95,6 +95,3 @@ data class UserSettings(
     val muteNotifications: Boolean? = null,
     val onlyFollowersCanComment: Boolean? = null,
 )
-
-
-

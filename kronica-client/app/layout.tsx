@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="lg:w-[70vw] mx-auto">
+            <body className="lg:w-[70vw] mx-auto ">
                 <Navbar />
 
                 <div className="min-h-[60px] "></div>

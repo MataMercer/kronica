@@ -2,10 +2,13 @@ package unit.service
 
 import fixtures.Fixtures
 import io.mockk.clearAllMocks
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.matamercer.domain.dao.ArticleDao
 import org.matamercer.domain.dao.TransactionManager
@@ -16,7 +19,7 @@ import org.matamercer.domain.services.ArticleService
 import org.matamercer.web.Forms.CreateArticleForm
 
 @ExtendWith(MockKExtension::class)
-class ArticleServiceUnitTest {
+class ArticleServiceTest {
 
     @MockK(relaxUnitFun = true)
     private lateinit var articleDaoSql: ArticleDao
@@ -33,15 +36,13 @@ class ArticleServiceUnitTest {
     private lateinit var testFile:FileModel
     private lateinit var testUser: User
     private lateinit var testMaliciousUser: User
-    private lateinit var fixtures: Fixtures
 
     @BeforeEach
     fun setup(){
         clearAllMocks()
-        fixtures = Fixtures()
-        testUser = fixtures.rootUser
-        testMaliciousUser = fixtures.maliciousUser
-        testArticle = fixtures.testArticle
+        testUser = Fixtures.rootUser
+        testMaliciousUser = Fixtures.maliciousUser
+        testArticle = Fixtures.testArticle
         testArticleForm = CreateArticleForm(title = "title", body = "body")
 
         //make callbacks pass through transact
@@ -49,14 +50,14 @@ class ArticleServiceUnitTest {
     }
 
 
-    //TODO: fix unit tests
 
-//    @Test
-//    fun `When findById, return the article`(){
-//        every { articleDaoSql.findById(any(), any()) } returns testArticle
-//        val art = articleService.getById(1)
-//        assertThat(art.id).isEqualTo(testArticle.id)
-//    }
+    @Test
+    fun `When findById, return the article`(){
+        every { articleDaoSql.findById(any()) } returns testArticle
+        val a = articleService.getById(1)
+        assertThat(a.id).isEqualTo(testArticle.id)
+    }
+
 //
 //    @Test
 //    fun `When create article, create the article and return the id`(){

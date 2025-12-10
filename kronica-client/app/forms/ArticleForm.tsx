@@ -20,6 +20,7 @@ type SelectType = {
 
 type Inputs = {
     title: string;
+    tags: SelectType[];
     body: string;
     uploadedAttachments: FileInput[];
     timeline: SelectType;
@@ -57,6 +58,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
     const userId = user && user.id;
     const { timelines, mutate: mutateTimelines } = useTimelines(userId);
     const { characters, mutate: mutateCharacters } = useCharacters(userId);
+    const { tags, mutate: mutateTags} = useTags(userId);
     const { article, mutate: mutateArticle } = useArticle(id);
     const { toast } = useToast();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -255,6 +257,23 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                             />
                         </label>
                     )}
+
+                    <label className="flex flex-col" htmlFor="name">
+                        Tags
+                        <Controller
+                            name="tags"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    options={characterOptions}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    isMulti
+                                    isDisabled={!characters}
+                                />
+                            )}
+                        />
+                    </label>
 
                     <label className="flex flex-col" htmlFor="body">
                         Body

@@ -24,8 +24,8 @@ class AppConfigUnitTest {
         with(AppConfig){
             registerConfigReader(configReader)
             reload()
-            assert(discordOAuthClientId == "0")
-            assert(discordOAuthClientSecret == "0")
+            assert(discordOauthClientId == "0")
+            assert(discordOauthClientSecret == "0")
             assert(uploadSizeLimit == 0)
             assert(uploadUserSizeLimit == 0)
             assert(maxFileNameLength == 0)

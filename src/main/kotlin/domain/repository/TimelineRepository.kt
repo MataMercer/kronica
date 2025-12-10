@@ -24,9 +24,9 @@ class TimelineRepository(
     fun findByName(name: String) = timelineDao.findByName(name)
 
     fun update(timeline: Timeline) =  txn {
-        timelineDao.update( timeline).let {
-            timelineDao.findById(it)
-        }
+        val id = timelineDao.update( timeline)
+        contentDao.update(id, timeline.nsfw)
+        timelineDao.findById(id)
     }
 
     fun findFileModelsByTimelineId(timelineId: Long): List<FileModel> = txn{

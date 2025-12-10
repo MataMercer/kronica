@@ -17,7 +17,8 @@ class PropertiesReader(
             }
         }
     }
-    override fun get(key: String): String? {
-        return properties[key] as String?
+    override fun get(propertyName: String): String? {
+        return properties[propertyName] as String?
     }
+
 }

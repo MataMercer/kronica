@@ -33,15 +33,13 @@ class CharacterControllerTest {
     private lateinit var unauthClient: HttpClient
 
 
-    private lateinit var fixtures: Fixtures
     private lateinit var rootUser: User
 
     @BeforeEach
     fun beforeEachTest(){
-       fixtures = Fixtures()
         app = setupApp(AppMode.TEST)
         app.start(0)
-        rootUser = fixtures.rootUser
+        rootUser = Fixtures.rootUser
         val loginRequestForm = LoginRequestForm(
            email = rootUser.email,
             password = "password"
@@ -58,7 +56,7 @@ class CharacterControllerTest {
 
     @Test
     fun `when Create character returns ok`(){
-        val testCharacter = fixtures.testCharacter
+        val testCharacter = Fixtures.testCharacter
         val uploadFile = File("resources/test/polarbear.jpg")
         val mapper = jacksonObjectMapper()
         val requestBody = MultipartBody.Builder()
@@ -85,7 +83,7 @@ class CharacterControllerTest {
     }
 
     private fun createCharacter(): Long {
-        val testCharacter = fixtures.testCharacter
+        val testCharacter = Fixtures.testCharacter
         val uploadFile = File("resources/test/polarbear.jpg")
         val mapper = jacksonObjectMapper()
         val requestBody = MultipartBody.Builder()
@@ -146,8 +144,8 @@ class CharacterControllerTest {
 
     private fun createTimeline(): Long {
         val createTimelineForm = CreateTimelineForm(
-            name = fixtures.testTimeline.name,
-            description = fixtures.testTimeline.description
+            name = Fixtures.testTimeline.name,
+            description = Fixtures.testTimeline.description
         )
 
         val requestBody = JavalinJackson().toJsonString(createTimelineForm).toRequestBody()
@@ -171,8 +169,8 @@ class CharacterControllerTest {
 
         val articleRequestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .addFormDataPart("characters", characterId.toString())
             .addFormDataPart("timelineId", timelineId.toString())
             .build()
@@ -224,7 +222,7 @@ class CharacterControllerTest {
     fun `when update character returns ok`() {
         val characterId = createCharacter()
         val character = getCharacterById(characterId)
-        val testCharacter = fixtures.testCharacter.copy(id = characterId, name = "Updated Name")
+        val testCharacter = Fixtures.testCharacter.copy(id = characterId, name = "Updated Name")
         val uploadFile = File("resources/test/polarbear.jpg")
         val mapper = jacksonObjectMapper()
         val requestBody = MultipartBody.Builder()

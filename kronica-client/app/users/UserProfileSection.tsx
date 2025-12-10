@@ -5,6 +5,19 @@ import {BellPlus, Settings, UserPlus} from "lucide-react";
 import Image from "next/image";
 import { fetchCurrentUser } from "../fetch/auth";
 
+async function followUser(userId: string) {
+    const response = await fetch(
+        `http://localhost:7070/api/users//${userId}/follow`,
+        {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+        }
+    );
+    if (response.ok) {
+    }
+}
+
 type UserProfileSectionProps = {
     userId: Number;
 };

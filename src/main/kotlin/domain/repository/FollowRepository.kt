@@ -12,8 +12,7 @@ class FollowRepository(
     fun unfollow(followerId: Long, followeeId: Long) = followDao.unfollow(followerId, followeeId)
     fun findFollow(followerId: Long, followeeId: Long) = followDao.findByFollowerAndFollowee(followerId, followeeId)
     fun findFollow(id: Long) = followDao.find(id)
-    fun findFollowers(followeeId: Long) = followDao.findFollowers(followeeId)
+    fun findFollowers(followeeId: Long, notificationsEnabled: Boolean = false) = followDao.findFollowers(followeeId, notificationsEnabled)
     fun findFollowings(followerId: Long) = followDao.findFollowings(followerId)
     fun findFollowerCount(followeeId: Long) = followDao.findFollowerCount(followeeId)
-
 }

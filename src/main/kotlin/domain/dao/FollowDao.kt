@@ -1,5 +1,6 @@
 package org.matamercer.domain.dao
 
+import jdk.jfr.Enabled
 import org.matamercer.domain.models.Follow
 import org.matamercer.domain.models.NewFollow
 import java.sql.Connection
@@ -88,14 +89,17 @@ class FollowDao() {
         setLong(1, id)
     }
 
-    fun findFollowers( followeeId: Long): List<Follow> = mapper.queryForObjectList(
+    fun findFollowers( followeeId: Long, notificationsEnabled: Boolean = false ): List<Follow> = mapper.queryForObjectList(
         """
             SELECT * 
             FROM follows 
             WHERE followee_id = ?
+            AND notifications_enabled = ?
             """.trimIndent()
     ) {
-        setLong(1, followeeId)
+        var i = 0
+        setLong(++i, followeeId)
+        setBoolean(++i, notificationsEnabled)
     }
 
     fun findFollowings( followerId: Long): List<Follow> = mapper.queryForObjectList(

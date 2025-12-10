@@ -8,8 +8,6 @@ import org.matamercer.config.AppConfig
 import org.matamercer.domain.services.UserService
 import org.matamercer.loginUserToSession
 import org.matamercer.security.UserRole
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Controller("/api/oauth")
 class OAuthController(
@@ -24,7 +22,7 @@ class OAuthController(
             .host("discord.com")
             .addPathSegment("oauth2")
             .addPathSegment("authorize")
-            .addQueryParameter("client_id", AppConfig.discordOAuthClientId)
+            .addQueryParameter("client_id", AppConfig.discordOauthClientId)
             .addQueryParameter("response_type", "code")
             .addQueryParameter("redirect_uri", callbackUri )
             .addQueryParameter("scope", listOf("identify", "email", "openid").joinToString(" "))

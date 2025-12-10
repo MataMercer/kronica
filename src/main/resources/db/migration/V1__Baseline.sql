@@ -115,6 +115,8 @@ CREATE TABLE tags
     CONSTRAINT uc_name UNIQUE (name)
 );
 
+CREATE INDEX tag_names ON tags (name);
+
 CREATE TABLE tags_to_content
 (
     tag_id BIGINT NOT NULL,
@@ -327,5 +329,7 @@ CREATE TABLE announcements
 
     CONSTRAINT pk_announcements PRIMARY KEY (id)
 );
+
+
 
 

@@ -3,6 +3,7 @@ package controllers
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import createAuthClient
 import fixtures.Fixtures
+import fixtures.createArticle
 import getHostUrl
 import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.matamercer.AppMode
+import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.ArticleDto
 import org.matamercer.domain.models.NewUser
 import org.matamercer.security.UserRole
@@ -44,10 +46,8 @@ class ArticleControllerTest {
         role = UserRole.ROOT
     )
 
-    private lateinit var fixtures: Fixtures
     @BeforeEach
     fun beforeEachTest() {
-        fixtures = Fixtures()
         app = setupApp(AppMode.TEST)
         app.start(0)
         val loginRequestForm = LoginRequestForm(
@@ -105,8 +105,8 @@ class ArticleControllerTest {
         val mapper = jacksonObjectMapper()
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #1")))
@@ -127,8 +127,8 @@ class ArticleControllerTest {
 
     private fun createTimeline(): Long {
         val createTimelineForm = CreateTimelineForm(
-            name = fixtures.testTimeline.name,
-            description = fixtures.testTimeline.description
+            name = Fixtures.testTimeline.name,
+            description = Fixtures.testTimeline.description
         )
 
         val requestBody = JavalinJackson().toJsonString(createTimelineForm).toRequestBody()
@@ -146,8 +146,8 @@ class ArticleControllerTest {
         val uploadFile = File("resources/test/polarbear.jpg")
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .addFormDataPart("timelineId", timelineId.toString())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
@@ -172,8 +172,8 @@ class ArticleControllerTest {
     fun `when Create Article without attachments returns ok`(){
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .build()
 
         val request = Request.Builder()
@@ -197,7 +197,7 @@ class ArticleControllerTest {
     }
 
     private fun createCharacter(): Long {
-        val testCharacter = fixtures.testCharacter
+        val testCharacter = Fixtures.testCharacter
         val uploadFile = File("resources/test/polarbear.jpg")
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -220,8 +220,8 @@ class ArticleControllerTest {
         val characterId = createCharacter()
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .addFormDataPart("characters", characterId.toString())
             .build()
 
@@ -252,8 +252,8 @@ class ArticleControllerTest {
         val uploadFile = File("resources/test/polarbear.jpg")
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .build()
@@ -340,6 +340,12 @@ class ArticleControllerTest {
    }
 
     @Test
+    fun `when userA mentions userB, make sure userB gets a notification`(){
+        val mentTestArt = Fixtures.testArticle.copy(title = "hello @UserB")
+        val articleId = createArticle(app, userAClient, null, mentTestArt )
+    }
+
+    @Test
     fun `when update article return ok response`(){
         val articleId = createTestArticle(authClient)
         val article = getArticleById(articleId)
@@ -348,8 +354,8 @@ class ArticleControllerTest {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("id", articleId.toString())
-            .addFormDataPart("title", fixtures.testArticle.title)
-            .addFormDataPart("body", fixtures.testArticle.body)
+            .addFormDataPart("title", Fixtures.testArticle.title)
+            .addFormDataPart("body", Fixtures.testArticle.body)
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(id = article.attachments[0].id, caption = "deleted", delete = true)))

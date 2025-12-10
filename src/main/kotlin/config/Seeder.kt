@@ -13,6 +13,6 @@ class Seeder(private val userService: UserService) {
         userService.getByEmail("test@gmail.com") ?:
             userService.registerUser(
                 RegisterUserForm("test@gmail.com", "TestUser", "password"),
-                UserRole.AUTHENTICATED_USER
+                UserRole.CONTRIBUTOR_USER
             )
 }

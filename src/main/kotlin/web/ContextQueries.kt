@@ -1,5 +1,6 @@
 package org.matamercer.web
 
+import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.http.InternalServerErrorResponse
 import io.javalin.websocket.WsConnectContext
@@ -13,6 +14,7 @@ fun getPageQuery(ctx: Context): PageQuery?{
         size = ctx.queryParam("size")?.toIntOrNull() ?: return null
     )
 }
+
 
 fun getCurrentUser(ctx: Context): CurrentUser {
     val id = ctx.sessionAttribute<String>("current_user_id")

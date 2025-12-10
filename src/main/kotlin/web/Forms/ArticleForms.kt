@@ -3,8 +3,7 @@ package org.matamercer.web.Forms
 import io.javalin.http.UploadedFile
 import org.matamercer.web.FileMetadataForm
 
-class ArticleForms {
-}
+
 
 data class CreateArticleForm(
     val title: String?,
@@ -14,6 +13,7 @@ data class CreateArticleForm(
     val uploadedAttachmentsMetadata: List<FileMetadataForm> = listOf(),
     val characters: List<Long> = listOf(),
     val nsfw: Boolean = false,
+    val tags: List<String> = listOf()
 )
 
 data class UpdateArticleForm(
@@ -25,4 +25,5 @@ data class UpdateArticleForm(
     val uploadedAttachmentsMetadata: List<FileMetadataForm> = listOf(),
     val characters: List<Long> = listOf(),
     val nsfw: Boolean = false,
+    val tags: List<String> = listOf()
 )

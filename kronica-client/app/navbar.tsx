@@ -25,9 +25,9 @@ export default function Navbar() {
 
     const { notifications, mutate: mutateNotifications } = useNotifications();
 
-    const websiteName = "KRONIKA";
+    const websiteName = "";
     return (
-        <nav className="fixed w-[70vw] flex text-2xl min-h-[60px] justify-between bg-white border-b-[1px] border-black items-center">
+        <nav className="fixed w-[70vw] flex text-2xl min-h-[60px] justify-between bg-dark-500 border-b-[1px] border-black items-center">
             <Link className="ml-10 flex items-center space-x-2" href="/home">
                 <Image
                     alt="website logo"
@@ -58,6 +58,10 @@ export default function Navbar() {
                             <DropdownMenuContent>
                                 {notifications?.map((n) => (
                                     <DropdownMenuItem key={n.id}>
+                                        <span>
+                                            {`${n.notificationType.toString()}:`}
+                                        </span>
+                                        {}
                                         {n.message}
                                         <div></div>
                                     </DropdownMenuItem>

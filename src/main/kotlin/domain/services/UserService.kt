@@ -18,6 +18,8 @@ import org.matamercer.web.Forms.LoginRequestForm
 import org.matamercer.web.Forms.RegisterUserForm
 import org.matamercer.web.UpdateFollowForm
 import org.matamercer.web.Forms.UpdateUserForm
+import java.util.Locale
+import java.util.Locale.getDefault
 
 class UserService(
     private val userRepository: UserRepository,
@@ -57,6 +59,38 @@ class UserService(
         return userRepository.findById(id) ?: throw NotFoundResponse()
     }
 
+    fun getMentionedUsers(input: String)=
+        input
+            .split(" ")
+            .filter { it[0] == '@' }
+            .toSet()
+            .map { it.replace("@", "") }
+            .mapNotNull { userRepository.findByName(it) }
+
+
+    fun notifyMentionedUsers(input: String, currentUser: CurrentUser, contentId: Long) =
+        getMentionedUsers(input).let { mentionedUsers ->
+            NewNotification(
+                subject = currentUser.toUser(),
+                subjectId = currentUser.id,
+                notificationType = NotificationType.MENTIONED,
+                targetContentId = contentId,
+                recipients = mentionedUsers.map { it.id }
+            ).let { notificationWorker.dispatch(it) }
+        }
+
+    fun notifyNotifiedFollowers(currentUser: CurrentUser, contentId: Long){
+        val followers = followRepository.findFollowers(currentUser.id, true)
+        notificationWorker.dispatch(NewNotification(
+            subject = currentUser.toUser(),
+            subjectId = currentUser.id,
+            notificationType = NotificationType.POSTED,
+            targetContentId = contentId,
+            recipients = followers.map { it.id }
+        ))
+
+    }
+
     fun authenticateUser(loginRequestForm: LoginRequestForm): User {
         val foundUser = getByEmail(loginRequestForm.email) ?: throw NotFoundResponse()
         if (loginRequestForm.password.isNullOrBlank()) {
@@ -69,7 +103,7 @@ class UserService(
     }
 
     private fun getDiscordOAuthAccessToken(code: String): String{
-        if (AppConfig.discordOAuthClientId==null || AppConfig.discordOAuthClientSecret==null){
+        if (AppConfig.discordOauthClientId.isNullOrBlank() || AppConfig.discordOauthClientSecret.isNullOrBlank()){
             throw InternalServerErrorResponse("Discord OAuth client ID or secret is not configured.")
         }
 
@@ -86,15 +120,15 @@ class UserService(
             val code = code
             val grant_type = "authorization_code"
             val redirect_uri = redirectUri
-            val client_id = AppConfig.discordOAuthClientId
-            val client_secret = AppConfig.discordOAuthClientSecret
+            val client_id = AppConfig.discordOauthClientId
+            val client_secret = AppConfig.discordOauthClientSecret
         })
         val formBody = FormBody.Builder()
             .add("grant_type", "authorization_code")
             .add("code", code)
             .add("redirect_uri", redirectUri)
             .build()
-        val credentials = Credentials.basic(AppConfig.discordOAuthClientId!!, AppConfig.discordOAuthClientSecret!!)
+        val credentials = Credentials.basic(AppConfig.discordOauthClientId!!, AppConfig.discordOauthClientSecret!!)
         val request = Request.Builder()
             .url(url)
             .header("Content-Type", "application/x-www-form-urlencoded")

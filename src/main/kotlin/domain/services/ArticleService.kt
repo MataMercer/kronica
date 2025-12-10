@@ -16,9 +16,8 @@ class ArticleService(
     private val articleRepository: ArticleRepository,
     private val fileModelService: FileModelService,
     private val characterService: CharacterService,
-    private val userRepository: UserRepository,
+    private val userService: UserService,
     private val likeService: LikeService,
-    private val notificationWorker: NotificationWorker
 ) {
     private val attachmentSizes = setOf(
         ImagePresetSize.SMALL, ImagePresetSize.MEDIUM, ImagePresetSize.ORIGINAL
@@ -65,9 +64,9 @@ class ArticleService(
             form.timelineId,
             form.characters
         )
-        notifyMentionedUsers(form.body, currentUser, article.id)
-        notifyMentionedUsers(form.title, currentUser, article.id)
-        notifyNotifiedFollowers(currentUser, article.id)
+        userService.notifyMentionedUsers(form.body, currentUser, article.id)
+        userService.notifyMentionedUsers(form.title, currentUser, article.id)
+        userService.notifyNotifiedFollowers(currentUser, article.id)
         return article.id
     }
 
@@ -78,9 +77,11 @@ class ArticleService(
         fileModelService.checkUserStorageLimit(currentUser, form.uploadedAttachments)
         val existingFilesId = form.uploadedAttachmentsMetadata
             .filter { it.isExistingFile() }
-            .map { it.id }.toSet()
+            .map { it.id }
+            .toSet()
         val originalArticleFiles = originalArticle.attachments
-            .map { it.id }.toSet()
+            .map { it.id }
+            .toSet()
         if (!originalArticleFiles.containsAll(existingFilesId)) {
             throw BadRequestResponse("File metadata entries for existing files have ids that don't belong to the original article.")
         }
@@ -111,9 +112,8 @@ class ArticleService(
                 .filter { it.isExistingFile() && it.delete != null && it.delete }
                 .map { it.id }
         fileModelService.deleteFiles(originalArticle.attachments.filter { it.id in fileIdsToDelete })
-
-        notifyMentionedUsers(form.body, currentUser, article.id)
-        notifyMentionedUsers(form.title, currentUser, article.id)
+        userService.notifyMentionedUsers(form.body, currentUser, article.id)
+        userService.notifyMentionedUsers(form.title, currentUser, article.id)
         return article.id
     }
 
@@ -136,31 +136,7 @@ class ArticleService(
         fileModelService.validateFileMetadataList(
             form.uploadedAttachmentsMetadata,
             form.uploadedAttachments,
-            originalArticle.attachments
-        )
-    }
-
-    private fun getMentionedUsers(input: String) =
-        input
-            .split(" ")
-            .filter { it[0] == '@' }
-            .toSet()
-            .mapNotNull { userRepository.findByName(it) }
-
-    private fun notifyMentionedUsers(input: String, currentUser: CurrentUser, contentId: Long) =
-        getMentionedUsers(input).let { mentionedUsers ->
-            NewNotification(
-                subject = currentUser.toUser(),
-                subjectId = currentUser.id,
-                notificationType = NotificationType.MENTIONED,
-                targetContentId = contentId,
-                recipients = mentionedUsers.map { it.id }
-            ).let { notificationWorker.dispatch(it) }
-        }
-
-    private fun notifyNotifiedFollowers(currentUser: CurrentUser, contentId: Long){
-
-
+            originalArticle.attachments)
     }
 
     fun deleteById(currentUser: CurrentUser, id: Long?) {

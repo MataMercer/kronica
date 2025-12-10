@@ -5,31 +5,60 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa76c5f2-5d79-43c4-bfa4-67545c84a228" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/config/reader/EnvReader.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/MimeTypeDetector.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/TikaDetector.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/test/kotlin/unit/service/UploadSecurityTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/detekt.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/hooks/useTags.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/StringExtensions.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/Sq.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/TagService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/test/kotlin/fixtures/FixtureIntegrationHelpers.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/test/kotlin/unit/service/UserServiceTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/kotlinc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/forms/ArticleForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms/ArticleForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/navbar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/oauth/callback/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/oauth/callback/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/UserProfileSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/UserProfileSection.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/AppConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/AppConfig.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/Seeder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/Seeder.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/reader/ArgsReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/reader/ArgsReader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FileModelDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FileModelDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/reader/ConfigReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/reader/ConfigReader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/reader/DotEnvReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/reader/DotEnvReader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/reader/EnvReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/reader/EnvReader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/config/reader/PropertiesReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/config/reader/PropertiesReader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/CharacterDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FollowDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/FollowDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/NotificationDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/NotificationDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TagDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TagDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TimelineDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/dao/TimelineDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/models/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/models/User.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/FollowRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/FollowRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/NotificationRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/NotificationRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TagRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TagRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TimelineRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/CharacterService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/CharacterService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/FileModelService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/FileModelService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/storage/FileSystemStorageService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/UploadService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/UploadService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/image/ImagePresetSize.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/image/ImagePresetSize.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/image/ImageResizer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/image/ImageResizer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/ContentValidator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/ContentValidator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/ImageFileValidator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/ImageFileValidator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/TextFileValidator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/TextFileValidator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/UploadSecurity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/upload/security/UploadSecurity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/ArticleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/ArticleController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/NotificationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/NotificationService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/services/UserService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/domain/workers/NotificationWorker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/domain/workers/NotificationWorker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/ContextQueries.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/ContextQueries.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/OAuthController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/OAuthController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/TagController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/kotlin/web/controllers/TagController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/unit/config/ArgsReaderUnitTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/unit/config/ArgsReaderUnitTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/CommentControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/CommentControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/controllers/TimelineControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/controllers/TimelineControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/fixtures/Fixtures.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/unit/config/AppConfigUnitTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/unit/config/AppConfigUnitTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/unit/service/ArticleServiceUnitTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/unit/service/ArticleServiceTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/kotlin/unit/workers/NotificationWorkerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/kotlin/unit/workers/NotificationWorkerTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +69,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -57,28 +87,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/Users/merce/dev/kronica/kronica-client",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.Next.js: server-side.executor": "Run",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font",
-    "ts.external.directory.path": "C:\\Users\\merce\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;tagsfeat&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mercer/dev/kronica/kronica-client&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/mercer/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/timelines/[id]" />
@@ -102,7 +132,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.27812.50" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
       </set>
     </attachedChunks>
   </component>
@@ -123,6 +153,9 @@
       <workItem from="1752461527355" duration="1204000" />
       <workItem from="1753603238460" duration="92000" />
       <workItem from="1753603355276" duration="2224000" />
+      <workItem from="1761107366897" duration="1802000" />
+      <workItem from="1763686908559" duration="5239000" />
+      <workItem from="1763793353475" duration="3582000" />
     </task>
     <servers />
   </component>

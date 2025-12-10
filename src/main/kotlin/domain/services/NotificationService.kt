@@ -16,7 +16,6 @@ class NotificationService(
     fun create(n: NewNotification) = txn {
         n.recipients += getRecipientIds(n)
         notificationRepository.create(n).let { id ->
-            println(id)
             n.recipients.forEach { recipientId ->
                 notificationRepository.deleteToRecent(recipientId, AppConfig.maxNotificationCapacity!!)
             }
@@ -54,4 +53,6 @@ class NotificationService(
             isRead = false,
             createdAt = n.createdAt
         )
+
+
 }

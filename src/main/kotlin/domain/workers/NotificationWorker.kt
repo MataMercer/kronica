@@ -1,18 +1,13 @@
 package org.matamercer.domain.workers
 
 import io.javalin.http.sse.SseClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import org.matamercer.config.AppConfig
 import org.matamercer.domain.dao.NotificationDao
 import org.matamercer.domain.models.NewNotification
 import org.matamercer.domain.services.NotificationService
-import java.util.HashMap
 import kotlin.time.Duration.Companion.days
 
 //worker to handle notifications
@@ -24,9 +19,9 @@ class NotificationWorker(
     private val notificationService: NotificationService,
     private val notificationDao: NotificationDao,
 ) {
-    private val jobsChannel = Channel<NewNotification>()
-    private val completedChannel = Channel<NewNotification>()
-    private val clientMapChannel = Channel<HashMap<Long, SseClient>>()
+    private val notifFlow = MutableStateFlow<List<NewNotification>>(emptyList())
+    private val completedFlow = MutableStateFlow<List<NewNotification>>(emptyList())
+    private val clientMapFlow = MutableStateFlow<Map<Long, List<SseClient>>>(emptyMap<Long, List<SseClient>>())
 
     private var coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
     var isCleanerActive: Boolean = true
@@ -38,41 +33,53 @@ class NotificationWorker(
         coroutineScope.launch { cleaner() }
     }
 
-    private suspend fun collectJobs() = jobsChannel.receiveAsFlow().collect {
-        notificationService.create(it)
-        completedChannel.send(it)
+    private suspend fun collectJobs(): Unit = notifFlow.collect { newNotifications ->
+        if (newNotifications.isNotEmpty()) {
+            val newNotif = newNotifications.last()
+            notificationService.create(newNotif)
+            completedFlow.update { it + newNotif }
+        }
     }
 
-    fun dispatch(notificationJob: NewNotification) = runBlocking {
-        jobsChannel.send(notificationJob)
+    fun dispatch(notificationJob: NewNotification) = coroutineScope.launch {
+        notifFlow.update { it + notificationJob }
     }
 
     fun addClient(userId: Long, client: SseClient) = runBlocking {
-        val clientMap = clientMapChannel.receive()
-        clientMap[userId] = client
-        clientMapChannel.send(clientMap)
-    }
-
-    fun removeClient(userId: Long) = runBlocking {
-        val clientMap = clientMapChannel.receive()
-        clientMap.remove(userId)
-        clientMapChannel.send(clientMap)
-    }
-
-    private suspend fun distributeNotifications() {
-        val clientMap = clientMapChannel.receive()
-        completedChannel.receiveAsFlow().collect {
-            it.recipients.forEach { recipientId ->
-                notifyClient(clientMap, recipientId)
+        clientMapFlow.update {
+            if (it.contains(userId)) {
+                return@update it + (userId to (it[userId]!! + client))
+            } else {
+                return@update it + (userId to (listOf<SseClient>(client)))
             }
         }
     }
 
-    private fun notifyClient(clientMap: Map<Long, SseClient>, recipientId: Long) {
-        val client = clientMap[recipientId] ?: return
+    fun removeClient(userId: Long) = runBlocking {
+//        val clientMap = clientMapChannel.receive()
+//        clientMap.remove(userId)
+//        clientMapChannel.send(clientMap)
+    }
+
+    private suspend fun distributeNotifications() {
+        val clientMap = clientMapFlow.value
+
+        completedFlow.collect { completed ->
+            if (completed.isNotEmpty()) {
+                completed.last().recipients.forEach { recipientId ->
+                    notifyClient(clientMap, recipientId)
+                }
+            }
+        }
+    }
+
+    private fun notifyClient(clientMap: Map<Long, List<SseClient>>, recipientId: Long) {
+        val clients = clientMap[recipientId] ?: return
         notificationDao.findUnreadCount(recipientId)
-            .also {
-                client.sendEvent("$it")
+            .also { unreadCount ->
+                clients.forEach { client ->
+                    client.sendEvent("$unreadCount")
+                }
             }
     }
 
@@ -82,4 +89,5 @@ class NotificationWorker(
             delay(cleanerFrequency)
         }
     }
+
 }

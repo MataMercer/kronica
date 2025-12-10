@@ -66,7 +66,8 @@ fun setupDatabase(appMode: AppMode?) {
     TransactionManager.init(dataSource)
 }
 
-fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<String>()): Javalin {
+fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<String>()): Javalin {
+    print("Starting app in ${enumValueOf<AppMode>(appMode.name)} mode...")
     setupConfig(args)
     setupDatabase(appMode)
     val app = createJavalinApp()
@@ -86,7 +87,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     )
     val notificationWorker = NotificationWorker(
         notificationDao = notificationDao,
-        notificationService = notificationService
+        notificationService = notificationService,
+
 
     )
     notificationWorker.start()
@@ -143,9 +145,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
 
     val seeder = Seeder(userService)
     seeder.initRootUser()
-    if (appMode== AppMode.TEST){
-        seeder.initTestUser()
-    }
+    if (appMode== AppMode.TEST || appMode == AppMode.DEV) seeder.initTestUser()
 
     val articleDao = ArticleDao()
     val characterDao = CharacterDao()
@@ -183,7 +183,6 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         contentDao
     )
     val characterService = CharacterService(characterRepository, fileModelService)
-
     val contentRepository = ContentRepository(contentDao = contentDao)
     val likeRepository = LikeRepository(likeDao = likeDao)
     val likeService = LikeService(likeRepository = likeRepository, contentRepository = contentRepository)
@@ -192,9 +191,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         articleRepository,
         fileModelService,
         characterService,
-        userRepository = userRepository,
+        userService = userService,
         likeService = likeService,
-        notificationWorker = notificationWorker
     )
 
     val reportDao = ReportDao()
@@ -203,6 +201,14 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
         contentRepository = contentRepository,
         reportRepository = reportRepository,
     )
+
+
+    val tagDao = TagDao()
+    val tagRepository = TagRepository(tagDao)
+    val tagService = TagService(
+        tagRepository = tagRepository
+    )
+
     val articleController = ArticleController(articleService)
     val timelineController = TimelineController(timelineService)
     val userController = UserController(userService, userProfileService)
@@ -213,6 +219,7 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
     val oAuthController = OAuthController(userService)
     val reportController = ReportController(reportService = reportService)
     val likeController = LikeController(likeService)
+    val tagController = TagController(tagService)
 
     Router(
         listOf(
@@ -226,7 +233,8 @@ fun setupApp(appMode: AppMode? = AppMode.DEV, args: Array<String> = emptyArray<S
             notificationController,
             commentController,
             reportController,
-            likeController
+            likeController,
+            tagController
         ),
         app
     ).setupRoutes()
@@ -267,7 +275,6 @@ fun createJavalinApp(): Javalin = Javalin.create { config ->
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         })
     }
-
 }
 
 fun sqlSessionHandler(driver: String, url: String) = SessionHandler().apply {
