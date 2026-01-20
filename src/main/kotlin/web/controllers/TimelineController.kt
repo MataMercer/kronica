@@ -18,7 +18,7 @@ class TimelineController(
 ) {
 
     @Route(HandlerType.POST, "/")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun createTimeline(ctx: Context){
         val form = ctx.bodyValidator<CreateTimelineForm>()
             .check({ it.name.isNotBlank() }, "Name is empty.")
@@ -47,7 +47,7 @@ class TimelineController(
     }
 
     @Route(HandlerType.PUT, "/{id}/order")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun updateOrder(ctx: Context) {
         val timelineId = ctx.pathParam("id").toLong()
         val author = getCurrentUser(ctx)
@@ -56,7 +56,7 @@ class TimelineController(
     }
 
     @Route(HandlerType.PUT, "/{id}")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun update(ctx: Context){
         val form = ctx.bodyValidator<UpdateTimelineForm>()
             .check({ !it.name.isNullOrBlank() }, "Name is empty.")
@@ -67,7 +67,7 @@ class TimelineController(
 
 
     @Route(HandlerType.DELETE, "/{id}")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun deleteTimeline(ctx: Context){
         val timelineId = ctx.pathParam("id").toLong()
         val currentUser = getCurrentUser(ctx)

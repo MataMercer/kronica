@@ -12,6 +12,7 @@ data class NewCharacter(
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
     val nsfw: Boolean,
+    val tags: List<NewTag> = listOf(),
 )
 
 data class Character(
@@ -25,6 +26,7 @@ data class Character(
     var attachments: List<FileModel> = listOf(),
     var profilePictures: List<FileModel> = listOf(),
     var traits: List<Trait> = listOf(),
+    override var tags: List<Tag> = listOf(),
     ): Content()
 
 data class CharacterDto(
@@ -37,6 +39,7 @@ data class CharacterDto(
     val attachments: List<FileModelDto> = listOf(),
     val profilePictures: List<FileModelDto> = listOf(),
     var traits: List<Trait> = listOf(),
+    val tags: List<Tag> = listOf(),
 )
 
 data class CharacterQuery(

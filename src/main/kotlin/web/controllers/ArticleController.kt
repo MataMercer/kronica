@@ -41,7 +41,7 @@ class ArticleController(
     }
 
     @Route(HandlerType.DELETE, "/id/{id}")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun deleteArticle(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         val articleId = ctx.pathParam("id").toLong()
@@ -49,7 +49,7 @@ class ArticleController(
     }
 
     @Route(HandlerType.POST, "/")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
 
     fun createArticle(ctx: Context) {
 //        val createArticleForm = ctx.bodyValidator<CreateArticleForm>()
@@ -66,7 +66,8 @@ class ArticleController(
                 "uploadedAttachmentsMetadata",
                 FileMetadataForm::class.java
             ).get(),
-            nsfw = ctx.formParam("nsfw").toBoolean()
+            nsfw = ctx.formParam("nsfw").toBoolean(),
+            tags = ctx.formParams("tags")
         )
         val author = getCurrentUser(ctx)
         val articleId = articleService.create(createArticleForm, author)
@@ -76,7 +77,7 @@ class ArticleController(
     }
 
     @Route(HandlerType.PUT, "/")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun updateArticle(ctx: Context) {
 //        val createArticleForm = ctx.bodyValidator<CreateArticleForm>()
 //            .check({ !it.title.isNullOrBlank() }, "Title is empty")
@@ -105,7 +106,7 @@ class ArticleController(
 
 
     @Route(HandlerType.GET, "/following")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun getByFollowing(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         val pageQuery = getPageQuery(ctx)

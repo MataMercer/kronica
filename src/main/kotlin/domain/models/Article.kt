@@ -13,6 +13,7 @@ data class NewArticle(
     var timeline: Timeline? = null,
     var timelineIndex: Long? = null,
     var characters: List<Character> = listOf(),
+    var tags: List<NewTag> = listOf(),
     val nsfw: Boolean,
 )
 
@@ -29,6 +30,7 @@ data class Article(
     var timelineIndex: Long? = null,
     var characters: List<Character> = listOf(),
     var likeCount : Long? = null,
+    override var tags: List<Tag> = listOf(),
 ): Content()
 
 data class ArticleDto(
@@ -44,6 +46,7 @@ data class ArticleDto(
     val characters: List<CharacterDto> = listOf(),
     val likeCount: Long? = null,
     val youLiked: Boolean? = null,
+    var tags: List<Tag> = listOf(),
 )
 
 

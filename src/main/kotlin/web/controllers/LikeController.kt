@@ -17,7 +17,7 @@ class LikeController(
     private val likeService: LikeService
 ) {
     @Route(HandlerType.POST, "/like/{id}")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun likeArticle(ctx: Context){
         val form = ctx.bodyValidator<LikeForm>().get()
         likeService.like(form, getCurrentUser(ctx))
@@ -25,7 +25,7 @@ class LikeController(
     }
 
     @Route(HandlerType.DELETE, "/like/{id}")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun unlikeArticle(ctx: Context){
         val contentId = ctx.pathParam("id").toLongOrNull()
             ?: throw BadRequestResponse("Invalid content ID")
@@ -34,7 +34,7 @@ class LikeController(
     }
 
     @Route(HandlerType.GET, "/content/{id}")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun getLikes(ctx: Context) {
         val contentId = ctx.pathParam("id").toLongOrNull()
             ?: throw BadRequestResponse("Invalid content ID")

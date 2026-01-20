@@ -18,13 +18,13 @@ object Fixtures {
         role = UserRole.AUTHENTICATED_USER
     )
 
-    val testArticle = Article(
-        id = 1,
+    val testArticle = NewArticle(
         title = "title",
         body = "body",
         author = rootUser,
         attachments = emptyList(),
         nsfw = false,
+        tags = listOf(NewTag(name = "red_tag"), NewTag(name = "tall_tag"))
     )
 
     val testCharacter = Character(

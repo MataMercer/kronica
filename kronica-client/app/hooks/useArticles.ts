@@ -1,6 +1,5 @@
 import useSWR from "swr";
-import {Page} from "../fetch/articles";
-import {Article} from "@/app/Types/Models";
+import {Article, Page} from "@/app/Types/Models";
 
 
 export async function fetchAllArticles(authorId?: string, timelineId?: string) {

@@ -1,6 +1,5 @@
 import useSWR from "swr";
-import {Page} from "../fetch/articles";
-import {Character} from "../Types/Models";
+import {Character, Page} from "../Types/Models";
 
 export async function fetchAllCharacters(authorId: number) {
   const urlSearchParams = new URLSearchParams({

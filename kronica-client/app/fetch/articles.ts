@@ -1,10 +1,7 @@
 import { cookies } from "next/headers";
-import {Article} from "@/app/Types/Models";
+import {Article, Page} from "@/app/Types/Models";
 
-export type Page<T> = {
-  content: T[]
-  pages: number
-}
+
 
 export async function fetchAllArticles(authorId?: number, timelineId?: number, page?: number) {
   const urlSearchParams = new URLSearchParams({

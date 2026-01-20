@@ -111,6 +111,7 @@ class ArticleControllerTest {
             .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
             .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #1")))
             .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 1, caption = "attach #2")))
+            .addFormDataPart("tags", Fixtures.testArticle.tags.first().name)
             .build()
 
         val request = Request.Builder()

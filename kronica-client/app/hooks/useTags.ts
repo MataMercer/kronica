@@ -1,36 +1,35 @@
 import useSWR from "swr";
+import { Page, Tag } from "../Types/Models";
 
 
-export async function fetchAllTimelines(authorId: number) {
+export async function fetchAllTags(snippet: string) {
     const urlSearchParams = new URLSearchParams({
-        'author_id': authorId.toString()
+        'snippet': snippet
     })
-    const url = `http://localhost:7070/api/timelines?${urlSearchParams}`;
+    const url = `http://localhost:7070/api/tags/snippet${urlSearchParams}`;
     const res = await fetch(url, {
         method: "GET",
         credentials: "include",
-        next: { tags: ['timelines'] }
+        next: { tags: ['tags'] }
     });
     if (!res.ok) {
         console.log(res.status)
-        const error = new Error("Failed to fetch timelines");
+        const error = new Error("Failed to fetch tags");
         throw error
     }
 
     if (res.ok) {
         const data = res.json();
-
-        return data as Promise<Timeline[]>;
+        return data as Promise<Page<Tag>>;
     }
 }
 
-export function useTimelines(authorId?: number) {
-    const { data, mutate, error } = useSWR(authorId ? ["useTimelines", authorId] : null, ([URL, authorId]) => fetchAllTimelines(authorId));
-
+export function useTags(snippet?: string) {
+    const { data, mutate, error } = useSWR(snippet ? ["useTags", snippet] : null, ([URL, snippet]) => fetchAllTags(snippet));
     const loading = !data && !error;
     return {
         loading,
-        timelines: data,
+        tags: data,
         mutate
     };
 }
@@ -38,13 +37,12 @@ export function useTimelines(authorId?: number) {
 const fetcher = (url: string) => fetch(url, {
     method: "GET",
     credentials: "include",
-    next: { tags: ['timeline'] }
+    next: { tags: ['tags'] }
 }).then(res => res.json())
-export function useTimeline(id: string){
-    const { data, mutate, error, isLoading } = useSWR(`http://localhost:7070/api/timelines/id/${id}`, fetcher)
-
+export function useTag(id: string) {
+    const { data, mutate, error, isLoading } = useSWR(`http://localhost:7070/api/tags/snippet`, fetcher)
     return {
-        timeline: data as Timeline | undefined,
+        tags: data?.content as Tag | undefined,
         mutate,
         isLoading,
         isError: error,

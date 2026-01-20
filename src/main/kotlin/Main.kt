@@ -74,13 +74,12 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
 
     val userDao = UserDao()
     val followDao = FollowDao()
-    val followRepository = FollowRepository(followDao = followDao)
     val notificationDao = NotificationDao()
     val notificationRepository = NotificationRepository(
         notificationDao = notificationDao,
         userDao = userDao
     )
-
+    val followRepository = FollowRepository(followDao = followDao)
     val notificationService = NotificationService(
         notificationRepository = notificationRepository,
         followerRepository = followRepository,
@@ -168,6 +167,12 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
     if (appMode == AppMode.TEST || appMode == AppMode.DEV) storageService.deleteAll()
     storageService.init()
 
+    val tagDao = TagDao()
+    val tagRepository = TagRepository(tagDao)
+    val tagService = TagService(
+        tagRepository = tagRepository
+    )
+
     val characterRepository = CharacterRepository(
         characterDao = characterDao,
         fileModelDao = fileModelDao,
@@ -180,7 +185,8 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
         timelineDao = timelineDao,
         characterDao = characterDao,
         likeDao = likeDao,
-        contentDao
+        contentDao = contentDao,
+        tagRepository = tagRepository
     )
     val characterService = CharacterService(characterRepository, fileModelService)
     val contentRepository = ContentRepository(contentDao = contentDao)
@@ -200,13 +206,6 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
     val reportService = ReportService(
         contentRepository = contentRepository,
         reportRepository = reportRepository,
-    )
-
-
-    val tagDao = TagDao()
-    val tagRepository = TagRepository(tagDao)
-    val tagService = TagService(
-        tagRepository = tagRepository
     )
 
     val articleController = ArticleController(articleService)

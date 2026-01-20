@@ -28,7 +28,7 @@ class AuthController(
     }
 
     @Route(HandlerType.POST, "/login")
-    @RequiredRole(UserRole.UNAUTHENTICATED_USER)
+    @ReqRole(UserRole.UNAUTHENTICATED_USER)
     fun loginUser(ctx: Context) {
         val loginRequestForm = ctx.bodyValidator<LoginRequestForm>()
             .check({ !it.email.isNullOrBlank() }, "Email is empty")
@@ -41,7 +41,7 @@ class AuthController(
 
 
     @Route(HandlerType.POST, "/logout")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun logoutUser(ctx: Context) = ctx.req().session.invalidate()
 
     @Route(HandlerType.POST, "/register")

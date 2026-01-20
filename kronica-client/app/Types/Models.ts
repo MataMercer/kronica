@@ -12,7 +12,7 @@ export type Character = {
   author: User;
   attachments: FileModel[];
   profilePictures: FileModel[];
-  traits: {value: string; name: string;}[];
+  traits: { value: string; name: string; }[];
 }
 
 //See the link for more information on how TypeScript enums work at compile time
@@ -49,4 +49,14 @@ export type Timeline = {
   name: string;
   description: string;
   author: User;
+}
+
+export type Tag = {
+  id: number;
+  name: string;
+}
+
+export type Page<T> = {
+  content: T[]
+  pages: number
 }

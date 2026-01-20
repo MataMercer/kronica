@@ -5,12 +5,12 @@ import io.javalin.http.ForbiddenResponse
 import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.ArticleRepository
-import org.matamercer.domain.repository.UserRepository
 import org.matamercer.domain.services.upload.image.ImagePresetSize
-import org.matamercer.domain.workers.NotificationWorker
-import org.matamercer.web.*
+import org.matamercer.web.ArticleQuery
+import org.matamercer.web.FileUploadForm
 import org.matamercer.web.Forms.CreateArticleForm
 import org.matamercer.web.Forms.UpdateArticleForm
+import org.matamercer.web.PageQuery
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
@@ -59,10 +59,11 @@ class ArticleService(
                 body = form.body!!,
                 author = currentUser.toUser(),
                 attachments = attachments,
-                nsfw = form.nsfw
+                nsfw = form.nsfw,
+                tags = form.tags.map { NewTag(it) }
             ),
             form.timelineId,
-            form.characters
+            form.characters,
         )
         userService.notifyMentionedUsers(form.body, currentUser, article.id)
         userService.notifyMentionedUsers(form.title, currentUser, article.id)

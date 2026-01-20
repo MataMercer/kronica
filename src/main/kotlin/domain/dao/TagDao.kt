@@ -3,9 +3,11 @@ package org.matamercer.domain.dao
 import org.matamercer.domain.models.NewTag
 import org.matamercer.domain.models.Tag
 import org.matamercer.web.PageQuery
+import java.util.Locale
+import java.util.Locale.getDefault
 
 class TagDao {
-    private val mapper = RowMapper{rs ->
+    private val mapper = RowMapper { rs ->
         Tag(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -23,12 +25,35 @@ class TagDao {
         setLong(1, id)
     }
 
+    fun findByName(name: String): Tag? = mapper.queryForObject(
+        """
+            SELECT id, name, description
+            FROM tags 
+            WHERE name = ?
+        """.trimIndent()
+    ) {
+        setString(1, name.lowercase(getDefault()))
+    }
+
+
+    fun joinContent(contentId: Long, tagId: Long ) = mapper.update(
+    """
+            INSERT INTO tags_to_content (tag_id, content_id)
+            VALUES (?, ?)
+        """.trimIndent()
+    ) {
+        var i = 0
+        setLong(++i, tagId)
+        setLong(++i, contentId)
+    }
+
+
     fun findByContentId(contentId: Long): List<Tag> = mapper.queryForObjectList(
         """
             SELECT tags.id, tags.name, tags.description
             FROM tags
-            INNER JOIN content_tags ON tags.id = content_tags.tag_id
-            WHERE content_tags.content_id = ?
+            INNER JOIN tags_to_content ON tags.id = tags_to_content.tag_id
+            WHERE tags_to_content.content_id = ?
         """.trimIndent()
     ) {
         setLong(1, contentId)
@@ -37,7 +62,7 @@ class TagDao {
     fun create(tag: NewTag) = mapper.updateForId(
         """
             INSERT INTO tags (name, description, nsfw)
-            VALUES (?, ?)
+            VALUES (?, ?, ?)
         """.trimIndent()
     ) {
         var i = 0
@@ -69,18 +94,20 @@ class TagDao {
         setLong(1, id)
     }
 
-    fun findBySnippet(snippet: String, pageQuery: PageQuery?) = mapper.queryForObjectPage("""
+    fun findBySnippet(snippet: String, pageQuery: PageQuery?) = mapper.queryForObjectPage(
+        """
        SELECT 
         id,
         name,
-        description
+        description,
        ${SqlSnip.countCol}
         FROM tags
-        WHERE name like '?%'
+        WHERE name like ?
         ${SqlSnip.pageLimiter(pageQuery)}
-    """.trimIndent(), pageQuery){
+    """.trimIndent(), pageQuery
+    ) {
         var i = 0
-        setString(++i, snippet)
+        setString(++i, "$snippet%")
         if (pageQuery != null) {
             setInt(++i, pageQuery.size)
             setInt(++i, pageQuery.number * pageQuery.size)

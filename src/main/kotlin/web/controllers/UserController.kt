@@ -23,7 +23,7 @@ class UserController(
     }
 
     @Route(HandlerType.PUT, "/{id}/profile")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun updateProfile(ctx: Context){
         val updateProfileForm = UpdateProfileForm(
             description = ctx.formParam("description"),
@@ -35,7 +35,7 @@ class UserController(
     }
 
     @Route(HandlerType.DELETE,"/{id}")
-    @RequiredRole(UserRole.ADMIN)
+    @ReqRole(UserRole.ADMIN)
     fun deleteUser(ctx: Context){
         val id = ctx.pathParam("id").toLong()
         val currentUser = getCurrentUser(ctx)
@@ -43,7 +43,7 @@ class UserController(
     }
 
     @Route(HandlerType.POST,"/{id}/follow")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun followUser(ctx: Context){
         val currentUser = getCurrentUser(ctx)
         val form = ctx.bodyValidator<CreateFollowForm>().get()
@@ -52,7 +52,7 @@ class UserController(
     }
 
     @Route(HandlerType.PUT,"/{id}/follow")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun updateFollowUser(ctx: Context){
         val currentUser = getCurrentUser(ctx)
         val form = ctx.bodyValidator<UpdateFollowForm>().get()
@@ -61,7 +61,7 @@ class UserController(
     }
 
     @Route(HandlerType.DELETE,"/{id}/unfollow")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun unfollowUser(ctx: Context){
         val currentUser = getCurrentUser(ctx)
         val id = ctx.pathParam("id").toLong()

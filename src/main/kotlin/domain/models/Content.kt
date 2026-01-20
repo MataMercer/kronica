@@ -8,4 +8,5 @@ abstract class Content {
     abstract val createdAt: Date?
     abstract val updatedAt: Date?
     abstract val nsfw: Boolean
+    abstract val tags: List<Tag>
 }

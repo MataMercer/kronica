@@ -42,11 +42,11 @@ class CommentControllerTest {
 
     @Test
     fun `when creating a comment, it should return 201 Created`() {
-        createArticle(app, authClient, null, Fixtures.testArticle)
+        val id = createArticle(app, authClient, null, Fixtures.testArticle)
         val req = Request.Builder().url("${getHostUrl(app)}/api/comments/create").post(
             JavalinJackson().toJsonString(CommentForm(
                 body = "This is a test comment",
-                articleId = Fixtures.testArticle.id
+                articleId = id
             )).toRequestBody()
         ).build()
         val res = authClient.okHttp.newCall(req).execute()

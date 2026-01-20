@@ -6,7 +6,8 @@ data class NewTimeline(
     val name: String,
     val description: String,
     val author: User,
-    val nsfw: Boolean ,
+    val nsfw: Boolean,
+    val tags: List<NewTag> = listOf(),
 )
 
 data class Timeline(
@@ -17,6 +18,7 @@ data class Timeline(
     override val nsfw: Boolean,
     val name: String,
     val description: String,
+    override val tags: List<Tag> = listOf(),
     ): Content()
 
 data class TimelineDto(
@@ -25,6 +27,7 @@ data class TimelineDto(
     val description: String,
     val author: UserDto,
     val nsfw: Boolean,
+    val tags: List<NewTag> = listOf(),
 )
 data class TimelineThumbDto(
     val id: Long,

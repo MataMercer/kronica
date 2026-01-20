@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import createAuthClient
 import fixtures.Fixtures
+import fixtures.createCharacter
 import getHostUrl
 import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
@@ -82,32 +83,9 @@ class CharacterControllerTest {
         assertThat(res.isSuccessful).isTrue()
     }
 
-    private fun createCharacter(): Long {
-        val testCharacter = Fixtures.testCharacter
-        val uploadFile = File("resources/test/polarbear.jpg")
-        val mapper = jacksonObjectMapper()
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("name", testCharacter.name)
-            .addFormDataPart("body", testCharacter.body)
-            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
-            .addFormDataPart("uploadedAttachments", "polarbear.jpg",uploadFile.asRequestBody())
-            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 0, caption = "attach #1")))
-            .addFormDataPart("uploadedAttachmentsMetadata", mapper.writeValueAsString(FileMetadataForm(uploadIndex = 1, caption = "attach #2")))
-            .addFormDataPart("traits", "mobile suit:gundam,allegiance:londo bell")
-            .build()
-
-        val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/characters")
-            .post(requestBody).build()
-
-        val res = authClient.okHttp.newCall(request).execute()
-        return JsonUtils.getIdFromResponse(res)
-    }
-
     @Test
     fun `when fetch characters by user returns ok`(){
-        val characterId = createCharacter()
+        val characterId = createCharacter(app, authClient, Fixtures.testCharacter)
 
         val request = Request.Builder()
             .url("${getHostUrl(app)}/api/characters?author_id=${2}")
@@ -120,7 +98,7 @@ class CharacterControllerTest {
 
     @Test
     fun `when fetch characters by id returns ok`() {
-        val characterId = createCharacter()
+        val characterId = createCharacter(app, authClient, Fixtures.testCharacter)
 
         val request = Request.Builder()
             .url("${getHostUrl(app)}/api/characters/${characterId}")
@@ -162,10 +140,10 @@ class CharacterControllerTest {
 
     @Test
     fun `when fetch characters by timeline returns ok`() {
-        val characterId = createCharacter()
+        val characterId = createCharacter(app, authClient, Fixtures.testCharacter)
         val timelineId = createTimeline()
 
-        val characterId2 = createCharacter()
+        val characterId2 = createCharacter(app, authClient, Fixtures.testCharacter)
 
         val articleRequestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -191,7 +169,7 @@ class CharacterControllerTest {
 
     @Test
     fun `when delete character returns ok`() {
-        val characterId = createCharacter()
+        val characterId = createCharacter(app, authClient, Fixtures.testCharacter)
 
         val request = Request.Builder()
             .url("${getHostUrl(app)}/api/characters/${characterId}")
@@ -220,7 +198,7 @@ class CharacterControllerTest {
 
     @Test
     fun `when update character returns ok`() {
-        val characterId = createCharacter()
+        val characterId = createCharacter(app, authClient, Fixtures.testCharacter)
         val character = getCharacterById(characterId)
         val testCharacter = Fixtures.testCharacter.copy(id = characterId, name = "Updated Name")
         val uploadFile = File("resources/test/polarbear.jpg")

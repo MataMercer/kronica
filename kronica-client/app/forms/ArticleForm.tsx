@@ -12,6 +12,7 @@ import { useToast } from "@/components/hooks/use-toast";
 import { useArticle } from "../hooks/useArticles";
 import Select from "react-select";
 import Alert from "@/components/CustomUi/Alert";
+import { useTags } from "../hooks/useTags";
 
 type SelectType = {
     label: string;
@@ -58,7 +59,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
     const userId = user && user.id;
     const { timelines, mutate: mutateTimelines } = useTimelines(userId);
     const { characters, mutate: mutateCharacters } = useCharacters(userId);
-    const { tags, mutate: mutateTags} = useTags(userId);
+    const { tags, mutate: mutateTags} = useTags();
     const { article, mutate: mutateArticle } = useArticle(id);
     const { toast } = useToast();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -265,11 +266,10 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                             control={control}
                             render={({ field }) => (
                                 <Select
-                                    options={characterOptions}
+                                    options={tagOptions}
                                     value={field.value}
                                     onChange={field.onChange}
                                     isMulti
-                                    isDisabled={!characters}
                                 />
                             )}
                         />

@@ -11,6 +11,7 @@ data class NewComment(
     var likeCount : Long? = null,
     val author: User,
     val nsfw: Boolean,
+    val tags: List<NewTag> = listOf(),
 )
 
 data class Comment(
@@ -19,6 +20,7 @@ data class Comment(
     override val createdAt: Date? = null,
     override val updatedAt: Date? = null,
     override val nsfw: Boolean = false,
+    override val tags: List<Tag> = listOf(),
     val body: String,
     var likeCount : Long? = null,
 ): Content()

@@ -27,7 +27,7 @@ annotation class SseRoute(
 )
 
 @Target(AnnotationTarget.FUNCTION)
-annotation class RequiredRole(
+annotation class ReqRole(
     val role: UserRole,
 )
 

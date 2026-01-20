@@ -15,6 +15,7 @@ class ArticleRepository(
     private val characterDao: CharacterDao,
     private val likeDao: LikeDao,
     private val contentDao: ContentDao,
+    private val tagRepository: TagRepository
 ) {
 
     fun findById(id: Long) = txn { articleDao.findById(id)?.let { aggregate(it) } }
@@ -42,6 +43,9 @@ class ArticleRepository(
                 fileModelDao.joinArticle(it, res.id, index)
             }
         }
+        article.tags.map { tagRepository.create(it) }
+            .forEach { tagRepository.join(it.id, id )}
+
         characters.forEach { characterDao.joinArticle(it, res.id) }
         aggregate(res)
     }
@@ -108,6 +112,7 @@ class ArticleRepository(
             )
         ).content
         val likeCount = likeDao.countLikesByContentId(a.id)
+        val tags = tagRepository.findByContent(a.id)
         return a.apply {
             this.attachments = files
             this.characters = characters

@@ -15,7 +15,7 @@ class OAuthController(
 ) {
 
     @Route(HandlerType.GET, "/discord/login")
-    @RequiredRole(UserRole.UNAUTHENTICATED_USER)
+    @ReqRole(UserRole.UNAUTHENTICATED_USER)
     fun redirectToDiscordLogin(ctx: Context){
         val callbackUri = "http://localhost:3000/oauth/callback"
         val url = HttpUrl.Builder().scheme("https")
@@ -31,7 +31,7 @@ class OAuthController(
     }
 
     @Route(HandlerType.POST, "/discord")
-    @RequiredRole(UserRole.UNAUTHENTICATED_USER)
+    @ReqRole(UserRole.UNAUTHENTICATED_USER)
     fun discordAuthCodeLogin(ctx: Context){
         val code = ctx.queryParam("code")
         if (code != null) {

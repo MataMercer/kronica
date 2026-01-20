@@ -17,7 +17,7 @@ class ReportController(
     private val reportService: ReportService
 ){
     @Route(HandlerType.POST, "/create")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun create(ctx: Context){
         val author = getCurrentUser(ctx)
         val form = ctx.bodyValidator<CreateReportForm>().get()
@@ -25,7 +25,7 @@ class ReportController(
     }
 
     @Route(HandlerType.GET, "/")
-    @RequiredRole(UserRole.ADMIN)
+    @ReqRole(UserRole.ADMIN)
     fun findAll(ctx: Context) {
         val pageQuery = ctx.queryParamMap().let { queryParams ->
             PageQuery(
@@ -37,21 +37,21 @@ class ReportController(
     }
 
     @Route(HandlerType.DELETE, "/{id}")
-    @RequiredRole(UserRole.ADMIN)
+    @ReqRole(UserRole.ADMIN)
     fun delete(ctx: Context) {
         val id = ctx.pathParam("id").toLongOrNull() ?: throw BadRequestResponse("Id is null or not a number")
         reportService.delete(id)
     }
 
     @Route(HandlerType.GET, "/{id}")
-    @RequiredRole(UserRole.ADMIN)
+    @ReqRole(UserRole.ADMIN)
     fun getById(ctx: Context) {
         val id = ctx.pathParam("id").toLongOrNull() ?: throw BadRequestResponse("Id is null or not a number")
         ctx.json(reportService.getById(id))
     }
 
     @Route(HandlerType.PUT, "/")
-    @RequiredRole(UserRole.ADMIN)
+    @ReqRole(UserRole.ADMIN)
     fun update(ctx: Context) {
         val form = ctx.bodyValidator<UpdateReportForm>().get()
         reportService.update(form, getCurrentUser(ctx))

@@ -121,11 +121,13 @@ CREATE TABLE tags_to_content
 (
     tag_id BIGINT NOT NULL,
     content_id BIGINT NOT NULL,
+    tagger_id BIGINT,
 
     CONSTRAINT pk_tags_to_content PRIMARY KEY (tag_id, content_id),
     CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE,
     CONSTRAINT fk_content_id FOREIGN KEY (content_id) REFERENCES content (id) ON DELETE CASCADE,
-    CONSTRAINT uc_tags_to_content UNIQUE (tag_id, content_id)
+    CONSTRAINT uc_tags_to_content UNIQUE (tag_id, content_id),
+    CONSTRAINT fk_tagger FOREIGN KEY (tagger_id) REFERENCES users (id)
 );
 
 

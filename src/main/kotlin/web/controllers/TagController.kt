@@ -12,10 +12,16 @@ class TagController(
     private val tagService: TagService
 ) {
     @Route(HandlerType.GET, "/snippet")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun getBySnippet(ctx: Context){
         val snippet = ctx.queryParamAsClass<String>("snippet").get()
         val res = tagService.getBySnippet(snippet, getPageQuery(ctx))
         ctx.json(res)
+    }
+
+    @Route(HandlerType.GET, "/{id}")
+    @ReqRole(UserRole.AUTHENTICATED_USER)
+    fun getById(ctx: Context){
+        TODO("impl")
     }
 }

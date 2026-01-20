@@ -32,7 +32,7 @@ class NotificationController(
 //    }
 
     @SseRoute("/subscribe")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun setupSseNotifications(client: SseClient){
         val ctx = client.ctx()
         val currentUser = getCurrentUser(ctx)
@@ -45,7 +45,7 @@ class NotificationController(
     }
 
     @Route(HandlerType.PUT,"/read")
-    @RequiredRole(UserRole.AUTHENTICATED_USER)
+    @ReqRole(UserRole.AUTHENTICATED_USER)
     fun readAndMarkNotifications(ctx: Context){
         val currentUser = getCurrentUser(ctx)
         val pageQuery = PageQuery(

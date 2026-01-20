@@ -40,7 +40,7 @@ class TagControllerTest {
     fun `when providing a snippet return all matching tags`(){
         createArticle(app, authClient, null, Fixtures.testArticle)
         val request = Request.Builder()
-            .url("${getHostUrl(app)}/api/tags/snippet?snippet=${}")
+            .url("${getHostUrl(app)}/api/tags/snippet?snippet=${Fixtures.testArticle.tags.first().name.subSequence(0, 2)}")
             .build()
         val res = authClient.okHttp.newCall(request).execute()
         print(res.body?.string())

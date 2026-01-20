@@ -36,7 +36,7 @@ class CharacterController(
     }
 
     @Route(HandlerType.DELETE, "/{id}")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun deleteCharacter(ctx: Context) {
         val currentUser = getCurrentUser(ctx)
         val articleId = ctx.pathParam("id").toLong()
@@ -44,7 +44,7 @@ class CharacterController(
     }
 
     @Route(HandlerType.POST, "/")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun createCharacter(ctx: Context) {
         val createCharacterForm = CreateCharacterForm(
             name = ctx.formParam("name"),
@@ -66,7 +66,7 @@ class CharacterController(
     }
 
     @Route(HandlerType.PUT, "/{id}")
-    @RequiredRole(UserRole.CONTRIBUTOR_USER)
+    @ReqRole(UserRole.CONTRIBUTOR_USER)
     fun updateCharacter(ctx: Context) {
         val updateCharacterForm = UpdateCharacterForm(
             id = ctx.formParam("id")?.toLong() ?: throw BadRequestResponse("Character ID is required"),

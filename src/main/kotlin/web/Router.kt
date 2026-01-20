@@ -7,7 +7,7 @@ import io.javalin.http.sse.SseClient
 import org.matamercer.authorizeCheck
 import org.matamercer.security.UserRole
 import org.matamercer.web.controllers.Controller
-import org.matamercer.web.controllers.RequiredRole
+import org.matamercer.web.controllers.ReqRole
 import org.matamercer.web.controllers.Route
 import org.matamercer.web.controllers.SseRoute
 import java.lang.reflect.InvocationTargetException
@@ -61,7 +61,7 @@ class Router(
             .filter { it.isAnnotationPresent(Route::class.java) }
             .forEach { method ->
                 val routeAnnotation = method.getAnnotation(Route::class.java)
-                val roleAnnotation = method.getAnnotation(RequiredRole::class.java)
+                val roleAnnotation = method.getAnnotation(ReqRole::class.java)
                 val handler: (Context) -> Unit = { ctx: Context ->
                     //hide invocation target exception
                     try {
@@ -90,7 +90,7 @@ class Router(
             .filter { it.isAnnotationPresent(SseRoute::class.java) }
             .forEach { method ->
                 val routeAnnotation = method.getAnnotation(SseRoute::class.java)
-                val roleAnnotation = method.getAnnotation(RequiredRole::class.java)
+                val roleAnnotation = method.getAnnotation(ReqRole::class.java)
                 val handler: (SseClient) -> Unit = { client: SseClient ->
                     method.invoke(obj, client)
                 }

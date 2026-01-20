@@ -12,6 +12,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.Character
+import org.matamercer.domain.models.NewArticle
 import org.matamercer.web.CommentForm
 import java.io.File
 
@@ -34,7 +35,7 @@ fun createCharacter(app: Javalin, authClient: HttpClient, testCharacter: Charact
     return JsonUtils.getIdFromResponse(res)
 }
 
-fun createArticle(app: Javalin, authClient: HttpClient, timelineId: Long? = null, testArticle: Article): Long {
+fun createArticle(app: Javalin, authClient: HttpClient, timelineId: Long? = null, testArticle: NewArticle): Long {
     val uploadFile = File("resources/test/polarbear.jpg")
     val requestBody = MultipartBody.Builder()
         .setType(MultipartBody.FORM)
@@ -43,6 +44,7 @@ fun createArticle(app: Javalin, authClient: HttpClient, timelineId: Long? = null
         .addFormDataPart("timelineId", timelineId.toString())
         .addFormDataPart("uploadedAttachments", "polarbear.jpg", uploadFile.asRequestBody())
         .addFormDataPart("uploadedAttachments", "polarbear.jpg", uploadFile.asRequestBody())
+        .addFormDataPart("tags", Fixtures.testArticle.tags.first().name)
         .build()
 
     val request = Request.Builder()

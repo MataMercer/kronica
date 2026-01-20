@@ -5,62 +5,50 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="update article works mostly...">
-      <change afterPath="$PROJECT_DIR$/kronica-client/.idea/detekt.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useTags.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/StringExtensions.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/Sq.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/TagService.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/TagControllerTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/FixtureIntegrationHelpers.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/unit/service/UserServiceTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/security/TextValidator.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/Types/Models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/Types/Models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/fetch/articles.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kronica-client/app/forms/ArticleForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/forms/ArticleForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/oauth/callback/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/oauth/callback/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kronica-client/app/users/UserProfileSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/users/UserProfileSection.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useArticles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useArticles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useCharacters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useCharacters.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useTags.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useTags.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kronica-client/app/hooks/useTimelines.ts" beforeDir="false" afterPath="$PROJECT_DIR$/kronica-client/app/hooks/useTimelines.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/AppConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/AppConfig.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/Seeder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/Seeder.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/reader/ArgsReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/reader/ArgsReader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/reader/ConfigReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/reader/ConfigReader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/reader/DotEnvReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/reader/DotEnvReader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/reader/EnvReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/reader/EnvReader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/reader/PropertiesReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/reader/PropertiesReader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FollowDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FollowDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/NotificationDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/NotificationDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/Sq.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/SqlSnip.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TagDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TagDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/User.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/FollowRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/FollowRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/NotificationRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/NotificationRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Article.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Character.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Character.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Comment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Comment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Content.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Content.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/models/Timeline.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/models/Timeline.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TagRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TagRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/NotificationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/NotificationService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/workers/NotificationWorker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/workers/NotificationWorker.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/ContextQueries.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/ContextQueries.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms/ArticleForms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms/ArticleForms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Router.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Router.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/AdminController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/AdminController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ArticleController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/AuthController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/AuthController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/CharacterController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ControllerAnnotations.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ControllerAnnotations.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/LikeController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/LikeController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/NotificationController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/NotificationController.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/OAuthController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/OAuthController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ReportController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/ReportController.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/TagController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/TagController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/TimelineController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/TimelineController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/controllers/UserController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/controllers/UserController.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/ArticleControllerTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/CharacterControllerTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/CommentControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/CommentControllerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/TimelineControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/TimelineControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/controllers/TagControllerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/controllers/TagControllerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/fixtures/FixtureIntegrationHelpers.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/FixtureIntegrationHelpers.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/fixtures/Fixtures.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/config/AppConfigUnitTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/config/AppConfigUnitTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceUnitTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/workers/NotificationWorkerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/workers/NotificationWorkerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +168,7 @@
     &quot;JUnit.CommentControllerTest.update comment should return 200 OK.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.CommentControllerTest.when creating a comment, it should return 201 Created.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.NotificationWorkerTest.dispatch works.executor&quot;: &quot;Debug&quot;,
-    &quot;JUnit.TagControllerTest.when providing a snippet return all matching tags.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.TagControllerTest.when providing a snippet return all matching tags.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TimelineControllerTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TimelineControllerTest.when Create Timeline returns ok.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TimelineControllerTest.when delete timeline, return ok.executor&quot;: &quot;Run&quot;,
@@ -246,7 +234,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.kotlinCompiler&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -291,7 +279,23 @@
       <command value="mvn flyway:migrate" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TagControllerTest.when providing a snippet return all matching tags">
+  <component name="RunManager" selected="Kotlin.MainKt">
+    <configuration name="ArticleControllerTest.when Create Article returns ok" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="WikiApi" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="controllers.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="controllers" />
+      <option name="MAIN_CLASS_NAME" value="controllers.ArticleControllerTest" />
+      <option name="METHOD_NAME" value="when Create Article returns ok" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ArticleControllerTest.when userA mentions userB, make sure userB gets a notification" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="WikiApi" />
       <extension name="coverage">
@@ -340,22 +344,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserServiceTest.test mentioned users" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="WikiApi" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="unit.service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="unit.service" />
-      <option name="MAIN_CLASS_NAME" value="unit.service.UserServiceTest" />
-      <option name="METHOD_NAME" value="test mentioned users" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="corretto-24" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -379,19 +367,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.TagControllerTest.when providing a snippet return all matching tags" />
+      <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
       <item itemvalue="JUnit.ArticleControllerTest.when userA mentions userB, make sure userB gets a notification" />
       <item itemvalue="JUnit.NotificationWorkerTest.dispatch works" />
-      <item itemvalue="JUnit.UserServiceTest.test mentioned users" />
+      <item itemvalue="JUnit.TagControllerTest.when providing a snippet return all matching tags" />
       <item itemvalue="Kotlin.MainKt" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.TagControllerTest.when providing a snippet return all matching tags" />
         <item itemvalue="Kotlin.MainKt" />
+        <item itemvalue="JUnit.TagControllerTest.when providing a snippet return all matching tags" />
+        <item itemvalue="JUnit.ArticleControllerTest.when Create Article returns ok" />
         <item itemvalue="JUnit.ArticleControllerTest.when userA mentions userB, make sure userB gets a notification" />
         <item itemvalue="JUnit.NotificationWorkerTest.dispatch works" />
-        <item itemvalue="JUnit.UserServiceTest.test mentioned users" />
       </list>
     </recent_temporary>
   </component>
@@ -593,24 +581,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/domain/repository/UserProfileRepository.kt</url>
-          <line>19</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/web/controllers/OAuthController.kt</url>
           <line>20</line>
           <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/web/controllers/TagController.kt</url>
-          <line>17</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/web/controllers/TagController.kt</url>
-          <line>16</line>
-          <option name="timeStamp" value="44" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

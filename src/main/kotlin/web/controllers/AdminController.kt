@@ -13,7 +13,7 @@ class AdminController(
 ) {
 
     @Route(HandlerType.PUT,"/{id}")
-    @RequiredRole(UserRole.ADMIN)
+    @ReqRole(UserRole.ADMIN)
     fun updateUser(ctx: Context){
         val updateUserForm = ctx.bodyValidator<UpdateUserForm>().get()
         val currentUser = getCurrentUser(ctx)

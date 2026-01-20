@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { Timeline } from "../fetch/timelines";
+import { Timeline } from "../Types/Models";
 
 
 export async function fetchAllTimelines(authorId: number) {
