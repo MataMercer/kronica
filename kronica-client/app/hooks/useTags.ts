@@ -6,7 +6,7 @@ export async function fetchAllTags(snippet: string) {
     const urlSearchParams = new URLSearchParams({
         'snippet': snippet
     })
-    const url = `http://localhost:7070/api/tags/snippet${urlSearchParams}`;
+    const url = `http://localhost:7070/api/tags/snippet?${urlSearchParams}`;
     const res = await fetch(url, {
         method: "GET",
         credentials: "include",
@@ -29,7 +29,7 @@ export function useTags(snippet?: string) {
     const loading = !data && !error;
     return {
         loading,
-        tags: data,
+        tags: data?.content,
         mutate
     };
 }

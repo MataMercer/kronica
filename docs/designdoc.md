@@ -78,6 +78,7 @@ This app uses a domain driven design.
   - Collates data such as nested objects so it can deliver complete data to the server.
   - Handles transactions for multiple Models.
   - Hides DB implementation details from the Service layer.
+  - Caches data via Redis
 - Data Access Object (DAO) Layer:
   - Hides ugly SQL queries away.
   - Maps data to and from Model objects.

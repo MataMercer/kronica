@@ -1,7 +1,7 @@
 package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.TagDao
-import org.matamercer.domain.dao.txn
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.NewTag
 import org.matamercer.domain.models.Tag
 import org.matamercer.web.PageQuery
@@ -23,4 +23,5 @@ class TagRepository(
     fun delete(tagId: Long) = tagDao.delete(tagId)
     fun findBySnippet(snippet: String, pageQuery: PageQuery?) = tagDao.findBySnippet(snippet, pageQuery)
     fun findByContent(contentId: Long) = tagDao.findByContentId(contentId)
+    fun findById(id: Long)= tagDao.findById(id)
 }

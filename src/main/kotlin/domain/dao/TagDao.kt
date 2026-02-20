@@ -1,13 +1,16 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
+import org.matamercer.domain.jdbc.RowMapperFun
+import org.matamercer.domain.jdbc.SqlSnip
 import org.matamercer.domain.models.NewTag
 import org.matamercer.domain.models.Tag
 import org.matamercer.web.PageQuery
-import java.util.Locale
+import java.sql.ResultSet
 import java.util.Locale.getDefault
 
 class TagDao {
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         Tag(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -15,28 +18,36 @@ class TagDao {
         )
     }
 
-    fun findById(id: Long): Tag? = mapper.queryForObject(
+    private val popularityMapper = fun (rs: ResultSet): Tag {
+        return Tag(
+            id = rs.getLong("id"),
+            name = rs.getString("name"),
+            description = rs.getString("description"),
+            popularity = rs.getInt("popularity")
+        )
+    }
+
+    fun findById(id: Long): Tag? = jdbc.queryForObject(
         """
             SELECT id, name, description
             FROM tags
             WHERE id = ?
         """.trimIndent()
-    ) {
+    , {
         setLong(1, id)
-    }
+    })
 
-    fun findByName(name: String): Tag? = mapper.queryForObject(
+    fun findByName(name: String): Tag? = jdbc.queryForObject(
         """
             SELECT id, name, description
             FROM tags 
             WHERE name = ?
-        """.trimIndent()
-    ) {
+        """.trimIndent(),
+        {
         setString(1, name.lowercase(getDefault()))
-    }
+    })
 
-
-    fun joinContent(contentId: Long, tagId: Long ) = mapper.update(
+    fun joinContent(contentId: Long, tagId: Long ) = jdbc.update(
     """
             INSERT INTO tags_to_content (tag_id, content_id)
             VALUES (?, ?)
@@ -48,18 +59,18 @@ class TagDao {
     }
 
 
-    fun findByContentId(contentId: Long): List<Tag> = mapper.queryForObjectList(
+    fun findByContentId(contentId: Long): List<Tag> = jdbc.queryForObjectList(
         """
             SELECT tags.id, tags.name, tags.description
             FROM tags
             INNER JOIN tags_to_content ON tags.id = tags_to_content.tag_id
             WHERE tags_to_content.content_id = ?
         """.trimIndent()
-    ) {
+    , {
         setLong(1, contentId)
-    }
+    })
 
-    fun create(tag: NewTag) = mapper.updateForId(
+    fun create(tag: NewTag) = jdbc.updateForId(
         """
             INSERT INTO tags (name, description, nsfw)
             VALUES (?, ?, ?)
@@ -71,7 +82,7 @@ class TagDao {
         setBoolean(++i, tag.nsfw)
     }
 
-    fun update(tag: Tag) = mapper.update(
+    fun update(tag: Tag) = jdbc.update(
         """
             UPDATE tags
             SET name = ?, description = ?, nsfw = ?
@@ -85,7 +96,7 @@ class TagDao {
         setLong(++i, tag.id)
     }
 
-    fun delete(id: Long) = mapper.update(
+    fun delete(id: Long) = jdbc.update(
         """
             DELETE FROM tags
             WHERE id = ?
@@ -94,23 +105,25 @@ class TagDao {
         setLong(1, id)
     }
 
-    fun findBySnippet(snippet: String, pageQuery: PageQuery?) = mapper.queryForObjectPage(
+    fun findBySnippet(snippet: String, pageQuery: PageQuery?) = jdbc.queryForObjectPage(
         """
        SELECT 
         id,
         name,
         description,
+        (SELECT COUNT(*) FROM tags_to_content WHERE tag_id=id) AS popularity,
        ${SqlSnip.countCol}
         FROM tags
         WHERE name like ?
+        ORDER BY popularity DESC
         ${SqlSnip.pageLimiter(pageQuery)}
-    """.trimIndent(), pageQuery
-    ) {
+    """.trimIndent(), pageQuery,
+     {
         var i = 0
         setString(++i, "$snippet%")
         if (pageQuery != null) {
             setInt(++i, pageQuery.size)
             setInt(++i, pageQuery.number * pageQuery.size)
         }
-    }
+    }, popularityMapper )
 }

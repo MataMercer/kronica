@@ -1,13 +1,13 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.NewTimeline
 import org.matamercer.domain.models.Timeline
 import org.matamercer.domain.models.User
-import java.sql.Connection
 
 class TimelineDao {
 
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         Timeline(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -19,10 +19,10 @@ class TimelineDao {
             ),
             nsfw = rs.getBoolean("nsfw"),
 
-        )
+            )
     }
 
-    fun findByAuthorId( id: Long): List<Timeline> = mapper.queryForObjectList(
+    fun findByAuthorId( id: Long): List<Timeline> = jdbc.queryForObjectList(
         """
                 SELECT
                     timelines.id,
@@ -39,11 +39,11 @@ class TimelineDao {
                 INNER JOIN users ON content.author_id=users.id
                 WHERE users.id = ?
             """.trimIndent()
-    ) {
+    , {
         setLong(1, id)
-    }
+    })
 
-    fun findById( id: Long): Timeline? = mapper.queryForObject(
+    fun findById( id: Long): Timeline? = jdbc.queryForObject(
         """
                 SELECT
                     timelines.id,
@@ -60,11 +60,11 @@ class TimelineDao {
                 INNER JOIN users ON content.author_id=users.id
                 WHERE timelines.id = ?
             """.trimIndent()
-    ) {
+    , {
         setLong(1, id)
-    }
+    })
 
-    fun findByName(name: String): Timeline? = mapper.queryForObject(
+    fun findByName(name: String): Timeline? = jdbc.queryForObject(
         """
                 SELECT
                     timelines.id,
@@ -81,11 +81,11 @@ class TimelineDao {
                 INNER JOIN users ON content.author_id=users.id
                 WHERE timelines.name = ?
             """.trimIndent()
-    ) {
+    , {
         setString(1, name)
-    }
+    })
 
-    fun create(timeline: NewTimeline, contentId: Long): Long = mapper.updateForId(
+    fun create(timeline: NewTimeline, contentId: Long): Long = jdbc.updateForId(
         """
                 INSERT INTO timelines
                     (
@@ -102,7 +102,7 @@ class TimelineDao {
         setString(++i, timeline.description)
     }
 
-    fun update(timeline: Timeline): Long = mapper.updateForId(
+    fun update(timeline: Timeline): Long = jdbc.updateForId(
         """
                 UPDATE timelines
                 SET 
@@ -118,7 +118,7 @@ class TimelineDao {
     }
 
 
-    fun createTimelineEntry(timelineId: Long, articleId: Long): Long = mapper.updateForId(
+    fun createTimelineEntry(timelineId: Long, articleId: Long): Long = jdbc.updateForId(
         """
              INSERT INTO timeline_entries 
                  (timeline_id,
@@ -160,7 +160,7 @@ class TimelineDao {
 //        setLong(1, gapIndex)
 //    }
 
-    fun deleteTimelineEntry(articleId: Long) = mapper.update(
+    fun deleteTimelineEntry(articleId: Long) = jdbc.update(
         """
                WITH deleted AS (
                    DELETE FROM timeline_entries
@@ -176,7 +176,7 @@ class TimelineDao {
         setLong(1, articleId)
     }
 
-    fun updateTimelineOrder(articleId: Long, index: Int) = mapper.update(
+    fun updateTimelineOrder(articleId: Long, index: Int) = jdbc.update(
         """
                 UPDATE timeline_entries
                 SET timeline_index = ?
@@ -188,7 +188,7 @@ class TimelineDao {
         setLong(++i, articleId)
     }
 
-    fun delete(id: Long) = mapper.update(
+    fun delete(id: Long) = jdbc.update(
         """
                 DELETE FROM timelines
                 WHERE id = ?

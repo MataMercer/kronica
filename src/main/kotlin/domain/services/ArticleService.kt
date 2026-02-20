@@ -178,6 +178,7 @@ class ArticleService(
         characters = article.characters.map {
             characterService.toDto(it)
         },
+        tags = article.tags,
         likeCount = article.likeCount,
         youLiked = user?.let { likeService.checkLiked(it.id, article.id) }
     )

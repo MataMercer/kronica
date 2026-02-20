@@ -1,13 +1,13 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.FileModel
-import java.sql.Connection
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 class FileModelDao() {
 
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         FileModel(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -19,82 +19,73 @@ class FileModelDao() {
     }
 
     fun findById( id: Long): FileModel? {
-        return mapper.queryForObject("""
+        return jdbc.queryForObject("""
             SELECT
                 files.*
             FROM files
             WHERE files.id = ?
-        """.trimIndent()) {
+        """.trimIndent(), {
             setLong(1, id)
-        }
+        })
     }
 
     fun findByStorageId( storageId: String): FileModel? {
-        return mapper.queryForObject("""
+        return jdbc.queryForObject("""
             SELECT
                 files.*
             FROM files
             WHERE files.storage_id = ?
-        """.trimIndent()) {
+        """.trimIndent(), {
             setString(1, storageId)
-        }
+        })
     }
 
-    fun findByOwningArticleId(owningArticleId: Long): List<FileModel> {
-        val sql = """
+    fun findByOwningArticleId(owningArticleId: Long) = jdbc.queryForObjectList("""
             SELECT 
                 files.*
             FROM files
             INNER JOIN files_to_articles ON files.id=files_to_articles.file_id
             WHERE files_to_articles.article_id = ?
             ORDER BY files_to_articles.index
-        """.trimIndent()
-        return mapper.queryForObjectList(sql) {
+        """.trimIndent(), {
             setLong(1, owningArticleId)
-        }
-    }
+        })
 
-    fun findCharacterAttachments( id: Long): List<FileModel> {
-        val sql = """
+
+    fun findCharacterAttachments( id: Long) = jdbc.queryForObjectList("""
             SELECT 
                 files.*
             FROM files
             INNER JOIN files_to_characters ON files.id=files_to_characters.file_id
             WHERE files_to_characters.character_id = ?
             ORDER BY files_to_characters.index
-        """.trimIndent()
-        return mapper.queryForObjectList(sql) {
+        """.trimIndent(), {
             setLong(1, id)
-        }
-    }
+        })
 
     fun findCharacterProfilePictures( id: Long): List<FileModel> {
-        val sql = """
+        return jdbc.queryForObjectList("""
             SELECT 
                 files.*
             FROM files
             INNER JOIN files_to_character_profiles ON files.id=files_to_character_profiles.file_id
             WHERE files_to_character_profiles.character_id = ?
             ORDER BY files_to_character_profiles.index
-        """.trimIndent()
-        return mapper.queryForObjectList(sql) {
+        """.trimIndent(), {
             setLong(1, id)
-        }
+        })
     }
 
-    fun findUserProfilePicture( profileId: Long): FileModel? {
-        val sql = """
+    fun findUserProfilePicture( profileId: Long) = jdbc.queryForObject("""
             SELECT 
                 files.*
             FROM files
             INNER JOIN user_profile_pictures ON files.id=user_profile_pictures.file_id
             INNER JOIN user_profiles ON user_profile_pictures.profile_id = user_profiles.id
             WHERE user_profiles.id = ?
-        """.trimIndent()
-        return mapper.queryForObject(sql) {
+        """.trimIndent(), {
             setLong(1, profileId)
-        }
-    }
+        })
 
     fun joinArticle( fileId: Long, articleId: Long, index: Int): Long {
         val sql = """
@@ -107,7 +98,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.updateForId(sql ) {
+        return jdbc.updateForId(sql ) {
             var i = 0
             setLong(++i, fileId)
             setLong(++i, articleId)
@@ -122,7 +113,7 @@ class FileModelDao() {
             WHERE file_id = ? AND article_id = ?
         """.trimIndent()
 
-        return mapper.updateForId(sql) {
+        return jdbc.updateForId(sql) {
             var i = 0
             setInt(++i, index)
             setLong(++i, fileId)
@@ -143,7 +134,7 @@ class FileModelDao() {
            AND index > (SELECT index FROM deleted); 
         """.trimIndent()
 
-        return mapper.update(sql) {
+        return jdbc.update(sql) {
             var i = 0
             setLong(++i, fileId)
         }
@@ -160,7 +151,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.updateForId(sql ) {
+        return jdbc.updateForId(sql ) {
             var i = 0
             setLong(++i, fileId)
             setLong(++i, characterId)
@@ -175,7 +166,7 @@ class FileModelDao() {
             WHERE file_id = ? AND character_id = ?
         """.trimIndent()
 
-        return mapper.updateForId(sql) {
+        return jdbc.updateForId(sql) {
             var i = 0
             setInt(++i, index)
             setLong(++i, fileId)
@@ -196,7 +187,7 @@ class FileModelDao() {
            AND index > (SELECT index FROM deleted); 
         """.trimIndent()
 
-        return mapper.update(sql) {
+        return jdbc.update(sql) {
             var i = 0
             setLong(++i, fileId)
             setLong(++i, characterId)
@@ -215,7 +206,7 @@ class FileModelDao() {
             VALUES (?, ?, ?)
         """.trimIndent()
 
-        return mapper.updateForId(sql) {
+        return jdbc.updateForId(sql) {
             var i = 0
             setLong(++i, fileId)
             setLong(++i, characterId)
@@ -230,7 +221,7 @@ class FileModelDao() {
             WHERE file_id = ? AND character_id = ?
         """.trimIndent()
 
-        return mapper.updateForId(sql) {
+        return jdbc.updateForId(sql) {
             var i = 0
             setInt(++i, index)
             setLong(++i, fileId)
@@ -251,7 +242,7 @@ class FileModelDao() {
            AND index > (SELECT index FROM deleted); 
         """.trimIndent()
 
-        return mapper.update(sql ) {
+        return jdbc.update(sql ) {
             var i = 0
             setLong(++i, fileId)
             setLong(++i, characterId)
@@ -259,7 +250,7 @@ class FileModelDao() {
         }
     }
 
-    fun joinUserProfile(fileId: Long, profileId: Long) = mapper.update(
+    fun joinUserProfile(fileId: Long, profileId: Long) = jdbc.update(
         """INSERT INTO user_profile_pictures
             (
                 file_id,
@@ -273,7 +264,7 @@ class FileModelDao() {
         setLong(++i, profileId)
     }
 
-    fun deleteJoinUserProfile(fileId: Long, profileId: Long) = mapper.update(
+    fun deleteJoinUserProfile(fileId: Long, profileId: Long) = jdbc.update(
         """
             DELETE FROM user_profile_pictures
             WHERE file_id = ? AND profile_id = ?
@@ -285,7 +276,7 @@ class FileModelDao() {
     }
 
     fun create( fileModel: FileModel) =
-        mapper.updateForId(
+        jdbc.updateForId(
             """
                 INSERT INTO files
                     (
@@ -315,7 +306,7 @@ class FileModelDao() {
         }
 
     fun updateCaption( fileId: Long, caption: String) =
-        mapper.updateForId(
+        jdbc.updateForId(
             """
                 UPDATE files
                 SET
@@ -328,7 +319,7 @@ class FileModelDao() {
             setLong(++i, fileId)
         }
 
-    fun deleteById( id: Long) = mapper.update(
+    fun deleteById( id: Long) = jdbc.update(
         """
                 DELETE FROM files
                 WHERE files.id = ?
@@ -339,7 +330,7 @@ class FileModelDao() {
 
 
     fun findByTimeline( timelineId: Long) =
-        mapper.queryForObjectList(
+        jdbc.queryForObjectList(
             """
             SELECT * FROM files 
                 JOIN files_to_articles 
@@ -352,20 +343,17 @@ class FileModelDao() {
             ;
 
         """.trimIndent()
-        ) {
+        , {
             setLong(1, timelineId)
-        }
+        })
 
-    fun findByUser( userId: Long): List<FileModel> {
-        val sql = """
+    fun findByUser( userId: Long) = jdbc.queryForObjectList("""
             SELECT * FROM files 
                 WHERE author_id=?
                 
-        """.trimIndent()
-        return mapper.queryForObjectList(sql) {
+        """.trimIndent(), {
             setLong(1, userId)
-        }
-    }
+        })
 
     fun calcUserStorageUsed( userId: Long): Long {
         val sql = """
@@ -374,7 +362,7 @@ class FileModelDao() {
             WHERE author_id = ?
         """.trimIndent()
 
-        return mapper.queryForLong(sql) {
+        return jdbc.queryForLong(sql) {
             setLong(1, userId)
         } ?: 0L
     }

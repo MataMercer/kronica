@@ -2,17 +2,14 @@ package unit.service
 
 import fixtures.Fixtures
 import io.mockk.clearAllMocks
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.matamercer.domain.dao.ArticleDao
-import org.matamercer.domain.dao.TransactionManager
-import org.matamercer.domain.models.Article
+import org.matamercer.domain.jdbc.TransactionManager
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.NewArticle
 import org.matamercer.domain.models.User

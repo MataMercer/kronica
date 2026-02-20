@@ -2,7 +2,7 @@
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import MDEditor from "@uiw/react-md-editor";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import UploadInput, { FileInput } from "../components/inputs/UploadInput";
 import { useTimelines } from "../hooks/useTimelines";
@@ -13,6 +13,7 @@ import { useArticle } from "../hooks/useArticles";
 import Select from "react-select";
 import Alert from "@/components/CustomUi/Alert";
 import { useTags } from "../hooks/useTags";
+import Creatable, { useCreatable } from "react-select/creatable";
 
 type SelectType = {
     label: string;
@@ -42,6 +43,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
         formState: { errors },
         control,
         setError,
+        getValues,
     } = useForm<Inputs>({
         defaultValues: {
             title: "ExampleTitle",
@@ -59,7 +61,9 @@ export default function ArticleForm({ id }: ArticleFormProps) {
     const userId = user && user.id;
     const { timelines, mutate: mutateTimelines } = useTimelines(userId);
     const { characters, mutate: mutateCharacters } = useCharacters(userId);
-    const { tags, mutate: mutateTags} = useTags();
+
+    const [tagsInputValue, setTagsInputValue] = useState("");
+    const { tags, mutate: mutateTags } = useTags(tagsInputValue);
     const { article, mutate: mutateArticle } = useArticle(id);
     const { toast } = useToast();
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -84,13 +88,22 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                 }
             });
         }
+
+        if (data.tags) {
+            data.tags.forEach((tag) => {
+                if (tag.label) {
+                    formData.append("tags", tag.label?.toString());
+                }
+            });
+        }
+
         data.uploadedAttachments
             .filter((it) => it.data)
             .map((it) => {
                 it.data && formData.append("uploadedAttachments", it.data);
                 formData.append(
                     "uploadedAttachmentsMetadata",
-                    JSON.stringify(it.metadata)
+                    JSON.stringify(it.metadata),
                 );
             });
 
@@ -138,7 +151,7 @@ export default function ArticleForm({ id }: ArticleFormProps) {
             }
             formData.append(
                 "uploadedAttachmentsMetadata",
-                JSON.stringify(it.metadata)
+                JSON.stringify(it.metadata),
             );
         });
 
@@ -159,7 +172,8 @@ export default function ArticleForm({ id }: ArticleFormProps) {
 
     useEffect(() => {
         if (id && article) {
-            const { title, body, timeline, characters, attachments } = article;
+            const { title, body, timeline, characters, attachments, tags } =
+                article;
             setValue("title", title);
             setValue("body", body);
             if (timeline) {
@@ -174,7 +188,15 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                 characters.map((c) => ({
                     label: c.name,
                     value: c.id,
-                }))
+                })),
+            );
+
+            setValue(
+                "tags",
+                tags.map((t) => ({
+                    label: t.name,
+                    value: t.id,
+                })),
             );
 
             if (attachments && attachments.length > 0) {
@@ -190,8 +212,8 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                                     caption: a.caption,
                                     delete: false,
                                 },
-                            } as FileInput)
-                    )
+                            }) as FileInput,
+                    ),
                 );
             }
         }
@@ -209,9 +231,18 @@ export default function ArticleForm({ id }: ArticleFormProps) {
             value: character.id,
         })) || [];
 
+    const tagOptions =
+        tags?.map((tag) => ({
+            label: tag.name,
+            value: tag.id,
+        })) || [];
+
+    const keyDownHandler = (e) => {
+        if (e.key === "Enter") e.preventDefault();
+    };
     return (
         <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} onKeyDown={keyDownHandler}>
                 <Alert message={errors?.root?.ServerError?.message} />
                 <div className="flex flex-col gap-4 py-4">
                     <label className="flex flex-col" htmlFor="title">
@@ -265,11 +296,14 @@ export default function ArticleForm({ id }: ArticleFormProps) {
                             name="tags"
                             control={control}
                             render={({ field }) => (
-                                <Select
+                                <Creatable
                                     options={tagOptions}
                                     value={field.value}
                                     onChange={field.onChange}
                                     isMulti
+                                    onInputChange={(newValue) => {
+                                        setTagsInputValue(newValue);
+                                    }}
                                 />
                             )}
                         />

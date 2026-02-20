@@ -1,12 +1,14 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
+import org.matamercer.domain.jdbc.genTimestamp
 import org.matamercer.domain.models.NewReport
 import org.matamercer.domain.models.Report
 import org.matamercer.domain.models.User
 import org.matamercer.web.PageQuery
 
 class ReportDao {
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         Report(
             id = rs.getLong("id"),
             reason = rs.getString("reason"),
@@ -26,7 +28,7 @@ class ReportDao {
         )
     }
 
-    fun findAll(pageQuery: PageQuery? = null) = mapper.queryForObjectPage("""
+    fun findAll(pageQuery: PageQuery? = null) = jdbc.queryForObjectPage("""
         SELECT 
             reports.*,
             
@@ -43,15 +45,15 @@ class ReportDao {
         LEFT JOIN users AS resolvers
         ON reports.resolver_id = resolvers.id
         ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
-    """.trimIndent(), pageQuery){
+    """.trimIndent(), pageQuery,{
         var i = 0
         if (pageQuery!=null){
             setInt(++i, pageQuery.size)
             setInt(++i, pageQuery.number * pageQuery.size)
         }
-    }
+    })
 
-    fun findById(id: Long) = mapper.queryForObject("""
+    fun findById(id: Long) = jdbc.queryForObject("""
         SELECT 
             reports.*,
             
@@ -68,11 +70,11 @@ class ReportDao {
         LEFT JOIN users AS resolvers
         ON reports.resolver_id = resolvers.id
         WHERE reports.id = ?
-    """.trimIndent()) {
+    """.trimIndent(), {
         setLong(1, id)
-    }
+    })
 
-    fun create(report: NewReport) = mapper.updateForId("""
+    fun create(report: NewReport) = jdbc.updateForId("""
         INSERT INTO reports 
         (reason, category, created_at, reported_content_id, author_id)
         VALUES (?, ?, ?, ?, ?)
@@ -85,7 +87,7 @@ class ReportDao {
         setLong(++i, report.author.id)
     }
 
-    fun update(report: Report) = mapper.update("""
+    fun update(report: Report) = jdbc.update("""
         UPDATE reports
         SET reason = ?, category = ?, resolver_id = ?
         WHERE id = ?
@@ -98,7 +100,7 @@ class ReportDao {
         setLong(++i, report.id)
     }
 
-    fun delete(id: Long) = mapper.update("""
+    fun delete(id: Long) = jdbc.update("""
         DELETE FROM reports
         WHERE id = ?
     """.trimIndent()) {

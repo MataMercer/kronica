@@ -1,5 +1,6 @@
 package org.matamercer.domain.services
 
+import io.javalin.http.NotFoundResponse
 import org.matamercer.domain.models.Tag
 import org.matamercer.domain.repository.TagRepository
 import org.matamercer.web.PageQuery
@@ -10,5 +11,9 @@ class TagService(
 ) {
     fun getBySnippet(snippet: String, pageQuery: PageQuery?): Page<Tag> {
         return tagRepository.findBySnippet(snippet, pageQuery)
+    }
+
+    fun findById(id: Long): Tag{
+        return tagRepository.findById(id) ?: throw NotFoundResponse()
     }
 }

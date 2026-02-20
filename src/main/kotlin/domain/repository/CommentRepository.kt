@@ -2,7 +2,7 @@ package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.CommentDao
 import org.matamercer.domain.dao.ContentDao
-import org.matamercer.domain.dao.txn
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.Comment
 import org.matamercer.domain.models.NewComment
 

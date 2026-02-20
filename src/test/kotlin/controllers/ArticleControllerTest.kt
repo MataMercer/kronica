@@ -120,6 +120,7 @@ class ArticleControllerTest {
 
         val res = authClient.okHttp.newCall(request).execute()
         val body = res.body?.string()
+        print(body)
         print(res.code)
         assertThat(res.isSuccessful).isTrue()
 

@@ -1,5 +1,6 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.Character
 import org.matamercer.domain.models.CharacterQuery
 import org.matamercer.domain.models.NewCharacter
@@ -7,7 +8,7 @@ import org.matamercer.domain.models.User
 import org.matamercer.web.PageQuery
 
 class CharacterDao {
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         Character(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -23,7 +24,7 @@ class CharacterDao {
         )
     }
 
-    fun findById(id: Long) = mapper.queryForObject(
+    fun findById(id: Long) = jdbc.queryForObject(
         """
            SELECT
                 characters.*, 
@@ -42,9 +43,9 @@ class CharacterDao {
                ON content.author_id=users.id
            WHERE characters.id = ?
        """.trimIndent()
-    ) { setLong(1, id) }
+    , { setLong(1, id) })
 
-    fun findAll(query: CharacterQuery?, pageQuery: PageQuery? = null) = mapper.queryForObjectPage(
+    fun findAll(query: CharacterQuery?, pageQuery: PageQuery? = null) = jdbc.queryForObjectPage(
         """
             SELECT
                 characters.*,
@@ -71,14 +72,14 @@ class CharacterDao {
             AND ${if (query?.articleId != null) "articles_to_characters.article_id = ?" else "TRUE"}
             AND ${if (query?.timelineId != null) "timeline_entries.timeline_id = ?" else "TRUE"}
             """.trimIndent(), pageQuery
-    ) {
+    , {
         var i = 0
         query?.authorId?.let { it1 -> setLong(++i, it1) }
         query?.articleId?.let { it1 -> setLong(++i, it1) }
         query?.timelineId?.let { it1 -> setLong(++i, it1) }
-    }
+    })
 
-    fun create(character: NewCharacter, contentId: Long) = mapper.update(
+    fun create(character: NewCharacter, contentId: Long) = jdbc.update(
             """
                 INSERT INTO characters
                     (
@@ -95,7 +96,7 @@ class CharacterDao {
             setString(++i, character.body)
         }
 
-    fun update(character: Character) = mapper.updateForId(
+    fun update(character: Character) = jdbc.updateForId(
         """
             UPDATE characters
             SET name = ?,
@@ -109,7 +110,7 @@ class CharacterDao {
         setLong(++i, character.id)
     }
 
-    fun joinArticle(characterId: Long, articleId: Long) = mapper.updateForId(
+    fun joinArticle(characterId: Long, articleId: Long) = jdbc.updateForId(
         """
             INSERT INTO articles_to_characters
             (
@@ -125,7 +126,7 @@ class CharacterDao {
     }
 
 
-    fun deleteJoinArticle(characterId: Long, articleId: Long) = mapper.updateForId(
+    fun deleteJoinArticle(characterId: Long, articleId: Long) = jdbc.updateForId(
         """
             DELETE FROM articles_to_characters
             WHERE article_id = ? AND character_id = ?
@@ -136,7 +137,7 @@ class CharacterDao {
         setLong(++i, characterId)
     }
 
-    fun deleteById(id: Long) = mapper.update(
+    fun deleteById(id: Long) = jdbc.update(
         """
            DELETE FROM characters
             WHERE characters.id = ?
@@ -145,7 +146,7 @@ class CharacterDao {
         setLong(1, id)
     }
 
-    fun deleteByAuthorId(authorId: Long) = mapper.update(
+    fun deleteByAuthorId(authorId: Long) = jdbc.update(
         """
             DELETE FROM characters
             WHERE author_id = ?
@@ -154,7 +155,7 @@ class CharacterDao {
         setLong(1, authorId)
     }
 
-    fun findCharacterCountByAuthorId(id: Long): Long? = mapper.queryForLong(
+    fun findCharacterCountByAuthorId(id: Long): Long? = jdbc.queryForLong(
         """
             SELECT COUNT(*) AS count
             FROM characters

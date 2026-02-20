@@ -1,15 +1,14 @@
 package org.matamercer.domain.dao
 
-import jdk.jfr.Enabled
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.Follow
 import org.matamercer.domain.models.NewFollow
-import java.sql.Connection
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 class FollowDao() {
 
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         Follow(
             id = rs.getLong("id"),
             followerId = rs.getLong("follower_id"),
@@ -20,7 +19,7 @@ class FollowDao() {
         )
     }
 
-    fun follow(follow: NewFollow) = mapper.update(
+    fun follow(follow: NewFollow) = jdbc.update(
         """
             INSERT INTO follows
             (
@@ -41,7 +40,7 @@ class FollowDao() {
         setTimestamp(++i, Timestamp.valueOf(LocalDateTime.now()))
     }
 
-    fun unfollow(followerId: Long, followeeId: Long) = mapper.update(
+    fun unfollow(followerId: Long, followeeId: Long) = jdbc.update(
         """
             DELETE FROM follows
             WHERE follower_id = ? AND followee_id = ?
@@ -52,7 +51,7 @@ class FollowDao() {
         setLong(++i, followeeId)
     }
 
-    fun update(follow: Follow) = mapper.update(
+    fun update(follow: Follow) = jdbc.update(
         """
             UPDATE follows
             SET 
@@ -67,52 +66,52 @@ class FollowDao() {
         setLong(++i, follow.id)
     }
 
-    fun findByFollowerAndFollowee( followerId: Long, followeeId: Long): Follow? = mapper.queryForObject(
+    fun findByFollowerAndFollowee( followerId: Long, followeeId: Long): Follow? = jdbc.queryForObject(
         """
             SELECT * 
             FROM follows 
             WHERE follower_id = ? AND followee_id = ?
             """.trimIndent()
-    ) {
+    , {
         var i = 0
         setLong(++i, followerId)
         setLong(++i, followeeId)
-    }
+    })
 
-    fun find(id: Long): Follow? = mapper.queryForObject(
+    fun find(id: Long): Follow? = jdbc.queryForObject(
         """
             SELECT * 
             FROM follows 
             WHERE id = ?
             """.trimIndent()
-    ) {
+    , {
         setLong(1, id)
-    }
+    })
 
-    fun findFollowers( followeeId: Long, notificationsEnabled: Boolean = false ): List<Follow> = mapper.queryForObjectList(
+    fun findFollowers( followeeId: Long, notificationsEnabled: Boolean = false ): List<Follow> = jdbc.queryForObjectList(
         """
             SELECT * 
             FROM follows 
             WHERE followee_id = ?
             AND notifications_enabled = ?
             """.trimIndent()
-    ) {
+    , {
         var i = 0
         setLong(++i, followeeId)
         setBoolean(++i, notificationsEnabled)
-    }
+    })
 
-    fun findFollowings( followerId: Long): List<Follow> = mapper.queryForObjectList(
+    fun findFollowings( followerId: Long): List<Follow> = jdbc.queryForObjectList(
         """
             SELECT * 
             FROM follows 
             WHERE follower_id = ?
             """.trimIndent()
-    ) {
+    , {
         setLong(1, followerId)
-    }
+    })
 
-    fun findFollowerCount( followeeId: Long): Long? = mapper.queryForLong(
+    fun findFollowerCount( followeeId: Long): Long? = jdbc.queryForLong(
         """
             SELECT COUNT(*) 
             FROM follows 

@@ -1,6 +1,7 @@
 package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.*
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.CharacterQuery
 import org.matamercer.domain.models.NewArticle
@@ -44,7 +45,7 @@ class ArticleRepository(
             }
         }
         article.tags.map { tagRepository.create(it) }
-            .forEach { tagRepository.join(it.id, id )}
+            .forEach { tagRepository.join(it.id, id) }
 
         characters.forEach { characterDao.joinArticle(it, res.id) }
         aggregate(res)
@@ -117,6 +118,7 @@ class ArticleRepository(
             this.attachments = files
             this.characters = characters
             this.likeCount = likeCount
+            this.tags = tags
         }
     }
 }

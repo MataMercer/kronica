@@ -1,12 +1,11 @@
 package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.*
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.AuthProvider
-import org.matamercer.domain.models.Follow
 import org.matamercer.domain.models.NewUser
 import org.matamercer.domain.models.Profile
 import org.matamercer.domain.models.User
-import javax.sql.DataSource
 
 class UserRepository(
     private val userDao: UserDao,

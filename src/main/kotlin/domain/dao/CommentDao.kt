@@ -1,11 +1,12 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.Comment
 import org.matamercer.domain.models.NewComment
 import org.matamercer.domain.models.User
 
 class CommentDao {
-    private val mapper = RowMapper<Comment> { rs ->
+    private val jdbc = JdbcExecutor<Comment> { rs ->
         Comment(
             id = rs.getLong("id"),
             body = rs.getString("body"),
@@ -19,7 +20,7 @@ class CommentDao {
         )
     }
 
-    fun findById(id: Long) = mapper.queryForObject(
+    fun findById(id: Long) = jdbc.queryForObject(
         """
             SELECT 
             c.id,
@@ -35,11 +36,11 @@ class CommentDao {
             JOIN users u ON content.author_id = u.id
             WHERE c.id = ?
         """.trimIndent()
-    ) {
+    , {
         setLong(1, id)
-    }
+    })
 
-    fun findByContentId(contentId: Long) = mapper.queryForObjectList(
+    fun findByContentId(contentId: Long) = jdbc.queryForObjectList(
         """
             SELECT 
             comments.* 
@@ -53,11 +54,11 @@ class CommentDao {
             JOIN comments_to_content ON content.id = comments_to_content.comment_id
             WHERE comments_to_content.content_id = ?
         """.trimIndent()
-    ) {
+    , {
         setLong(1, contentId)
-    }
+    })
 
-    fun create(comment: NewComment, contentId: Long) = mapper.update(
+    fun create(comment: NewComment, contentId: Long) = jdbc.update(
         """
             INSERT INTO comments 
             (id,
@@ -70,7 +71,7 @@ class CommentDao {
         setString(++i, comment.body)
     }
 
-    fun joinContent(commentId: Long, contentId: Long) = mapper.update(
+    fun joinContent(commentId: Long, contentId: Long) = jdbc.update(
             """
                 INSERT INTO comments_to_content (comment_id, article_id)
                 VALUES (?, ?)
@@ -81,7 +82,7 @@ class CommentDao {
             setLong(++i, contentId)
         }
 
-    fun joinComment(replyToId: Long, replyId: Long) = mapper.update(
+    fun joinComment(replyToId: Long, replyId: Long) = jdbc.update(
         """
             INSERT INTO comment_replies (reply_to_id, reply_id)
             VALUES (?, ?)
@@ -92,7 +93,7 @@ class CommentDao {
         setLong(++i, replyId)
     }
 
-    fun update(comment: Comment) = mapper.updateForId(
+    fun update(comment: Comment) = jdbc.updateForId(
         """
             UPDATE comments
             SET body = ?
@@ -104,7 +105,7 @@ class CommentDao {
         setLong(++i, comment.id)
     }
 
-    fun delete(id: Long) = mapper.update(
+    fun delete(id: Long) = jdbc.update(
         """
                 DELETE FROM comments
                 WHERE id = ?

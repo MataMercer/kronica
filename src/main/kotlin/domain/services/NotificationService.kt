@@ -1,8 +1,7 @@
 package org.matamercer.domain.services
 
 import org.matamercer.config.AppConfig
-import org.matamercer.domain.dao.NotificationDao
-import org.matamercer.domain.dao.txn
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.*
 import org.matamercer.domain.repository.FollowRepository
 import org.matamercer.domain.repository.NotificationRepository

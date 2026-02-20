@@ -1,5 +1,6 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.Article
 import org.matamercer.domain.models.NewArticle
 import org.matamercer.domain.models.Timeline
@@ -10,7 +11,7 @@ import org.matamercer.web.dto.Page
 
 class ArticleDao {
 
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         val timelineId = rs.getLong("timelines_id")
         var timeline: Timeline? = null
         if (timelineId != 0L) {
@@ -45,7 +46,7 @@ class ArticleDao {
     }
 
     fun findAll(query: ArticleQuery?, pageQuery: PageQuery? = null): Page<Article> =
-        mapper.queryForObjectPage(
+        jdbc.queryForObjectPage(
             """
             SELECT
                 articles.*,
@@ -80,7 +81,7 @@ class ArticleDao {
             ${if (query?.timelineId != null) "ORDER BY timeline_entries_timeline_index ASC" else ""}
             ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
             """.trimIndent(), pageQuery
-        ) {
+        , {
             var i = 0
             query?.authorId?.let { it1 -> setLong(++i, it1) }
             query?.timelineId?.let { it1 -> setLong(++i, it1) }
@@ -88,9 +89,9 @@ class ArticleDao {
                 setInt(++i, pageQuery.size)
                 setInt(++i, pageQuery.number * pageQuery.size)
             }
-        }
+        })
 
-    fun findByFollowing(userId: Long, pageQuery: PageQuery?): Page<Article> = mapper.queryForObjectPage(
+    fun findByFollowing(userId: Long, pageQuery: PageQuery?): Page<Article> = jdbc.queryForObjectPage(
         """
             WITH followed_users AS (
                 SELECT 
@@ -130,16 +131,16 @@ class ArticleDao {
             WHERE users.id IN (SELECT * FROM followed_users)
             ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
         """.trimIndent(), pageQuery
-    ) {
+    , {
         var i = 0
         setLong(++i, userId)
         if (pageQuery != null) {
             setInt(++i, pageQuery.size)
             setInt(++i, pageQuery.number * pageQuery.size)
         }
-    }
+    })
 
-    fun findById(id: Long): Article? = mapper.queryForObject(
+    fun findById(id: Long): Article? = jdbc.queryForObject(
         """
                SELECT 
                    articles.*,
@@ -170,7 +171,7 @@ class ArticleDao {
                 ON timeline_entries.timeline_id=timelines.id    
                WHERE articles.id = ?
                """.trimIndent()
-    ) { setLong(1, id) }
+    , { setLong(1, id) })
 
 //    fun findByAuthorId(conn: Connection, id: Long, pageQuery: PageQuery): Page<Article> {
 //        val sql = """
@@ -206,7 +207,7 @@ class ArticleDao {
 //    }
 
     fun create(article: NewArticle, contentId: Long) =
-        mapper.update(
+        jdbc.update(
             """
                 INSERT INTO articles
                     (
@@ -250,7 +251,7 @@ class ArticleDao {
 //    }
 
     fun findLikedArticledByUserId(id: Long, pageQuery: PageQuery): Page<Article> =
-        mapper.queryForObjectPage(
+        jdbc.queryForObjectPage(
             """
             SELECT 
                 articles.*, 
@@ -264,11 +265,11 @@ class ArticleDao {
             INNER JOIN article_likes ON articles.id=article_likes.article_id
             WHERE article_likes.author_id = ? 
           """.trimIndent(), pageQuery
-        ) { setLong(1, id) }
+        , { setLong(1, id) })
 
 
     fun update(article: Article): Long =
-        mapper.updateForId(
+        jdbc.updateForId(
             """
             UPDATE articles
             SET title = ?,
@@ -283,7 +284,7 @@ class ArticleDao {
         }
 
     fun deleteById(id: Long) =
-        mapper.update(
+        jdbc.update(
             """
           DELETE FROM articles
           WHERE articles.id = ?
@@ -299,7 +300,7 @@ class ArticleDao {
             WHERE articles.id = timeline_entries.article_id 
             AND timeline_entries.timeline_id = ?;
         """.trimIndent()
-        mapper.update(sql) {
+        jdbc.update(sql) {
             setLong(1, timelineId)
         }
     }
@@ -309,7 +310,7 @@ class ArticleDao {
             DELETE FROM articles
             WHERE articles.author_id = ?
         """.trimIndent()
-        mapper.update(sql) {
+        jdbc.update(sql) {
             setLong(1, authorId)
         }
     }

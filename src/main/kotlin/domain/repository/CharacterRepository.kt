@@ -1,12 +1,11 @@
 package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.*
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.Character
 import org.matamercer.domain.models.CharacterQuery
 import org.matamercer.domain.models.NewCharacter
 import org.matamercer.web.FileMetadataForm
-import java.sql.Connection
-import javax.sql.DataSource
 
 class CharacterRepository(
     private val characterDao: CharacterDao,

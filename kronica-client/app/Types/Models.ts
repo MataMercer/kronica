@@ -5,16 +5,6 @@ export type User = {
   role: keyof typeof UserRole;
 };
 
-export type Character = {
-  id: number;
-  name: string;
-  body: string;
-  author: User;
-  attachments: FileModel[];
-  profilePictures: FileModel[];
-  traits: { value: string; name: string; }[];
-}
-
 //See the link for more information on how TypeScript enums work at compile time
 //https://www.typescriptlang.org/docs/handbook/enums.html#enums-at-compile-time
 export enum UserRole {
@@ -26,17 +16,33 @@ export enum UserRole {
   ROOT = 5
 }
 
-export type Article = {
-  id: number;
+export type Content = {
+  id: Number
+  author: User
+  createdAt: String
+  updatedAt: String
+  nsfw: Boolean
+  tags: Tag[]
+}
+
+export type Article = Content & {
   title: string;
   body: string;
-  author: User;
   attachments: FileModel[];
   characters: Character[];
   timeline: Timeline;
   youLiked: boolean;
   likeCount: number;
 }
+
+export type Character = Content & {
+  name: string;
+  body: string;
+  attachments: FileModel[];
+  profilePictures: FileModel[];
+  traits: { value: string; name: string; }[];
+}
+
 export type FileModel = {
   id: number;
   name: string;
@@ -44,16 +50,15 @@ export type FileModel = {
   storageId: string;
 }
 
-export type Timeline = {
-  id: number;
+export type Timeline = Content & {
   name: string;
   description: string;
-  author: User;
 }
 
 export type Tag = {
   id: number;
   name: string;
+  popularity: number;
 }
 
 export type Page<T> = {

@@ -12,4 +12,5 @@ data class Tag(
     val name: String,
     val description: String? = null,
     val nsfw: Boolean = false,
+    val popularity: Int? = null,
 )

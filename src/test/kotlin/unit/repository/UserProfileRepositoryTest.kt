@@ -7,9 +7,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.matamercer.domain.dao.FileModelDao
-import org.matamercer.domain.dao.TransactionManager
 import org.matamercer.domain.dao.UserProfileDao
-import org.matamercer.domain.dao.txn
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.Profile
 import org.matamercer.domain.repository.UserProfileRepository

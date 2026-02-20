@@ -1,6 +1,8 @@
+import TagsDisplay from "@/app/components/content/TagsDisplay";
 import { fetchArticle } from "@/app/fetch/articles";
 import { ImagePresetSize } from "@/app/Types/ImagePresetSize";
 import Img from "@/components/CustomUi/Img";
+import Tag from "@/components/CustomUi/Tag";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,6 +13,7 @@ export default async function ArticlePage(props: {
     const id = params.id;
     const article = id && (await fetchArticle(id));
 
+    console.log(article);
     return (
         <div>
             {article && (
@@ -18,14 +21,19 @@ export default async function ArticlePage(props: {
                     <h1 className="text-3xl font-bold">
                         {article && article.title}
                     </h1>
-                    Timeline:
+                    {article.tags && <TagsDisplay tags={article.tags} />}
                     {article.timeline && (
-                        <Link
-                            href={`/users/${article.author.id}/${article.timeline.id}`}
-                            className=""
-                        >
-                            <h2 className="text-xl">{article.timeline.name}</h2>
-                        </Link>
+                        <div>
+                            Timeline:
+                            <Link
+                                href={`/users/${article.author.id}/${article.timeline.id}`}
+                                className=""
+                            >
+                                <h2 className="text-xl">
+                                    {article.timeline.name}
+                                </h2>
+                            </Link>
+                        </div>
                     )}
                     <p>{article && article.body}</p>
                     <h2 className="subheading">Gallery</h2>

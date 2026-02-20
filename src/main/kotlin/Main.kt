@@ -19,6 +19,7 @@ import org.matamercer.config.reader.DotEnvReader
 import org.matamercer.config.reader.EnvReader
 import org.matamercer.config.reader.PropertiesReader
 import org.matamercer.domain.dao.*
+import org.matamercer.domain.jdbc.TransactionManager
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.*
 import org.matamercer.domain.services.*

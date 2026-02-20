@@ -1,4 +1,4 @@
-package org.matamercer.domain.dao
+package org.matamercer.domain.jdbc
 
 import org.matamercer.web.PageQuery
 

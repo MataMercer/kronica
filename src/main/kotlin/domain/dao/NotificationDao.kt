@@ -1,11 +1,13 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
+import org.matamercer.domain.jdbc.genTimestamp
 import org.matamercer.domain.models.NewNotification
 import org.matamercer.domain.models.Notification
 import org.matamercer.web.PageQuery
 
 class NotificationDao {
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         Notification(
             id = rs.getLong("id"),
             notificationType = enumValueOf(rs.getString("notification_type")),
@@ -16,7 +18,7 @@ class NotificationDao {
         )
     }
 
-    fun create(notification: NewNotification): Long = mapper.updateForId(
+    fun create(notification: NewNotification): Long = jdbc.updateForId(
         """
             INSERT INTO notifications
                 (
@@ -37,7 +39,7 @@ class NotificationDao {
         setTimestamp(++i, genTimestamp())
     }
 
-    fun joinRecipients(notificationId: Long, recipientUserId: Long) = mapper.updateForId(
+    fun joinRecipients(notificationId: Long, recipientUserId: Long) = jdbc.updateForId(
         """
             INSERT INTO notifications_to_recipients
                 (
@@ -52,7 +54,7 @@ class NotificationDao {
         setLong(++i, recipientUserId)
     }
 
-    fun findByRecipient(userId: Long, pageQuery: PageQuery?) = mapper.queryForObjectPage(
+    fun findByRecipient(userId: Long, pageQuery: PageQuery?) = jdbc.queryForObjectPage(
         """
         SELECT *,
         count(*) OVER() AS total_count
@@ -61,17 +63,17 @@ class NotificationDao {
         ON notifications.id=notifications_to_recipients.notification_id
         WHERE notifications_to_recipients.user_id=?
         ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
-    """.trimIndent(), pageQuery
-    ) {
+    """.trimIndent(), pageQuery,
+        {
         var i = 0
         setLong(++i, userId)
         if (pageQuery != null) {
             setInt(++i, pageQuery.size)
             setInt(++i, pageQuery.number * pageQuery.size)
         }
-    }
+    })
 
-    fun markRead(notificationId: Long, userId: Long) = mapper.update(
+    fun markRead(notificationId: Long, userId: Long) = jdbc.update(
         """
        UPDATE notifications_to_recipients
        SET is_read = ?
@@ -85,7 +87,7 @@ class NotificationDao {
         setLong(++i, userId)
     }
 
-    fun findUnreadCount(userId: Long) = mapper.queryForLong(
+    fun findUnreadCount(userId: Long) = jdbc.queryForLong(
         """
             SELECT COUNT(*)
             FROM notifications
@@ -100,7 +102,7 @@ class NotificationDao {
 
 
     //delete only join tables to recipient users.
-    fun deleteToRecent(userId: Long, maxRecent: Int) = mapper.update(
+    fun deleteToRecent(userId: Long, maxRecent: Int) = jdbc.update(
         """
         DELETE FROM notifications_to_recipients
         WHERE notifications_to_recipients.id NOT IN 
@@ -119,7 +121,7 @@ class NotificationDao {
     }
 
     //delete notifications by a cleaner worker
-    fun deleteOldAndRead(maxAgeDays: Int) = mapper.update(
+    fun deleteOldAndRead(maxAgeDays: Int) = jdbc.update(
         """
             DELETE FROM notifications 
             WHERE 

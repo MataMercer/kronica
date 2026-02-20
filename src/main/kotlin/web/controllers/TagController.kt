@@ -1,5 +1,6 @@
 package org.matamercer.web.controllers
 
+import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.http.HandlerType
 import io.javalin.http.queryParamAsClass
@@ -19,9 +20,11 @@ class TagController(
         ctx.json(res)
     }
 
-    @Route(HandlerType.GET, "/{id}")
+    @Route(HandlerType.GET, "/id/{id}")
     @ReqRole(UserRole.AUTHENTICATED_USER)
     fun getById(ctx: Context){
-        TODO("impl")
+        val id = ctx.pathParam("id").toLongOrNull() ?: throw BadRequestResponse("Id is null or not a number")
+        val res = tagService.findById(id)
+        ctx.json(res)
     }
 }

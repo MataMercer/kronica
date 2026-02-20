@@ -1,18 +1,17 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.AuthProvider
 import org.matamercer.domain.models.NewUser
-import org.matamercer.domain.models.Profile
 import org.matamercer.domain.models.SocialMediaLink
 import org.matamercer.domain.models.User
-import java.sql.Connection
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 
 class UserDao {
 
-    private val mapper = RowMapper<User> { rs ->
+    private val mapper = JdbcExecutor<User> { rs ->
         User(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -23,9 +22,9 @@ class UserDao {
         )
     }
 
-    fun findAll(): List<User> = mapper.queryForObjectList(
-        "SELECT * FROM users"
-    ) {}
+    fun findAll() = mapper.queryForObjectList(
+        "SELECT * FROM users",
+     {})
 
     fun findByEmail(email: String): User? = mapper.queryForObject(
         """
@@ -33,19 +32,19 @@ class UserDao {
                 FROM users 
                 WHERE users.email = ?
                 """.trimIndent()
-    ) {
+    , {
         setString(1, email)
-    }
+    })
 
-    fun findById(id: Long): User? = mapper.queryForObject(
+    fun findById(id: Long) = mapper.queryForObject(
         """
             SELECT * 
             FROM users 
             WHERE users.id = ?
             """.trimIndent()
-    ) {
+    , {
         setLong(1, id)
-    }
+    })
 
     fun findByOAuthIdAndAuthProvider(oauthId: Long, authProvider: AuthProvider) = mapper.queryForObject(
         """
@@ -53,11 +52,11 @@ class UserDao {
             FROM users 
             WHERE users.oauth_id = ? AND users.auth_provider = ?     
         """.trimIndent()
-    ) {
+    , {
         var i = 0
         setLong(++i, oauthId)
         setString(++i, authProvider.name)
-    }
+    })
 
     fun findByName(name: String): User? = mapper.queryForObject(
         """
@@ -65,9 +64,9 @@ class UserDao {
             FROM users 
             WHERE users.name = ?
             """.trimIndent()
-    ) {
+    , {
         setString(1, name)
-    }
+    })
 
 
     fun create(user: NewUser, profileId: Long): Long = mapper.updateForId(

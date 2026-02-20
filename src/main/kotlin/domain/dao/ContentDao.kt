@@ -1,10 +1,13 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
+import org.matamercer.domain.jdbc.genTimestamp
+
 
 class ContentDao {
-    private val mapper = RowMapper{}
+    private val jdbc = JdbcExecutor {}
 
-    fun create(authorId: Long, nsfw: Boolean) = mapper.updateForId(
+    fun create(authorId: Long, nsfw: Boolean) = jdbc.updateForId(
         """
         INSERT INTO content (author_id, created_at, updated_at, nsfw)
         VALUES (?, ?, ?, ?)
@@ -17,7 +20,7 @@ class ContentDao {
         setBoolean(++i, nsfw)
     }
 
-    fun update(contentId: Long, nsfw: Boolean) = mapper.update(
+    fun update(contentId: Long, nsfw: Boolean) = jdbc.update(
         """
         UPDATE content
         SET updated_at = ?,
@@ -31,7 +34,7 @@ class ContentDao {
         setLong(++i, contentId)
     }
 
-    fun findAuthorId(id: Long) = mapper.queryForLong(
+    fun findAuthorId(id: Long) = jdbc.queryForLong(
         """
         SELECT author_id
         FROM content

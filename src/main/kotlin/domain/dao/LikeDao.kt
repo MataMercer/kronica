@@ -1,12 +1,13 @@
 package org.matamercer.domain.dao
 
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.Like
 import org.matamercer.domain.models.User
 import org.matamercer.web.PageQuery
 
 class LikeDao {
 
-    private val mapper = RowMapper { rs ->
+    private val jdbc = JdbcExecutor { rs ->
         Like(
             id = rs.getLong("id"),
             author = User(
@@ -17,7 +18,7 @@ class LikeDao {
         )
     }
 
-    fun findByContentId(contentId: Long, pageQuery: PageQuery?) = mapper.queryForObjectPage(
+    fun findByContentId(contentId: Long, pageQuery: PageQuery?) = jdbc.queryForObjectPage(
         """
             SELECT
                 id,
@@ -32,11 +33,11 @@ class LikeDao {
             WHERE likes.owning_content_id = ?
             ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
         """.trimIndent()
-    , pageQuery) {
+    , pageQuery, {
         setLong(1, contentId)
-    }
+    })
 
-    fun findByUserId(userId: Long): List<Like> = mapper.queryForObjectList(
+    fun findByUserId(userId: Long): List<Like> = jdbc.queryForObjectList(
         """
             SELECT
                 likes.id,
@@ -48,11 +49,11 @@ class LikeDao {
             INNER JOIN users ON likes.author_id=users.id
             WHERE likes.author_id = ?
         """.trimIndent()
-    ) {
+    , {
         setLong(1, userId)
-    }
+    })
 
-    fun like(userId: Long, contentId: Long ): Long = mapper.updateForId(
+    fun like(userId: Long, contentId: Long ): Long = jdbc.updateForId(
         """
             INSERT INTO likes
                 (
@@ -68,7 +69,7 @@ class LikeDao {
         setLong(++i, contentId)
     }
 
-    fun unlike( userId: Long, contentId: Long): Long = mapper.updateForId(
+    fun unlike( userId: Long, contentId: Long): Long = jdbc.updateForId(
         """
             DELETE FROM likes
             WHERE author_id = ? AND owning_content_id = ?
@@ -80,7 +81,7 @@ class LikeDao {
     }
 
 
-    fun checkLiked( userId: Long,contentId: Long): Long? =  mapper.queryForLong(
+    fun checkLiked( userId: Long,contentId: Long): Long? =  jdbc.queryForLong(
         """
             SELECT
                 likes.owning_content_id
@@ -94,7 +95,7 @@ class LikeDao {
         setLong(++i, userId)
     }
 
-    fun countLikesByContentId(contentId: Long) = mapper.queryForLong(
+    fun countLikesByContentId(contentId: Long) = jdbc.queryForLong(
         """
             SELECT COUNT(*) AS count
             FROM likes

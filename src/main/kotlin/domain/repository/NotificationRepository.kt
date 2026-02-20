@@ -2,7 +2,7 @@ package org.matamercer.domain.repository
 
 import org.matamercer.domain.dao.NotificationDao
 import org.matamercer.domain.dao.UserDao
-import org.matamercer.domain.dao.txn
+import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.NewNotification
 import org.matamercer.domain.models.Notification
 import org.matamercer.web.PageQuery
