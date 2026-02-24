@@ -48,35 +48,8 @@ class ArticleDao {
     fun findAll(query: ArticleQuery?, pageQuery: PageQuery? = null): Page<Article> =
         jdbc.queryForObjectPage(
             """
-            SELECT
-                articles.*,
-                
-                users.id AS authors_id,
-                users.name AS authors_name,
-                users.role AS authors_role,
-                
-                content.created_at AS created_at,
-                content.updated_at AS updated_at,
-                content.nsfw AS nsfw,
-                
-                
-                timeline_entries.timeline_index AS timeline_entries_timeline_index,
-                   
-                timelines.id AS timelines_id,
-                timelines.name AS timelines_name,
-                timelines.description AS timelines_description,
-                
-                count(*) OVER() AS total_count
-            FROM articles
-            INNER JOIN content 
-                ON articles.id=content.id
-            INNER JOIN users 
-                ON content.author_id=users.id
-            LEFT JOIN timeline_entries 
-                ON articles.id=timeline_entries.article_id
-            LEFT JOIN timelines
-                ON timeline_entries.timeline_id=timelines.id
-            WHERE ${if (query?.authorId != null) "users.id = ?" else "TRUE"}
+            SELECT * FROM articles_view
+            WHERE ${if (query?.authorId != null) "authors_id = ?" else "TRUE"}
             AND ${if (query?.timelineId != null) "timelines.id = ?" else "TRUE"} 
             ${if (query?.timelineId != null) "ORDER BY timeline_entries_timeline_index ASC" else ""}
             ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
@@ -101,33 +74,7 @@ class ArticleDao {
                     ON users.id=follows.followee_id
                     WHERE follows.follower_id = ?
             )
-            SELECT 
-                articles.*,
-                
-                users.id AS authors_id,
-                users.name AS authors_name,
-                users.role AS authors_role,
-                
-                content.created_at AS created_at,
-                content.updated_at AS updated_at,
-                content.nsfw AS nsfw,
-                
-                timeline_entries.timeline_index AS timeline_entries_timeline_index,
-                   
-                timelines.id AS timelines_id,
-                timelines.name AS timelines_name,
-                timelines.description AS timelines_description,
-                
-                count(*) OVER() AS total_count
-            FROM articles
-            INNER JOIN content 
-                ON articles.id=content.id
-            INNER JOIN users 
-                ON content.author_id=users.id
-            LEFT JOIN timeline_entries 
-                ON articles.id=timeline_entries.article_id
-            LEFT JOIN timelines
-                ON timeline_entries.timeline_id=timelines.id
+            SELECT * FROM articles_view
             WHERE users.id IN (SELECT * FROM followed_users)
             ${if (pageQuery != null) "LIMIT ? OFFSET ?" else ""}
         """.trimIndent(), pageQuery
@@ -142,34 +89,9 @@ class ArticleDao {
 
     fun findById(id: Long): Article? = jdbc.queryForObject(
         """
-               SELECT 
-                   articles.*,
-                    
-                   users.id AS authors_id,
-                   users.name AS authors_name,
-                   users.role AS authors_role,
-                   
-                   
-                   content.created_at AS created_at,
-                   content.updated_at AS updated_at,
-                   content.nsfw AS nsfw,
-                   
-                   timeline_entries.timeline_index AS timeline_entries_timeline_index,
-                   
-                   timelines.id AS timelines_id,
-                   timelines.name AS timelines_name,
-                   timelines.description AS timelines_description
-                   
-               FROM articles
-               INNER JOIN content 
-                   ON articles.id=content.id
-                INNER JOIN users
-                ON content.author_id=users.id
-               LEFT JOIN timeline_entries 
-                ON articles.id=timeline_entries.article_id
-               LEFT JOIN timelines
-                ON timeline_entries.timeline_id=timelines.id    
-               WHERE articles.id = ?
+               SELECT *
+               FROM articles_view
+               WHERE articles_view.id = ?
                """.trimIndent()
     , { setLong(1, id) })
 
