@@ -332,6 +332,29 @@ CREATE TABLE announcements
     CONSTRAINT pk_announcements PRIMARY KEY (id)
 );
 
+CREATE TABLE SiteConfig
+(
+    id INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    about VARCHAR(255) NOT NULL,
+
+    max_upload_size INT,
+    max_attachments INT,
+    max_posts_all_time INT,
+    max_posts_per_month INT,
+    max_text_body_size INT,
+    max_notifications INT,
+    blacklisted_words TEXT[],
+
+    enable_discord_auth BOOLEAN NOT NULL,
+    enable_user_registration BOOLEAN NOT NULL,
+    enable_email_registration BOOLEAN NOT NULL,
+    enable_article BOOLEAN NOT NULL,
+    enable_character BOOLEAN NOT NULL,
+    enable_timelines BOOLEAN NOT NULL,
+    enable_file_uploads BOOLEAN NOT NULL,
+)
 
 
 
