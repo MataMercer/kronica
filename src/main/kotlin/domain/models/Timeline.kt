@@ -27,7 +27,7 @@ data class TimelineDto(
     val description: String,
     val author: UserDto,
     val nsfw: Boolean,
-    val tags: List<NewTag> = listOf(),
+    val tags: List<Tag> = listOf(),
 )
 data class TimelineThumbDto(
     val id: Long,

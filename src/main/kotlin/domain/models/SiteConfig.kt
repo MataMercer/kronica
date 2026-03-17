@@ -9,13 +9,14 @@ data class SiteConfig(
     val maxUploadSize: String,
     val maxAttachments: Int,
     val maxPostsAllTime: Int,
-    val maxPostsPerMonth: Int,
+    val maxPostsPerDay: Int,
     val maxTextBodySize: Int,
     val blacklistedWords: List<String>,
     val maxNotifications: Int,
 
-    val enableDiscordAuth: Boolean,
+    val enableDiscordRegistration: Boolean,
     val enableUserRegistration: Boolean,
+    val enableEmailRegistration: Boolean,
 
     val enableArticles: Boolean,
     val enableCharacters: Boolean,

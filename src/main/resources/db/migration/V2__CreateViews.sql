@@ -5,6 +5,14 @@ CREATE VIEW authors_view AS
         users.role AS authors_role
     FROM users;
 
+CREATE VIEW content_view AS
+    SELECT
+        content.created_at AS created_at,
+        content.updated_at AS updated_at,
+        content.nsfw AS nsfw
+    FROM content;
+
+
 
 CREATE VIEW articles_view AS
     SELECT
