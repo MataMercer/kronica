@@ -186,7 +186,7 @@ class UserService(
     fun authenticateUserWithDiscordOAuth(code: String): User{
         val accessToken = getDiscordOAuthAccessToken(code)
         val discordUserInfo = getDiscordUser(accessToken)
-       val foundUser = userRepository.findByOAuthIdAndProvider(discordUserInfo.id, AuthProvider.DISCORD)
+       val foundUser = userRepository.findByOAuth(discordUserInfo.id, AuthProvider.DISCORD)
         return foundUser
             ?: registerUser(
                 RegisterUserForm(
@@ -259,7 +259,7 @@ class UserService(
         if (currentUser.id == form.followeeId) {
             throw BadRequestResponse("You cannot follow yourself.")
         }
-        val follow = followRepository.findFollow(currentUser.id, form.followeeId)
+        val follow = followRepository.findByFollowerAndFollowee(currentUser.id, form.followeeId)
         if (follow != null) {
             throw BadRequestResponse()
         }
@@ -277,11 +277,11 @@ class UserService(
     }
 
     fun updateFollow(form: UpdateFollowForm, currentUser: CurrentUser) {
-        val follow = followRepository.findFollow(form.id) ?: throw BadRequestResponse()
+        val follow = followRepository.find(form.id) ?: throw BadRequestResponse()
         if (follow.followerId != currentUser.id) {
             throw ForbiddenResponse()
         }
-        followRepository.updateFollow(Follow(
+        followRepository.update(Follow(
             id = follow.id,
             followerId = follow.followerId,
             followeeId = follow.followeeId,
@@ -295,14 +295,14 @@ class UserService(
         if (currentUser.id == id) {
             throw BadRequestResponse()
         }
-        followRepository.findFollow(currentUser.id, id) ?: throw BadRequestResponse()
+        followRepository.findByFollowerAndFollowee(currentUser.id, id) ?: throw BadRequestResponse()
         followRepository.unfollow(currentUser.id, id)
     }
 
     fun getFollowers(id: Long): List<Follow> = followRepository.findFollowers(id)
     fun getFollowings(id: Long): List<Follow> = followRepository.findFollowings(id)
 
-    private fun isFollowing(userIdA: Long, userIdB: Long): Boolean = followRepository.findFollow(userIdA, userIdB) != null
+    private fun isFollowing(userIdA: Long, userIdB: Long): Boolean = followRepository.findByFollowerAndFollowee(userIdA, userIdB) != null
     private fun checkUserExistsByEmail(email: String): Boolean = userRepository.findByEmail(email) != null
     private fun checkUserExistsByName(name: String): Boolean = userRepository.findByName(name) != null
 

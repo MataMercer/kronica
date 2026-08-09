@@ -17,7 +17,7 @@ class UserProfileService(
     )
 
     fun updateProfile(currentUser: CurrentUser, form: UpdateProfileForm) {
-        val originalProfile = userProfileRepository.findProfileByUserId(currentUser.id)
+        val originalProfile = userProfileRepository.findByUserId(currentUser.id)
         val picture = form.picture?.let {
             fileModelService.uploadImages(
                 forms = listOf(FileUploadForm(it)),

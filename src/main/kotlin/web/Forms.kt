@@ -2,6 +2,7 @@ package org.matamercer.web
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.javalin.http.UploadedFile
+import kotlin.times
 
 data class CreateTimelineForm(
     val name: String,
@@ -45,7 +46,12 @@ data class ArticleQuery(
 data class PageQuery(
     val number: Int,
     val size: Int,
-)
+
+){
+    fun getOffset():Int{
+        return number * size
+    }
+}
 
 data class CommentForm(
     val body: String? = null,

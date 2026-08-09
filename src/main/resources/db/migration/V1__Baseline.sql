@@ -347,17 +347,14 @@ CREATE TABLE site_config
     blacklisted_words TEXT[],
     max_notifications INT,
 
-    enable_discord_auth BOOLEAN NOT NULL,
+    enable_discord_registration BOOLEAN NOT NULL,
     enable_user_registration BOOLEAN NOT NULL,
     enable_email_registration BOOLEAN NOT NULL,
     enable_articles BOOLEAN NOT NULL,
     enable_characters BOOLEAN NOT NULL,
     enable_timelines BOOLEAN NOT NULL,
-    enable_file_uploads BOOLEAN NOT NULL,
-
-
-    CONSTRAINT pk_site_config PRIMARY KEY (id),
-)
+    enable_file_uploads BOOLEAN NOT NULL
+);
 
 
 

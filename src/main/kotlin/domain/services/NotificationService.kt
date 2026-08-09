@@ -29,10 +29,15 @@ class NotificationService(
 
     fun readAndMark(currentUser: CurrentUser, pageQuery: PageQuery) =
         notificationRepository
-            .readAndMark(currentUser.id, pageQuery)
+            .getUnread(currentUser.id, pageQuery)
             .convert { toDto(it, currentUser) }
 
-    fun getUnreadCount(userId: Long) = notificationRepository.getUnreadCount(userId)
+
+    fun getUnreadCount(userId: Long) = notificationRepository.findUnreadCount(userId)
+
+    fun deleteOldAndRead() = txn {
+        notificationRepository.deleteOldAndRead(AppConfig.maxNotificationCapacity!!)
+    }
 
     fun toDto(n: Notification, currentUser: CurrentUser)=
         NotificationDto(

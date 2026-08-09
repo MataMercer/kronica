@@ -67,7 +67,7 @@ object AppConfig {
                     propSet(it, annot)
                 }
             }
-        print("finished")
+        print("AppConfig reloaded.")
     }
 
     private fun propSet(property: KMutableProperty<AppConfig>, confProp: ConfProp) {

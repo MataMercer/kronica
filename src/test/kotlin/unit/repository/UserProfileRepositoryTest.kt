@@ -6,17 +6,14 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.matamercer.domain.dao.FileModelDao
-import org.matamercer.domain.dao.UserProfileDao
 import org.matamercer.domain.jdbc.txn
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.Profile
+import org.matamercer.domain.repository.FileModelRepository
 import org.matamercer.domain.repository.UserProfileRepository
 
 @ExtendWith(MockKExtension::class)
 class UserProfileRepositoryTest {
-
-
     @MockK(relaxUnitFun = true)
     private lateinit var userProfileRepository: UserProfileRepository
 
@@ -30,50 +27,50 @@ class UserProfileRepositoryTest {
 
     @Test
     fun `test update user profile repository with no picture`() {
-        val userProfileDao = mockk<UserProfileDao>(relaxed = true)
-        every { userProfileDao.findById(any()) } returns Profile(
-            id = 1L,
-            description = "Test User",
-            picture = null
-        )
-        val fileModelDao = mockk<FileModelDao>(relaxed = true)
+
+        val fileModelRepo = mockk<FileModelRepository>(relaxed = true)
         userProfileRepository = UserProfileRepository(
-            userProfileDao = userProfileDao,
-            fileModelDao = fileModelDao,
+            fileRepo = fileModelRepo,
+            db = mockk(relaxed = true)
         )
         val profile = Profile(
             id = 1L,
             description = "Test User",
             picture = null
         )
+        every { userProfileRepository.findById(any()) } returns Profile(
+            id = 1L,
+            description = "Test User",
+            picture = null
+        )
         userProfileRepository.updateProfile(profile)
         verify {
-            userProfileDao.findById(profile.id!!)
-            userProfileDao.updateProfile(profile)
+            userProfileRepository.findById(profile.id!!)
+            userProfileRepository.updateProfile(profile)
 
         }
         verify(exactly = 0) {
-            fileModelDao.deleteById(any())
-            fileModelDao.deleteJoinUserProfile(any(), any())
-            fileModelDao.create(any())
-            fileModelDao.joinUserProfile(any(), any())
+            fileModelRepo.deleteById(any())
+            fileModelRepo.deleteJoinUserProfile(any(), any())
+            fileModelRepo.create(any())
+            fileModelRepo.joinUserProfile(any(), any())
         }
-        confirmVerified(userProfileDao)
+        confirmVerified(userProfileRepository, fileModelRepo)
 
     }
 
     @Test
     fun `test update user profile repository with picture`() {
-        val userProfileDao = mockk<UserProfileDao>(relaxed = true)
-        every { userProfileDao.findById(any()) } returns Profile(
+
+        val fileRepo = mockk<FileModelRepository>(relaxed = true)
+        userProfileRepository = UserProfileRepository(
+            fileRepo = fileRepo,
+            db = mockk(relaxed = true)
+        )
+        every { userProfileRepository.findById(any()) } returns Profile(
             id = 1L,
             description = "Test User",
             picture = null
-        )
-        val fileModelDao = mockk<FileModelDao>(relaxed = true)
-        userProfileRepository = UserProfileRepository(
-            userProfileDao = userProfileDao,
-            fileModelDao = fileModelDao,
         )
         val profile = Profile(
             id = 1L,
@@ -82,17 +79,16 @@ class UserProfileRepositoryTest {
         )
         userProfileRepository.updateProfile(profile)
         verify {
-            userProfileDao.findById(profile.id!!)
-            userProfileDao.updateProfile(profile)
-            fileModelDao.create(any())
-            fileModelDao.joinUserProfile(any(), any())
+            userProfileRepository.findById(profile.id!!)
+            userProfileRepository.updateProfile(profile)
+            fileRepo.create(any())
+            fileRepo.joinUserProfile(any(), any())
         }
-        confirmVerified(userProfileDao, fileModelDao)
+        confirmVerified(userProfileRepository, fileRepo)
     }
 
     @Test
     fun `test update user profile repository with picture and delete existing picture`() {
-        val userProfileDao = mockk<UserProfileDao>(relaxed = true)
         val existingPicture = FileModel(
             id = 2L,
             name = "existing_picture.jpg",
@@ -107,15 +103,16 @@ class UserProfileRepositoryTest {
             mimeType = "image/jpeg",
             storageId = "new-storage-id",
         )
-        every { userProfileDao.findById(any()) } returns Profile(
+
+        val fileRepo = mockk<FileModelRepository>(relaxed = true)
+        userProfileRepository = UserProfileRepository(
+            fileRepo = fileRepo,
+            db = mockk(relaxed = true)
+        )
+        every { userProfileRepository.findById(any()) } returns Profile(
             id = 1L,
             description = "Test User",
             picture = existingPicture
-        )
-        val fileModelDao = mockk<FileModelDao>(relaxed = true)
-        userProfileRepository = UserProfileRepository(
-            userProfileDao = userProfileDao,
-            fileModelDao = fileModelDao,
         )
         val profile = Profile(
             id = 1L,
@@ -124,14 +121,14 @@ class UserProfileRepositoryTest {
         )
         userProfileRepository.updateProfile(profile)
         verify {
-            userProfileDao.findById(profile.id!!)
-            userProfileDao.updateProfile(profile)
-            fileModelDao.deleteById(any())
-            fileModelDao.deleteJoinUserProfile(any(), any())
-            fileModelDao.create(any())
-            fileModelDao.joinUserProfile(any(), any())
+            userProfileRepository.findById(profile.id!!)
+            userProfileRepository.updateProfile(profile)
+            fileRepo.deleteById(any())
+            fileRepo.deleteJoinUserProfile(any(), any())
+            fileRepo.create(any())
+            fileRepo.joinUserProfile(any(), any())
         }
-        confirmVerified(userProfileDao, fileModelDao)
+        confirmVerified(userProfileRepository, fileRepo)
     }
 
 }

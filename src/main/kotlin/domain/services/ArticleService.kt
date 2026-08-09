@@ -11,6 +11,7 @@ import org.matamercer.web.FileUploadForm
 import org.matamercer.web.Forms.CreateArticleForm
 import org.matamercer.web.Forms.UpdateArticleForm
 import org.matamercer.web.PageQuery
+import org.matamercer.web.dto.Page
 
 class ArticleService(
     private val articleRepository: ArticleRepository,
@@ -35,7 +36,7 @@ class ArticleService(
                 page.convert { toDto(it, currentUser) }
         }
 
-    fun getByFollowing(userId: Long?, pageQuery: PageQuery?): List<Article> {
+    fun getByFollowing(userId: Long?, pageQuery: PageQuery?): Page<Article> {
         if (userId == null) throw BadRequestResponse()
         return articleRepository.findByFollowing(userId, pageQuery)
     }

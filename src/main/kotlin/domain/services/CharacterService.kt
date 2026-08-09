@@ -110,7 +110,7 @@ class CharacterService(
         return c
     }
 
-    fun getAll(query: CharacterQuery): Page<CharacterDto> = characterRepository.findAll(query).convert { toDto(it) }
+    fun getAll(query: CharacterQuery): Page<CharacterDto> = characterRepository.findAll(query, null).convert { toDto(it) }
 
     fun deleteById(currentUser: CurrentUser, id: Long?) {
         if (id == null) {

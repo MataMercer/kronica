@@ -8,7 +8,6 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.matamercer.domain.dao.ArticleDao
 import org.matamercer.domain.jdbc.TransactionManager
 import org.matamercer.domain.models.FileModel
 import org.matamercer.domain.models.NewArticle
@@ -19,8 +18,6 @@ import org.matamercer.web.Forms.CreateArticleForm
 @ExtendWith(MockKExtension::class)
 class ArticleServiceTest {
 
-    @MockK(relaxUnitFun = true)
-    private lateinit var articleDaoSql: ArticleDao
     @MockK(relaxUnitFun = true)
     private lateinit var transactionManager: TransactionManager
 

@@ -4,11 +4,71 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="site config wip" />
+    <list default="true" id="eee186b5-a9f4-46a9-8ef7-67401a022d0c" name="Changes" comment="site config wip">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TraitRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/AppConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/AppConfig.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/config/reader/DatabaseReader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/config/reader/DatabaseReader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ArticleDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CharacterDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/CommentDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ConfigDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ContentDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FileModelDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/FollowDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/LikeDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/NotificationDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/ReportDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/SiteConfigDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TagDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TimelineDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/TraitDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/UserDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/UserProfileDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/dao/UserSettingsDao.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/jdbc/JdbcExecutor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/jdbc/JdbcExecutor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ArticleRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CharacterRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CommentRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/CommentRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ConfigRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ConfigRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ContentRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ContentRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/FileModelRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/FileModelRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/FollowRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/FollowRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/LikeRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/LikeRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/NotificationRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/NotificationRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ReportRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/ReportRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TagRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TagRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/TimelineRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/UserProfileRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/UserProfileRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/repository/UserRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/repository/UserRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/ArticleService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/CharacterService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/NotificationService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/NotificationService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserProfileService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserProfileService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/services/UserService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/domain/workers/NotificationWorker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/domain/workers/NotificationWorker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/FormMapper.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/web/Forms.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Baseline.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/dao/ArticleDaoUnitTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/repository/UserProfileRepositoryTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/repository/UserProfileRepositoryTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/service/ArticleServiceTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/unit/workers/NotificationWorkerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/unit/workers/NotificationWorkerTest.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/merce/dev/kronica" value="2aezV82qYRtpLQ8kI7no63sJjv3" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedChatMode">
+    <option name="chatModeId" value="Agent" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -192,7 +252,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.kotlinCompiler&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mercer\\AppData\\Local\\JetBrains\\Toolbox\\apps\\IDEA-U\\ch-0\\233.14015.106\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -232,9 +292,9 @@
     <option name="myCommands">
       <command value="mvn flyway:baseline" />
       <command value="mvn flyway:undo" />
-      <command value="mvn clean" />
       <command value="mvn flyway:clean" />
       <command value="mvn flyway:migrate" />
+      <command value="mvn clean" />
     </option>
   </component>
   <component name="RunManager" selected="Kotlin.MainKt">
@@ -570,5 +630,13 @@
       <FILTER>unit.service.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/WikiApp$kotlin_in_WikiApi.ic" NAME="kotlin in WikiApi Coverage Results" MODIFIED="1715856049865" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

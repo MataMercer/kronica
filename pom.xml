@@ -233,6 +233,23 @@
             <artifactId>caffeine</artifactId>
             <version>3.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-core</artifactId>
+            <version>3.53.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-kotlin</artifactId>
+            <version>3.53.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-kotlin-sqlobject</artifactId>
+            <version>3.53.0</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>

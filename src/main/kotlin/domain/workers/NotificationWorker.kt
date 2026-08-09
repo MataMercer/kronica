@@ -5,7 +5,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import org.matamercer.config.AppConfig
-import org.matamercer.domain.dao.NotificationDao
 import org.matamercer.domain.models.NewNotification
 import org.matamercer.domain.services.NotificationService
 import kotlin.time.Duration.Companion.days
@@ -17,7 +16,6 @@ import kotlin.time.Duration.Companion.days
 
 class NotificationWorker(
     private val notificationService: NotificationService,
-    private val notificationDao: NotificationDao,
 ) {
     private val notifFlow = MutableStateFlow<List<NewNotification>>(emptyList())
     private val completedFlow = MutableStateFlow<List<NewNotification>>(emptyList())
@@ -75,7 +73,7 @@ class NotificationWorker(
 
     private fun notifyClient(clientMap: Map<Long, List<SseClient>>, recipientId: Long) {
         val clients = clientMap[recipientId] ?: return
-        notificationDao.findUnreadCount(recipientId)
+        notificationService.getUnreadCount(recipientId)
             .also { unreadCount ->
                 clients.forEach { client ->
                     client.sendEvent("$unreadCount")
@@ -85,7 +83,7 @@ class NotificationWorker(
 
     private suspend fun cleaner() {
         while (isCleanerActive) {
-            notificationDao.deleteOldAndRead(AppConfig.maxNotificationAgeDays!!)
+            notificationService.deleteOldAndRead()
             delay(cleanerFrequency)
         }
     }

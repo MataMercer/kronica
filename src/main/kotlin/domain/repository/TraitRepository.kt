@@ -1,11 +1,14 @@
-package org.matamercer.domain.dao
+package org.matamercer.domain.repository
 
 import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.models.Trait
+import java.sql.ResultSet
 
-class TraitDao {
+class TraitRepository(
+    private val db: JdbcExecutor
+) {
 
-    private val jdbc = JdbcExecutor { rs ->
+    private val traitMapper =  { rs: ResultSet ->
         Trait(
             id = rs.getLong("id"),
             name = rs.getString("name"),
@@ -14,7 +17,7 @@ class TraitDao {
 
     }
 
-    fun createTrait(name: String, value: String, characterId: Long): Long = jdbc.updateForId(
+    fun createTrait(name: String, value: String, characterId: Long): Long = db.updateForId(
         """
             INSERT INTO traits
             (
@@ -30,7 +33,7 @@ class TraitDao {
         setLong(++i, characterId)
     }
 
-    fun deleteTrait(name: String, characterId: Long) = jdbc.update("""
+    fun deleteTrait(name: String, characterId: Long) = db.update("""
        DELETE FROM traits
         WHERE character_id = ?
         AND name = ?
@@ -40,7 +43,7 @@ class TraitDao {
         setString(++i, name)
     }
 
-    fun updateTrait( name: String, value: String, characterId: Long): Long = jdbc.updateForId(
+    fun updateTrait( name: String, value: String, characterId: Long): Long = db.updateForId(
         """
             UPDATE traits
             SET val = ?
@@ -53,7 +56,7 @@ class TraitDao {
         setLong(++i, characterId)
     }
 
-    fun findTraitsByCharacter( characterId: Long): List<Trait> = jdbc.queryForObjectList(
+    fun findTraitsByCharacter( characterId: Long): List<Trait> = db.query(
         """
             SELECT 
                 id,
@@ -62,6 +65,6 @@ class TraitDao {
             FROM traits
             WHERE traits.character_id = ?
         """.trimIndent(),{
-        setLong(1, characterId)
-    })
+            setLong(1, characterId)
+        }, traitMapper)
 }

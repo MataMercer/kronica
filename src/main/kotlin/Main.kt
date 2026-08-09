@@ -15,10 +15,11 @@ import org.eclipse.jetty.server.session.SessionHandler
 import org.matamercer.config.AppConfig
 import org.matamercer.config.Seeder
 import org.matamercer.config.reader.ArgsReader
+import org.matamercer.config.reader.DatabaseReader
 import org.matamercer.config.reader.DotEnvReader
 import org.matamercer.config.reader.EnvReader
 import org.matamercer.config.reader.PropertiesReader
-import org.matamercer.domain.dao.*
+import org.matamercer.domain.jdbc.JdbcExecutor
 import org.matamercer.domain.jdbc.TransactionManager
 import org.matamercer.domain.models.User
 import org.matamercer.domain.repository.*
@@ -26,13 +27,17 @@ import org.matamercer.domain.services.*
 import org.matamercer.domain.services.storage.FileSystemStorageService
 import org.matamercer.domain.services.upload.UploadService
 import org.matamercer.domain.services.upload.image.ImageResizer
-import org.matamercer.domain.services.upload.security.*
+import org.matamercer.domain.services.upload.security.ImageFileValidator
+import org.matamercer.domain.services.upload.security.TextFileValidator
+import org.matamercer.domain.services.upload.security.TikaDetector
+import org.matamercer.domain.services.upload.security.UploadSecurity
 import org.matamercer.domain.workers.NotificationWorker
 import org.matamercer.security.UserRole
 import org.matamercer.security.generateCsrfToken
 import org.matamercer.web.FileMetadataForm
 import org.matamercer.web.Router
 import org.matamercer.web.controllers.*
+import javax.sql.DataSource
 
 
 fun main(args: Array<String>):Unit {
@@ -57,7 +62,7 @@ fun setupConfig(args: Array<String>) {
     AppConfig.reload()
 }
 
-fun setupDatabase(appMode: AppMode?) {
+fun setupDatabase(appMode: AppMode?): DataSource {
     val dataSource: HikariDataSource = if (appMode == AppMode.TEST) {
         initTestDataSource()
     } else {
@@ -65,6 +70,7 @@ fun setupDatabase(appMode: AppMode?) {
     }
     if (appMode == AppMode.TEST) migrate(dataSource, appMode) else migrate(dataSource)
     TransactionManager.init(dataSource)
+    return dataSource
 }
 
 fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<String>()): Javalin {
@@ -73,32 +79,40 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
     setupDatabase(appMode)
     val app = createJavalinApp()
 
-    val userDao = UserDao()
-    val followDao = FollowDao()
-    val notificationDao = NotificationDao()
-    val notificationRepository = NotificationRepository(
-        notificationDao = notificationDao,
-        userDao = userDao
+
+    val db = JdbcExecutor()
+
+    val configRepository = ConfigRepository(db = db)
+
+
+    val followRepository = FollowRepository(db = db)
+
+    val storageService = FileSystemStorageService()
+    val fileModelRepository = FileModelRepository(db = db)
+    val contentRepository = ContentRepository(db = db)
+    val userProfileRepository = UserProfileRepository(
+        fileRepo = fileModelRepository,
+        db = db,
     )
-    val followRepository = FollowRepository(followDao = followDao)
+    val userRepository = UserRepository(
+        db = db,
+        userProfileRepository = userProfileRepository,
+    )
+    val notificationRepository = NotificationRepository(
+        db = db,
+        userRepo = userRepository,
+    )
     val notificationService = NotificationService(
         notificationRepository = notificationRepository,
         followerRepository = followRepository,
     )
     val notificationWorker = NotificationWorker(
-        notificationDao = notificationDao,
         notificationService = notificationService,
-
-
     )
     notificationWorker.start()
 
     val httpClient = OkHttpClient()
-    val userProfileDao = UserProfileDao()
-    val userRepository = UserRepository(
-        userDao = userDao,
-        userProfileDao = userProfileDao,
-    )
+
     val userService = UserService(
         userRepository = userRepository,
         notificationWorker = notificationWorker,
@@ -106,9 +120,6 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
         followRepository = followRepository
     )
 
-    val contentDao = ContentDao()
-
-    val storageService = FileSystemStorageService()
 
     val uploadSecurity = UploadSecurity(
         mimeTypeDetector = TikaDetector(),
@@ -120,24 +131,17 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
         uploadSecurity = uploadSecurity,
         imageResizer = ImageResizer()
     )
-    val fileModelDao = FileModelDao()
-    val fileModelRepository = FileModelRepository(fileModelDao = fileModelDao)
     val fileModelService = FileModelService(
         uploadService = uploadService,
         fileModelRepository = fileModelRepository
     )
 
-    val userProfileRepository = UserProfileRepository(
-        userProfileDao = userProfileDao,
-        fileModelDao = fileModelDao,
-    )
     val userProfileService = UserProfileService(
         userProfileRepository = userProfileRepository,
         fileModelService = fileModelService
     )
 
-    val commentDao = CommentDao()
-    val commentRepository = CommentRepository(commentDao = commentDao, contentDao = contentDao)
+    val commentRepository = CommentRepository(db = db, contentRepo = contentRepository)
     val commentService = CommentService(
         commentRepository = commentRepository
     )
@@ -147,51 +151,44 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
     seeder.initRootUser()
     if (appMode== AppMode.TEST || appMode == AppMode.DEV) seeder.initTestUser()
 
-    val articleDao = ArticleDao()
-    val characterDao = CharacterDao()
-    val likeDao = LikeDao()
 
-    val traitDao = TraitDao()
 
-    val timelineDao = TimelineDao()
+    if (appMode == AppMode.TEST || appMode == AppMode.DEV) storageService.deleteAll()
+    storageService.init()
+
+    val tagRepository = TagRepository(db)
+    val tagService = TagService(
+        tagRepository = tagRepository
+    )
+
+    val traitRepository = TraitRepository(db)
+
+    val characterRepository = CharacterRepository(
+        fileRepo = fileModelRepository,
+        db = db,
+        contentRepo = contentRepository,
+        traitRepo = traitRepository,
+    )
+    val likeRepository = LikeRepository(db = db)
     val timelineRepository = TimelineRepository(
-        timelineDao = timelineDao,
-        articleDao = articleDao,
-        fileModelDao = fileModelDao,
-        contentDao = contentDao,
+        fileRepo = fileModelRepository,
+        contentRepo = contentRepository,
+        db = db,
+    )
+    val articleRepository = ArticleRepository(
+        fileRepo = fileModelRepository,
+        charRepo = characterRepository,
+        contentRepo = contentRepository,
+        db = db,
+        tagRepository = tagRepository,
+        likeRepository = likeRepository,
+        timelineRepo = timelineRepository
     )
     val timelineService = TimelineService(
         fileModelService = fileModelService,
         timelineRepository = timelineRepository
     )
-
-    if (appMode == AppMode.TEST || appMode == AppMode.DEV) storageService.deleteAll()
-    storageService.init()
-
-    val tagDao = TagDao()
-    val tagRepository = TagRepository(tagDao)
-    val tagService = TagService(
-        tagRepository = tagRepository
-    )
-
-    val characterRepository = CharacterRepository(
-        characterDao = characterDao,
-        fileModelDao = fileModelDao,
-        traitDao = traitDao,
-        contentDao = contentDao
-    )
-    val articleRepository = ArticleRepository(
-        articleDao = articleDao,
-        fileModelDao = fileModelDao,
-        timelineDao = timelineDao,
-        characterDao = characterDao,
-        likeDao = likeDao,
-        contentDao = contentDao,
-        tagRepository = tagRepository
-    )
     val characterService = CharacterService(characterRepository, fileModelService)
-    val contentRepository = ContentRepository(contentDao = contentDao)
-    val likeRepository = LikeRepository(likeDao = likeDao)
     val likeService = LikeService(likeRepository = likeRepository, contentRepository = contentRepository)
 
     val articleService = ArticleService(
@@ -202,8 +199,7 @@ fun setupApp(appMode: AppMode = AppMode.DEV, args: Array<String> = emptyArray<St
         likeService = likeService,
     )
 
-    val reportDao = ReportDao()
-    val reportRepository = ReportRepository(reportDao)
+    val reportRepository = ReportRepository(db)
     val reportService = ReportService(
         contentRepository = contentRepository,
         reportRepository = reportRepository,

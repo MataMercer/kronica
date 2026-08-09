@@ -4,169 +4,111 @@ import org.matamercer.web.PageQuery
 import org.matamercer.web.dto.Page
 import java.sql.*
 import java.time.LocalDateTime
+import kotlin.collections.emptyList
 import kotlin.math.ceil
 
 typealias RowMapperFun<T> = (resultSet: ResultSet) -> T
 
-class JdbcExecutor<T>(private val defaultMapper: RowMapperFun<T>) {
-    private fun getRowObject(mapperFun: RowMapperFun<T>, resultSet: ResultSet): T? {
-        if (resultSet.next()) {
-            return mapperFun(resultSet)
+fun genTimestamp(): Timestamp = Timestamp.valueOf(LocalDateTime.now())
+
+class JdbcExecutor {
+
+    private fun <T> useConn(block: Connection.() -> T): T {
+        val conn = TransactionManager.getAvailableConnection()
+        return try {
+            conn.block()
+        } finally {
+            TransactionManager.settleConnection(conn)
         }
-        return null
     }
 
-    private fun getRowObjectList(mapperFun: RowMapperFun<T>, resultSet: ResultSet): List<T> {
+    fun <T> query(sql: String, statementSetter: PreparedStatement.() -> Unit, mapperFun: RowMapperFun<T>): List<T> =
+        useConn {
+            prepareStatement(sql).use { st ->
+                st.statementSetter()
+                st.executeQuery().use { rs ->
+                    rs.mapRows(mapperFun)
+                }
+            }
+        }
+
+    fun <T> query(
+        sql: String,
+        statementSetter: PreparedStatement.() -> Unit,
+        mapperFun: RowMapperFun<T>,
+        pageQuery: PageQuery?
+    ): Page<T> = useConn {
+        prepareStatement(sql).use { st ->
+            st.apply(statementSetter)
+            val rs = st.executeQuery()
+            rs.use {
+                rs.mapRowsPaged(mapperFun, pageQuery)
+            }
+        }
+    }
+
+    fun update(sql: String, statementSetter: PreparedStatement.(conn: Connection) -> Unit) = useConn {
+        prepareStatement(sql).use { st ->
+            st.statementSetter(this)
+            st.executeUpdate()
+        }
+    }
+
+    fun updateForId(sql: String, statementSetter: PreparedStatement.() -> Unit): Long = useConn {
+        prepareStatement(sql, Statement.RETURN_GENERATED_KEYS).use { st ->
+            st.apply(statementSetter)
+            st.executeUpdate()
+            val rs = st.generatedKeys
+            rs.use {
+                var id: Long? = null
+                if (rs.next()) {
+                    id = rs.getLong("id")
+                }
+                if (id == null) {
+                    throw SQLException("No generated key returned for insert statement or id column not found: $sql")
+                }
+                id
+            }
+        }
+    }
+
+    private fun <T> ResultSet.mapRows(mapperFun: RowMapperFun<T>): List<T> {
         val rows = emptyList<T>().toMutableList()
-        if (resultSet.isBeforeFirst) {
-            val firstNext = resultSet.next()
+        if (isBeforeFirst) {
+            val firstNext = next()
             if (!firstNext) {
                 return emptyList()
             }
-        } else if (!resultSet.isFirst) {
+        } else if (!isFirst) {
             return emptyList()
         }
 
         do {
-            val rowObj = mapperFun(resultSet)
+            val rowObj = mapperFun(this)
             rows.add(rowObj)
-        } while (resultSet.next())
+        } while (next())
         return rows
     }
 
-    private fun getTotalCount(rs: ResultSet): Int {
-        if (!rs.next()) {
-            return 0
-        }
-        return rs.getInt("total_count")
-    }
-
-
-
-    fun queryForObjectList(
-        sql: String,
-        statementSetter: PreparedStatement.() -> Unit,
-        rowMapperFun: RowMapperFun<T> = defaultMapper
-    ): List<T> {
-        val conn = TransactionManager.getAvailableConnection()
-        val st = conn.prepareStatement(sql)
-        st.apply(statementSetter)
-        val rs = st.executeQuery()
-        val list = getRowObjectList(rowMapperFun, rs)
-        rs.close()
-        st.close()
-        TransactionManager.settleConnection(conn)
-        return list
-    }
-
-    fun queryForObjectPage(
-        sql: String,
-        pageQuery: PageQuery?,
-        statementSetter: PreparedStatement.() -> Unit,
-        rowMapperFun: RowMapperFun<T> = defaultMapper
+    private fun <T> ResultSet.mapRowsPaged(
+        rowMapperFun: RowMapperFun<T>,
+        pageQuery: PageQuery?
     ): Page<T> {
-        val conn = TransactionManager.getAvailableConnection()
-        val st = conn.prepareStatement(sql)
-        st.apply(statementSetter)
-
-        val rs = st.executeQuery()
-        val totalCount = getTotalCount(rs)
-        val list = if (totalCount == 0) emptyList() else getRowObjectList(rowMapperFun,rs)
-        rs.close()
-        st.close()
-        TransactionManager.settleConnection(conn)
-
-        if (pageQuery == null) {
-            return Page(
-                content = list,
-                pages = 1,
-                number = 0,
-                size = list.size
-            )
-        }
-
-        return Page<T>(
+        val totalCount = getTotalCount(this)
+        val list = if (totalCount == 0) emptyList<T>() else this.mapRows(rowMapperFun)
+        val pageSize = pageQuery?.size ?: 0
+        return Page(
             content = list,
-            pages = ceil((totalCount.toDouble() / pageQuery.size.toDouble())).toInt(),
-            number = pageQuery.number,
-            size = pageQuery.size,
+            pages = ceil((totalCount.toDouble() / pageSize.toDouble())).toInt(),
+            number = pageQuery?.number ?: 0,
+            size = pageQuery?.size,
         )
     }
 
-    fun queryForObject(
-        sql: String,
-        statementSetter: PreparedStatement.() -> Unit,
-        rowMapperFun: RowMapperFun<T> = defaultMapper
-    ): T? {
-        val conn = TransactionManager.getAvailableConnection()
-        val st = conn.prepareStatement(sql)
-        st.apply(statementSetter)
-        val rs = st.executeQuery()
-        val obj = getRowObject(rowMapperFun, rs)
-        rs.close()
-        st.close()
-        TransactionManager.settleConnection(conn)
-        return obj
-    }
-
-    fun queryForLong(sql: String, statementSetter: PreparedStatement.() -> Unit): Long? {
-        val conn = TransactionManager.getAvailableConnection()
-        val st = conn.prepareStatement(sql)
-        st.apply(statementSetter)
-        val rs = st.executeQuery()
-        val result = if (rs.next()) rs.getLong(1) else null
-        rs.close()
-        st.close()
-        TransactionManager.settleConnection(conn)
-        return result
-    }
-
-    fun queryForLongList(
-        sql: String,
-        statementSetter: (st: PreparedStatement) -> Unit
-    ): MutableList<Long> {
-        val conn = TransactionManager.getAvailableConnection()
-        val st = conn.prepareStatement(sql)
-        st.apply(statementSetter)
-        val rs = st.executeQuery()
-        val list = emptyList<Long>().toMutableList()
-        while (rs.next()) {
-            val rowObj = rs.getLong(1)
-            list.add(rowObj)
+    private fun getTotalCount(resultSet: ResultSet): Int {
+        if (!resultSet.next()) {
+            return 0
         }
-        rs.close()
-        st.close()
-        TransactionManager.settleConnection(conn)
-        return list
-    }
-
-    fun updateForId(sql: String, statementSetter: PreparedStatement.() -> Unit): Long {
-        val conn = TransactionManager.getAvailableConnection()
-        val st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-        st.apply(statementSetter)
-        st.executeUpdate()
-        val rs = st.generatedKeys
-        var id: Long? = null
-        while (rs.next()) {
-            id = rs.getLong("id")
-        }
-        rs.close()
-        st.close()
-        TransactionManager.settleConnection(conn)
-        if (id == null) {
-            throw SQLException("Id not found")
-        }
-        return id
-    }
-
-    fun update(sql: String, statementSetter: PreparedStatement.() -> Unit) {
-        val conn = TransactionManager.getAvailableConnection()
-        val st = conn.prepareStatement(sql)
-        st.apply(statementSetter)
-        st.executeUpdate()
-        st.close()
-        TransactionManager.settleConnection(conn)
+        return resultSet.getInt("total_count")
     }
 }
-
-fun genTimestamp(): Timestamp = Timestamp.valueOf(LocalDateTime.now())

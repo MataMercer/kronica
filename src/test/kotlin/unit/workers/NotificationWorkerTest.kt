@@ -10,9 +10,9 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.matamercer.domain.dao.NotificationDao
 import org.matamercer.domain.models.NewNotification
 import org.matamercer.domain.models.NotificationType
+import org.matamercer.domain.repository.NotificationRepository
 import org.matamercer.domain.services.NotificationService
 import org.matamercer.domain.workers.NotificationWorker
 import org.matamercer.setupConfig
@@ -25,7 +25,7 @@ class NotificationWorkerTest {
     private lateinit var notificationService: NotificationService
 
     @MockK(relaxUnitFun = true)
-    private lateinit var notificationDao: NotificationDao
+    private lateinit var notificationRepository: NotificationRepository
 
     @InjectMockKs
     private lateinit var notificationWorker: NotificationWorker
@@ -39,7 +39,7 @@ class NotificationWorkerTest {
         setupConfig(emptyArray<String>())
 
         every { sseClient.sendEvent(any()) } returns Unit
-        every { notificationDao.findUnreadCount(any()) } returns 0
+        every { notificationRepository.findUnreadCount(any()) } returns 0
         notificationWorker.start()
 
     }
